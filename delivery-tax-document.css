@@ -1,0 +1,1674 @@
+:root {
+  --dtd-blue: #0868c9;
+  --dtd-blue-dark: #064c9b;
+  --dtd-blue-soft: #eef7ff;
+  --dtd-border: #d8e2ee;
+  --dtd-text: #1f2a37;
+}
+
+.dtd-nav-item { color: var(--dtd-blue-dark); }
+.dtd-page-shell { min-width: 0; color: var(--dtd-text); }
+.dtd-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid var(--dtd-border);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(15, 73, 134, .06);
+}
+.dtd-brand-title { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.dtd-brand-title img { width: 58px; height: 58px; object-fit: contain; }
+.dtd-brand-title h2 { margin: 2px 0 0; font-size: 22px; color: #111827; }
+.dtd-company-mini { color: var(--dtd-blue-dark); font-size: 13px; font-weight: 700; }
+.dtd-toolbar-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.dtd-btn {
+  border: 1px solid var(--dtd-blue);
+  color: var(--dtd-blue-dark);
+  background: #fff;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.dtd-btn:hover { background: var(--dtd-blue-soft); }
+.dtd-btn:disabled { opacity: .55; cursor: wait; }
+.dtd-btn-primary { background: var(--dtd-blue); color: #fff; }
+.dtd-btn-primary:hover { background: var(--dtd-blue-dark); }
+
+.dtd-workspace {
+  display: grid;
+  grid-template-columns: minmax(560px, 1.05fr) minmax(520px, .95fr);
+  gap: 12px;
+  align-items: start;
+}
+.dtd-editor-card, .dtd-preview-card {
+  background: #fff;
+  border: 1px solid var(--dtd-border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(15, 73, 134, .06);
+}
+.dtd-form-section { padding: 14px 16px; border-bottom: 1px solid #e7edf4; }
+.dtd-form-section:last-child { border-bottom: 0; }
+.dtd-section-title { display: flex; align-items: center; gap: 8px; color: var(--dtd-blue-dark); font-weight: 800; font-size: 14px; margin-bottom: 12px; }
+.dtd-section-title span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; background: var(--dtd-blue); font-size: 12px; }
+.dtd-grid { display: grid; gap: 10px 12px; }
+.dtd-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.dtd-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.dtd-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.dtd-span-2 { grid-column: span 2; }
+/* Force optional document dates onto a new row for easier data entry */
+.dtd-grid-line-break{grid-column:1/-1;height:0;min-height:0;margin:0;padding:0;border:0;overflow:hidden}
+
+.dtd-full-field { grid-column: 1 / -1; }
+.dtd-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.dtd-field > span { font-size: 12px; color: #374151; font-weight: 700; }
+.dtd-field input, .dtd-field select, .dtd-field textarea {
+  width: 100%; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: #111827; padding: 8px 10px; font: inherit; font-size: 13px; outline: none;
+}
+.dtd-field textarea { min-height: 72px; resize: vertical; }
+.dtd-field input:focus, .dtd-field select:focus, .dtd-field textarea:focus { border-color: var(--dtd-blue); box-shadow: 0 0 0 3px rgba(8, 104, 201, .12); }
+.dtd-company-settings { margin-top: 12px; border: 1px dashed #b8cbe0; border-radius: 9px; background: #f8fbff; }
+.dtd-company-settings summary { cursor: pointer; padding: 10px 12px; color: var(--dtd-blue-dark); font-weight: 700; font-size: 12px; }
+.dtd-company-settings[open] .dtd-grid { padding: 0 12px 12px; }
+
+.dtd-production-ref-box { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; padding: 10px 12px; border: 1px dashed #b8cbe0; border-radius: 9px; background: #f8fbff; }
+.dtd-production-ref-box label { font-size: 12px; color: #374151; font-weight: 700; }
+.dtd-production-ref-box select {
+  width: 100%; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: #111827; padding: 8px 10px; font: inherit; font-size: 13px; outline: none;
+}
+.dtd-production-ref-box select:focus { border-color: var(--dtd-blue); box-shadow: 0 0 0 3px rgba(8, 104, 201, .12); }
+.dtd-production-ref-box small { color: #64748b; font-size: 10px; line-height: 1.35; }
+
+.dtd-branch-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.dtd-branch-option { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-items: center; column-gap: 8px; border: 1px solid #bfd0e3; border-radius: 9px; padding: 9px 10px; background: #fff; color: #334155; cursor: pointer; text-align: left; font: inherit; }
+.dtd-branch-option:hover { background: #f4f9ff; border-color: var(--dtd-blue); }
+.dtd-branch-option.active { border-color: var(--dtd-blue); background: var(--dtd-blue-soft); box-shadow: 0 0 0 2px rgba(8,104,201,.1); color: var(--dtd-blue-dark); }
+.dtd-branch-option:disabled { opacity: .42; cursor: not-allowed; }
+.dtd-branch-option b { font-size: 13px; }
+.dtd-branch-option small { grid-column: 2; font-size: 10px; color: #64748b; }
+.dtd-branch-dot { grid-row: 1 / span 2; width: 11px; height: 11px; border-radius: 50%; background: var(--dtd-blue); }
+.dtd-branch-dot.ub { background: #7c4cc4; }
+.dtd-branch-lock-note, .dtd-vat-help { color: #64748b; font-size: 10px; line-height: 1.35; }
+.dtd-items-wrap { overflow-x: auto; border: 1px solid #cfdbea; border-radius: 8px; }
+.dtd-items-editor { width: 100%; min-width: 790px; border-collapse: collapse; font-size: 12px; }
+.dtd-items-editor th { background: linear-gradient(180deg, #1484d7, #0870c4); color: #fff; padding: 8px 6px; white-space: nowrap; }
+.dtd-items-editor td { border-top: 1px solid #dbe5ef; padding: 4px; text-align: center; }
+.dtd-items-editor input, .dtd-items-editor textarea { width: 100%; box-sizing: border-box; border: 1px solid transparent; border-radius: 4px; padding: 7px 6px; font: inherit; background: #fff; }
+.dtd-items-editor textarea { min-height: 50px; resize: vertical; line-height: 1.35; }
+.dtd-items-editor input:focus, .dtd-items-editor textarea:focus { border-color: var(--dtd-blue); outline: none; background: #f7fbff; }
+.dtd-item-amount { min-width: 92px; font-weight: 700; text-align: right !important; }
+.dtd-remove-item { border: 0; background: transparent; cursor: pointer; padding: 5px; }
+.dtd-add-item { margin-top: 10px; border: 1px solid var(--dtd-blue); color: var(--dtd-blue); background: #fff; border-radius: 7px; padding: 7px 12px; font-weight: 700; cursor: pointer; }
+.dtd-item-limit { margin-top: 7px; color: #718096; font-size: 11px; }
+.dtd-summary-grid { display: grid; grid-template-columns: 1.1fr repeat(3, 1fr); gap: 10px; align-items: end; }
+.dtd-summary-box { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; background: #f8fafc; border: 1px solid #d8e2ee; border-radius: 8px; padding: 8px 10px; min-height: 40px; }
+.dtd-summary-box span { font-size: 11px; color: #475569; }
+.dtd-summary-box strong { font-size: 14px; text-align: right; }
+.dtd-summary-box em { font-size: 11px; color: #64748b; font-style: normal; }
+.dtd-summary-grand { background: #eaf5ff; border-color: #b9daf8; }
+.dtd-summary-grand strong { color: var(--dtd-blue); font-size: 16px; }
+.dtd-template-upload { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 1.5px dashed #5ba6e7; border-radius: 10px; min-height: 110px; cursor: pointer; color: var(--dtd-blue-dark); background: #fbfdff; }
+.dtd-template-upload input { display: none; }
+.dtd-template-upload strong { font-size: 14px; }
+.dtd-template-upload small { color: #64748b; margin-top: 3px; font-size: 11px; }
+.dtd-upload-icon { font-size: 31px; line-height: 1; color: var(--dtd-blue); }
+.dtd-template-status { margin-top: 8px; font-size: 12px; color: #475569; }
+.dtd-template-status button { border: 0; background: transparent; color: var(--dtd-blue); cursor: pointer; text-decoration: underline; }
+
+.dtd-preview-card { position: sticky; top: 8px; padding: 12px; }
+.dtd-preview-heading { font-weight: 800; font-size: 13px; margin-bottom: 9px; }
+.dtd-preview-tabs { display: grid; grid-template-columns: .9fr .8fr 1.4fr; border: 1px solid #cbd5e1; border-radius: 7px; overflow: hidden; margin-bottom: 9px; }
+.dtd-preview-tabs button { border: 0; border-right: 1px solid #cbd5e1; background: #f8fafc; padding: 9px 6px; font: inherit; font-size: 11px; cursor: pointer; color: #334155; }
+.dtd-preview-tabs button:last-child { border-right: 0; }
+.dtd-preview-tabs button.active { background: var(--dtd-blue); color: #fff; font-weight: 800; }
+.dtd-preview-scroll { max-height: calc(100vh - 220px); min-height: 620px; overflow: auto; padding: 8px; background: #eef3f8; border-radius: 8px; }
+.dtd-template-preview { margin-top: 12px; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; }
+.dtd-template-preview-head { display: flex; justify-content: space-between; padding: 8px 10px; background: #f8fafc; font-size: 12px; }
+.dtd-template-preview iframe { display: block; width: 100%; height: 620px; border: 0; }
+
+.dtd-live-preview-stack { display: flex; flex-direction: column; gap: 14px; }
+.dtd-document-page {
+  --doc-blue: #0758b6;
+  width: 100%;
+  aspect-ratio: 210 / 297;
+  box-sizing: border-box;
+  background: #fff;
+  color: var(--doc-blue);
+  border: 1px solid #cfd9e5;
+  padding: 1.85%;
+  font-family: Tahoma, 'Noto Sans Thai', Arial, sans-serif;
+  font-size: clamp(6.15px, .72vw, 11.2px);
+  line-height: 1.2;
+  overflow: hidden;
+  position: relative;
+}
+.dtd-doc-topbar { display: flex; justify-content: flex-end; align-items: baseline; margin-bottom: .7%; }
+.dtd-doc-serial-no { display: flex; align-items: baseline; gap: .4em; font-size: 1.05em; }
+.dtd-doc-serial-no span { font-weight: 700; }
+.dtd-doc-serial-no strong { color: #c62828; font-weight: 800; font-size: 1.15em; margin-left: .1em; }
+.dtd-doc-header { display: grid; grid-template-columns: 1.48fr .82fr; gap: 1.7%; min-height: 13.5%; }
+.dtd-doc-company { display: flex; gap: 2%; min-width: 0; align-items: flex-start; }
+.dtd-doc-company img { width: 13.5%; max-width: 86px; aspect-ratio: 1; object-fit: contain; flex: 0 0 auto; }
+.dtd-doc-company-th { font-size: 1.86em; line-height: 1.08; font-weight: 800; border-bottom: 1px solid var(--doc-blue); padding-bottom: .28em; white-space: nowrap; letter-spacing: -.015em; }
+.dtd-doc-company-en { font-size: 1.25em; line-height: 1.08; font-weight: 800; margin: .48em 0 .72em; white-space: nowrap; letter-spacing: -.015em; }
+.dtd-doc-contact { font-size: 1.02em; line-height: 1.18; margin: .18em 0; min-height: 1em; }
+.dtd-doc-tax { font-size: 1.13em; line-height: 1.15; font-weight: 800; margin-top: .3em; }
+.dtd-doc-title { text-align: center; font-weight: 700; }
+.dtd-doc-no { text-align: right; font-size: 1.08em; min-height: 1.35em; }
+.dtd-doc-no strong { margin-left: .45em; font-size: 1.18em; }
+.dtd-doc-title h3 { font-size: 1.52em; line-height: 1.08; margin: .38em 0; }
+.dtd-doc-title h2 { font-size: 1.42em; line-height: 1.12; margin: .28em 0; }
+.dtd-doc-title h4 { font-size: 1.3em; line-height: 1.12; margin: .45em 0 .2em; }
+.dtd-doc-title small { font-size: 1em; }
+.dtd-doc-party-grid { display: grid; grid-template-columns: 1.8fr .95fr; gap: 1.4%; height: 12.2%; margin-bottom: .9%; }
+.dtd-doc-party-box { border: 1.35px solid var(--doc-blue); border-radius: .85em; padding: 1.15%; position: relative; overflow: hidden; font-size: 1.04em; line-height: 1.26; }
+.dtd-doc-party-box > div { margin-bottom: .55em; }
+.dtd-doc-party-bottom { position: absolute; bottom: .7em; left: 1.1%; right: 1.1%; margin: 0 !important; }
+.dtd-doc-meta-table, .dtd-doc-items-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+.dtd-doc-meta-table { height: 8.1%; margin-bottom: 1%; }
+.dtd-doc-meta-table th, .dtd-doc-meta-table td { border-right: 1px solid var(--doc-blue); border-bottom: 1px solid var(--doc-blue); text-align: center; padding: .45em .25em; }
+.dtd-doc-meta-table th:first-child, .dtd-doc-meta-table td:first-child { border-left: 1px solid var(--doc-blue); }
+.dtd-doc-meta-table thead th { border-top: 1px solid var(--doc-blue); border-radius: .55em .55em 0 0; font-size: 1.12em; line-height: 1.08; font-weight: 800; overflow: hidden; }
+.dtd-doc-meta-table th span, .dtd-doc-items-table th span { font-size: .84em; line-height: 1.05; font-style: italic; }
+.dtd-doc-meta-table td { height: 3.35em; color: #111827; font-size: 1.02em; line-height: 1.15; }
+.dtd-doc-items-section { height: 47.2%; position: relative; border: 1px solid var(--doc-blue); border-radius: .65em; overflow: hidden; }
+.dtd-doc-items-table { height: 77%; color: var(--doc-blue); }
+.dtd-doc-items-table th, .dtd-doc-items-table td { border-right: 1px solid var(--doc-blue); border-bottom: 1px solid #b9d2ef; padding: .45em .35em; text-align: center; }
+.dtd-doc-items-table th:last-child, .dtd-doc-items-table td:last-child { border-right: 0; }
+.dtd-doc-items-table th { height: 4em; font-size: 1.12em; line-height: 1.08; font-weight: 800; }
+.dtd-doc-items-table th:nth-child(1) { width: 13%; }
+.dtd-doc-items-table th:nth-child(2) { width: 39%; }
+.dtd-doc-items-table th:nth-child(3) { width: 10%; }
+.dtd-doc-items-table th:nth-child(4) { width: 10%; }
+.dtd-doc-items-table th:nth-child(5) { width: 13%; }
+.dtd-doc-items-table th:nth-child(6) { width: 15%; }
+.dtd-doc-items-table tbody tr { height: 3.15em; }
+.dtd-doc-items-table tbody tr.empty { height: 3.15em; }
+.dtd-doc-items-table td { color: #111827; font-size: 1.03em; line-height: 1.28; vertical-align: top; }
+.dtd-doc-items-table td.num { text-align: right; padding-right: .7em; }
+.dtd-doc-desc { text-align: left !important; }
+.dtd-doc-watermark { position: absolute; width: 28%; opacity: .055; left: 39%; top: 30%; transform: translate(-50%, -50%); pointer-events: none; }
+.dtd-doc-bottom-area { position: absolute; left: 0; right: 0; bottom: 0; height: 23%; display: grid; grid-template-columns: 2.05fr .95fr; }
+.dtd-doc-payment-note { padding: 1.4%; font-size: .87em; line-height: 1.25; display: flex; flex-direction: column; justify-content: flex-end; gap: .38em; }
+.dtd-doc-baht { height: 4.1em; border: 1px solid var(--doc-blue); border-radius: .8em; display: grid; grid-template-columns: 12% 1fr; align-items: center; padding: 0 1.4%; margin-top: .45em; }
+.dtd-doc-baht b span { font-style: italic; }
+.dtd-doc-baht strong { color: #111827; text-align: center; font-weight: 500; }
+.dtd-doc-totals { display: grid; grid-template-rows: repeat(3, 1fr); gap: .55em; padding: .8em; }
+.dtd-doc-totals > div { display: grid; grid-template-columns: 58% 42%; border: 1px solid var(--doc-blue); border-radius: .7em; overflow: hidden; }
+.dtd-doc-totals span { display: grid; place-items: center; text-align: center; font-weight: 700; padding: .2em; border-right: 1px solid var(--doc-blue); }
+.dtd-doc-totals em { font-style: italic; }
+.dtd-doc-totals strong { display: grid; place-items: center end; padding-right: .6em; color: #111827; font-size: 1.08em; }
+.dtd-doc-terms { height: 5.4%; display: grid; grid-template-columns: 64% 36%; align-items: center; font-size: .82em; line-height: 1.35; }
+.dtd-doc-terms-copy { text-align: center; padding: 0 .8em; }
+.dtd-doc-officer-label { align-self: end; text-align: center; padding-bottom: .25em; font-size: 1.18em; font-weight: 700; }
+.dtd-doc-officer-label span { font-style: italic; font-weight: 500; }
+.dtd-doc-signatures { height: 13%; display: grid; grid-template-columns: 1.8fr repeat(4, 1fr); }
+.dtd-doc-sign-box { border: 1px solid var(--doc-blue); border-right: 0; display: grid; grid-template-rows: 31% 69%; overflow: hidden; }
+.dtd-doc-sign-box:first-child { border-radius: .7em 0 0 .7em; }
+.dtd-doc-sign-box:last-child { border-right: 1px solid var(--doc-blue); border-radius: 0 .7em .7em 0; }
+.dtd-doc-sign-head { display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 1px solid var(--doc-blue); font-size: 1em; line-height: 1.08; }
+.dtd-doc-sign-head span { font-style: italic; font-weight: 700; }
+.dtd-doc-sign-body { padding: .5em; display: flex; flex-direction: column; justify-content: space-between; text-align: center; font-size: .82em; line-height: 1.18; }
+.dtd-doc-sign-body small { min-height: 2.5em; line-height: 1.25; }
+.dtd-doc-sign-line { margin-top: auto; letter-spacing: -.1em; white-space: nowrap; }
+.dtd-doc-sign-date { margin-top: .25em; white-space: nowrap; }
+.dtd-doc-sign-footer { display: flex; justify-content: space-between; gap: .6em; margin-top: .18em; font-weight: 600; white-space: nowrap; }
+.dtd-doc-sign-footer span:last-child { margin-left: auto; }
+.dtd-doc-sign-customer .dtd-doc-sign-line { display: grid; grid-template-columns: 1fr auto 1fr; }
+
+.dtd-pdf-stage { position: fixed; left: -10000px; top: 0; width: 794px; z-index: -9999; background: #fff; }
+.dtd-pdf-stage .dtd-document-page, .dtd-document-page.dtd-pdf-page { width: 794px; height: 1123px; aspect-ratio: auto; border: 0; font-size: 10.2px; margin: 0; }
+
+@media (max-width: 1250px) {
+  .dtd-workspace { grid-template-columns: 1fr; }
+  .dtd-preview-card { position: static; }
+  .dtd-preview-scroll { max-height: none; }
+}
+@media (max-width: 760px) {
+  .dtd-toolbar { align-items: flex-start; flex-direction: column; }
+  .dtd-toolbar-actions { width: 100%; justify-content: flex-start; }
+  .dtd-brand-title h2 { font-size: 18px; }
+  .dtd-grid-4, .dtd-grid-3, .dtd-grid-2, .dtd-summary-grid { grid-template-columns: 1fr; }
+  .dtd-span-2 { grid-column: span 1; }
+  .dtd-preview-tabs { grid-template-columns: 1fr; }
+  .dtd-preview-tabs button { border-right: 0; border-bottom: 1px solid #cbd5e1; }
+  .dtd-preview-scroll { min-height: 440px; }
+}
+
+#dtd-live-preview .dtd-document-page + .dtd-document-page { margin-top: 14px; }
+.dtd-doc-page-counter { display: block; margin-top: .15em; font-size: .82em; font-weight: 600; }
+.dtd-doc-next-page-note { font-weight: 800; text-align: center; color: var(--doc-blue); }
+.dtd-doc-desc { white-space: normal; overflow-wrap: anywhere; line-height: 1.25; }
+.dtd-doc-items-table tbody tr.dtd-data-row td { vertical-align: top; }
+
+
+/* Document readability refinement: closer to the printed company form */
+.dtd-doc-meta-table th:nth-child(1), .dtd-doc-meta-table td:nth-child(1) { width: 13.5%; }
+.dtd-doc-meta-table th:nth-child(2), .dtd-doc-meta-table td:nth-child(2) { width: 14%; }
+.dtd-doc-meta-table th:nth-child(3), .dtd-doc-meta-table td:nth-child(3) { width: 14%; }
+.dtd-doc-meta-table th:nth-child(4), .dtd-doc-meta-table td:nth-child(4) { width: 14%; }
+.dtd-doc-meta-table th:nth-child(5), .dtd-doc-meta-table td:nth-child(5) { width: 15.5%; }
+.dtd-doc-meta-table th:nth-child(6), .dtd-doc-meta-table td:nth-child(6) { width: 14.5%; }
+.dtd-doc-meta-table th:nth-child(7), .dtd-doc-meta-table td:nth-child(7) { width: 14.5%; }
+.dtd-doc-meta-table thead th:nth-child(5) {
+  font-size: .88em;
+  line-height: 1.02;
+  padding-left: .12em;
+  padding-right: .12em;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+.dtd-doc-meta-table thead th:nth-child(5) span { font-size: .88em; letter-spacing: -.02em; }
+.dtd-doc-items-table tbody td { border-bottom: 0; }
+.dtd-doc-items-table tbody tr.dtd-data-row td { padding-top: .65em; }
+.dtd-doc-totals span { font-size: 1.02em; line-height: 1.12; }
+.dtd-doc-baht { font-size: 1.02em; }
+.dtd-doc-party-box b, .dtd-doc-no span { font-weight: 800; }
+
+/* =====================================================================
+   UI/UX + PDF typography refinement
+   - Productive form layout inspired by enterprise design-system patterns
+   - Compact print typography close to the original pre-printed form
+   ===================================================================== */
+
+/* Application shell */
+.dtd-page-shell {
+  padding: 12px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(8, 104, 201, .08), transparent 30%),
+    linear-gradient(180deg, #f8fbff 0%, #f3f7fb 100%);
+}
+.dtd-toolbar {
+  position: sticky;
+  top: 8px;
+  z-index: 20;
+  min-height: 68px;
+  border-color: #cbdbea;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 10px 28px rgba(15, 73, 134, .10);
+  backdrop-filter: blur(10px);
+}
+.dtd-brand-title img {
+  width: 52px;
+  height: 52px;
+  filter: drop-shadow(0 5px 8px rgba(8, 104, 201, .14));
+}
+.dtd-brand-title h2 {
+  font-size: 21px;
+  letter-spacing: -.02em;
+}
+.dtd-company-mini {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--dtd-blue-soft);
+  color: var(--dtd-blue-dark);
+  font-size: 11px;
+}
+.dtd-toolbar-actions { gap: 7px; }
+.dtd-btn {
+  min-height: 40px;
+  border-radius: 10px;
+  padding: 9px 13px;
+  box-shadow: 0 2px 5px rgba(15, 73, 134, .06);
+  transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+.dtd-btn:hover {
+  border-color: var(--dtd-blue-dark);
+  box-shadow: 0 5px 12px rgba(8, 104, 201, .12);
+  transform: translateY(-1px);
+}
+.dtd-btn:focus-visible,
+.dtd-add-item:focus-visible,
+.dtd-branch-option:focus-visible,
+.dtd-preview-tabs button:focus-visible {
+  outline: 3px solid rgba(8, 104, 201, .25);
+  outline-offset: 2px;
+}
+.dtd-btn-primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #0b76d9, #0758b6);
+  box-shadow: 0 7px 15px rgba(8, 104, 201, .22);
+}
+
+/* Form layout */
+.dtd-workspace {
+  grid-template-columns: minmax(600px, 1.04fr) minmax(560px, .96fr);
+  gap: 16px;
+}
+.dtd-editor-card {
+  padding: 2px 0 10px;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.dtd-form-section {
+  margin: 10px;
+  padding: 16px 17px;
+  border: 1px solid #d9e5f0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(20, 65, 110, .055);
+}
+.dtd-form-section:last-child { border-bottom: 1px solid #d9e5f0; }
+.dtd-section-title {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9f0f6;
+  color: #074d98;
+  font-size: 14px;
+  letter-spacing: -.01em;
+}
+.dtd-section-title span {
+  width: 25px;
+  height: 25px;
+  box-shadow: 0 4px 10px rgba(8, 104, 201, .22);
+}
+.dtd-grid { gap: 12px 14px; }
+.dtd-field { gap: 6px; }
+.dtd-field > span {
+  color: #334155;
+  font-size: 11px;
+  letter-spacing: .01em;
+}
+.dtd-field input,
+.dtd-field select,
+.dtd-field textarea {
+  min-height: 40px;
+  border-color: #c9d7e5;
+  border-radius: 9px;
+  padding: 9px 11px;
+  background: #fbfdff;
+  font-size: 13px;
+  transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.dtd-field textarea { min-height: 78px; line-height: 1.45; }
+.dtd-field input:hover,
+.dtd-field select:hover,
+.dtd-field textarea:hover { border-color: #93b6d8; background: #fff; }
+.dtd-field input:focus,
+.dtd-field select:focus,
+.dtd-field textarea:focus {
+  border-color: #0b76d9;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(8, 104, 201, .13);
+}
+.dtd-company-settings {
+  border-style: solid;
+  border-color: #d1dfec;
+  background: #f8fbff;
+}
+.dtd-company-settings summary { padding: 11px 13px; }
+.dtd-branch-options { gap: 10px; }
+.dtd-branch-option {
+  min-height: 62px;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 7px rgba(15, 73, 134, .04);
+  transition: .16s ease;
+}
+.dtd-branch-option:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(8, 104, 201, .09); }
+.dtd-branch-option.active {
+  background: linear-gradient(180deg, #f4faff, #e9f5ff);
+  box-shadow: inset 0 0 0 1px rgba(8,104,201,.12), 0 6px 15px rgba(8,104,201,.08);
+}
+.dtd-branch-dot { width: 13px; height: 13px; box-shadow: 0 0 0 4px rgba(8,104,201,.09); }
+.dtd-branch-dot.ub { box-shadow: 0 0 0 4px rgba(124,76,196,.10); }
+
+/* Product-entry table */
+.dtd-items-wrap {
+  border-color: #c9d9e8;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+.dtd-items-editor { font-size: 12px; }
+.dtd-items-editor th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 38px;
+  padding: 8px;
+  background: linear-gradient(180deg, #0f7bd5, #075eb8);
+  letter-spacing: .01em;
+}
+.dtd-items-editor td { padding: 5px; background: #fff; }
+.dtd-items-editor tbody tr:nth-child(even) td { background: #f8fbfe; }
+.dtd-items-editor tbody tr:hover td { background: #eef7ff; }
+.dtd-items-editor input,
+.dtd-items-editor textarea {
+  border-radius: 7px;
+  padding: 8px;
+  background: transparent;
+}
+.dtd-add-item {
+  min-height: 38px;
+  border-radius: 9px;
+  padding: 8px 13px;
+  background: #f5faff;
+}
+.dtd-summary-grid { gap: 12px; }
+.dtd-summary-box {
+  min-height: 50px;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(15,73,134,.045);
+}
+.dtd-summary-grand {
+  background: linear-gradient(135deg, #eaf6ff, #f7fbff);
+  border-color: #a9d1f3;
+}
+.dtd-template-upload {
+  min-height: 126px;
+  border-radius: 13px;
+  background: linear-gradient(180deg, #fbfdff, #f4f9ff);
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+.dtd-template-upload:hover { border-color: #0b76d9; background: #eef7ff; transform: translateY(-1px); }
+
+/* Preview area */
+.dtd-preview-card {
+  top: 90px;
+  border-color: #cfdeeb;
+  border-radius: 16px;
+  padding: 13px;
+  box-shadow: 0 12px 30px rgba(15, 73, 134, .10);
+}
+.dtd-preview-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #15324f;
+  font-size: 13px;
+}
+.dtd-preview-heading::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, .10);
+}
+.dtd-preview-tabs {
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #d3dfeb;
+  border-radius: 11px;
+  background: #eef3f8;
+}
+.dtd-preview-tabs button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #475569;
+}
+.dtd-preview-tabs button.active {
+  background: #fff;
+  color: #0758b6;
+  box-shadow: 0 3px 10px rgba(15,73,134,.12);
+}
+.dtd-preview-scroll {
+  padding: 16px;
+  border: 1px solid #d6e0ea;
+  border-radius: 12px;
+  background:
+    linear-gradient(45deg, rgba(8,104,201,.025) 25%, transparent 25%) 0 0/18px 18px,
+    linear-gradient(-45deg, rgba(8,104,201,.025) 25%, transparent 25%) 0 0/18px 18px,
+    #edf2f7;
+}
+#dtd-live-preview .dtd-document-page {
+  border: 0;
+  box-shadow: 0 12px 34px rgba(15, 42, 70, .18);
+}
+
+/* Print/PDF typography: compact and close to the original paper form */
+.dtd-document-page {
+  padding: 1.75%;
+  font-size: clamp(5.5px, .60vw, 9.2px);
+}
+.dtd-doc-header { grid-template-columns: 1.52fr .82fr; gap: 1.55%; min-height: 13%; }
+.dtd-doc-company { gap: 1.6%; }
+.dtd-doc-company > div { min-width: 0; flex: 1 1 auto; }
+.dtd-doc-company img {
+  width: 11.5%;
+  max-width: 68px;
+  min-width: 42px;
+}
+.dtd-doc-company-th {
+  font-size: 1.34em;
+  line-height: 1.12;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  letter-spacing: -.01em;
+}
+.dtd-doc-company-en {
+  font-size: 1.02em;
+  line-height: 1.12;
+  margin: .38em 0 .55em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.dtd-doc-contact { font-size: .84em; line-height: 1.22; margin: .12em 0; }
+.dtd-doc-tax { font-size: .94em; line-height: 1.15; margin-top: .22em; }
+.dtd-doc-no { font-size: .92em; min-height: 1.25em; }
+.dtd-doc-no strong { font-size: 1.02em; margin-left: .35em; }
+.dtd-doc-title h3 { font-size: 1.16em; line-height: 1.1; margin: .32em 0; }
+.dtd-doc-title h2 { font-size: 1.08em; line-height: 1.14; margin: .26em 0; }
+.dtd-doc-title h4 { font-size: 1.02em; line-height: 1.12; margin: .35em 0 .18em; }
+.dtd-doc-title > div:not(.dtd-doc-no) { font-size: .9em; line-height: 1.12; }
+.dtd-doc-title small { font-size: .82em; }
+.dtd-doc-party-grid { height: 12.1%; margin-bottom: .85%; }
+.dtd-doc-party-box {
+  padding: 1.05%;
+  border-width: 1px;
+  font-size: .9em;
+  line-height: 1.24;
+}
+.dtd-doc-party-box > div { margin-bottom: .42em; }
+.dtd-doc-party-bottom { bottom: .62em; }
+.dtd-doc-meta-table { height: 8%; margin-bottom: .9%; }
+.dtd-doc-meta-table th,
+.dtd-doc-meta-table td { padding: .38em .2em; }
+.dtd-doc-meta-table thead th {
+  font-size: .9em;
+  line-height: 1.05;
+  font-weight: 800;
+}
+.dtd-doc-meta-table th span,
+.dtd-doc-items-table th span { font-size: .82em; line-height: 1.02; }
+.dtd-doc-meta-table td { height: 3.1em; font-size: .94em; line-height: 1.12; }
+.dtd-doc-meta-table thead th:nth-child(5) {
+  font-size: .82em;
+  line-height: 1.0;
+  letter-spacing: -.025em;
+}
+.dtd-doc-meta-table thead th:nth-child(5) span { font-size: .86em; }
+.dtd-doc-items-section { height: 47.6%; border-width: 1px; }
+.dtd-doc-items-table th,
+.dtd-doc-items-table td { padding: .38em .3em; }
+.dtd-doc-items-table th { height: 3.75em; font-size: .9em; line-height: 1.05; }
+.dtd-doc-items-table td { font-size: .94em; line-height: 1.24; }
+.dtd-doc-items-table tbody tr.dtd-data-row td { padding-top: .52em; }
+.dtd-doc-payment-note { font-size: .74em; line-height: 1.24; }
+.dtd-doc-baht { height: 3.75em; font-size: .9em; }
+.dtd-doc-totals { gap: .45em; padding: .65em; }
+.dtd-doc-totals span { font-size: .86em; line-height: 1.08; }
+.dtd-doc-totals strong { font-size: .92em; }
+.dtd-doc-terms { font-size: .7em; line-height: 1.28; }
+.dtd-doc-officer-label { font-size: .9em; }
+.dtd-doc-sign-head { font-size: .84em; line-height: 1.05; }
+.dtd-doc-sign-body { font-size: .68em; line-height: 1.16; }
+.dtd-doc-sign-body small { min-height: 2.3em; }
+.dtd-doc-page-counter { font-size: .72em; }
+.dtd-doc-watermark { width: 25%; opacity: .045; }
+
+/* Fixed A4 rendering size used by the PDF generator */
+.dtd-pdf-stage .dtd-document-page,
+.dtd-document-page.dtd-pdf-page {
+  width: 794px;
+  height: 1123px;
+  font-size: 8.9px;
+}
+.dtd-pdf-stage .dtd-document-page { box-shadow: none; }
+
+@media (max-width: 1250px) {
+  .dtd-page-shell { padding: 8px; }
+  .dtd-toolbar { position: static; }
+  .dtd-preview-card { top: auto; }
+}
+@media (max-width: 760px) {
+  .dtd-page-shell { padding: 4px; border-radius: 12px; }
+  .dtd-form-section { margin: 8px; padding: 14px; }
+  .dtd-toolbar { border-radius: 12px; }
+  .dtd-toolbar-actions .dtd-btn { flex: 1 1 calc(50% - 8px); }
+}
+
+/* Final compact-header tuning requested by user */
+.dtd-doc-party-box { overflow-wrap: anywhere; }
+.dtd-doc-meta-table thead th,
+.dtd-doc-items-table th { font-size: .84em; }
+.dtd-doc-meta-table thead th:nth-child(5) { font-size: .78em; }
+.dtd-doc-meta-table thead th:nth-child(5) span { font-size: .84em; }
+
+/* ==========================================================
+   PDF / PRINT READABILITY V3 — 14px real A4 base size
+   Requested for clearer customer, product, quantity, price,
+   totals, signatures, notes, and payment/legal conditions.
+   ========================================================== */
+.dtd-document-page {
+  font-size: clamp(8.8px, .86vw, 12.4px);
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fixed A4 page captured by html2canvas and exported by jsPDF. */
+.dtd-pdf-stage .dtd-document-page,
+.dtd-document-page.dtd-pdf-page {
+  font-size: 14px;
+}
+
+/* Customer / ship-to information. */
+.dtd-doc-party-box {
+  font-size: 1em;
+  line-height: 1.24;
+}
+.dtd-doc-party-box > div { margin-bottom: .38em; }
+
+/* Metadata and item tables. */
+.dtd-doc-meta-table thead th,
+.dtd-doc-items-table th {
+  font-size: .86em;
+  line-height: 1.03;
+}
+.dtd-doc-meta-table td,
+.dtd-doc-items-table td {
+  font-size: 1em;
+  line-height: 1.2;
+}
+.dtd-doc-meta-table th span,
+.dtd-doc-items-table th span {
+  font-size: .78em;
+  line-height: 1;
+}
+
+/* Payment Term stays slightly smaller so both languages fit. */
+.dtd-doc-meta-table thead th:nth-child(5) {
+  font-size: .68em;
+  line-height: 1;
+  letter-spacing: -.035em;
+  padding-left: .08em;
+  padding-right: .08em;
+}
+.dtd-doc-meta-table thead th:nth-child(5) span {
+  font-size: .8em;
+  letter-spacing: -.025em;
+}
+
+/* Totals and amount in words. */
+.dtd-doc-totals span {
+  font-size: .94em;
+  line-height: 1.08;
+}
+.dtd-doc-totals strong { font-size: 1.06em; }
+.dtd-doc-baht { font-size: 1em; }
+.dtd-doc-baht strong { font-size: 1em; }
+
+/* Notes, conditions, and signature area. */
+.dtd-doc-payment-note {
+  font-size: .86em;
+  line-height: 1.22;
+}
+.dtd-doc-terms {
+  font-size: .82em;
+  line-height: 1.24;
+}
+.dtd-doc-officer-label { font-size: .9em; }
+.dtd-doc-sign-head {
+  font-size: .9em;
+  line-height: 1.04;
+}
+.dtd-doc-sign-body {
+  font-size: .82em;
+  line-height: 1.14;
+}
+.dtd-doc-sign-body small {
+  min-height: 2em;
+  line-height: 1.16;
+}
+.dtd-doc-page-counter { font-size: .78em; }
+
+/* Keep document header proportionate to the new 14px base. */
+.dtd-doc-company-th { font-size: 1.26em; }
+.dtd-doc-company-en { font-size: .96em; }
+.dtd-doc-contact { font-size: .8em; }
+.dtd-doc-tax { font-size: .9em; }
+.dtd-doc-no { font-size: .86em; }
+.dtd-doc-no strong { font-size: 1em; }
+.dtd-doc-title h3 { font-size: 1.08em; }
+.dtd-doc-title h2 { font-size: 1em; }
+.dtd-doc-title h4 { font-size: .96em; }
+.dtd-doc-title > div:not(.dtd-doc-no) { font-size: .84em; }
+.dtd-doc-title small { font-size: .78em; }
+
+@media (max-width: 900px) {
+  #dtd-live-preview .dtd-document-page {
+    font-size: 9px;
+  }
+}
+
+/* ==========================================================
+   FOOTER WRITING SPACE REFINEMENT
+   Increase signature writing area to match the paper sample
+   ========================================================== */
+.dtd-doc-terms {
+  height: 4.9%;
+  align-items: end;
+  padding-top: .15em;
+}
+.dtd-doc-terms-copy {
+  padding: 0 1em;
+  line-height: 1.18;
+}
+.dtd-doc-officer-label {
+  align-self: end;
+  padding-bottom: .2em;
+}
+.dtd-doc-signatures {
+  height: 15.4%;
+  grid-template-columns: 1.9fr 1.08fr 1fr 1fr 1fr;
+  align-items: stretch;
+}
+.dtd-doc-sign-box {
+  grid-template-rows: 24% 76%;
+}
+.dtd-doc-sign-head {
+  font-size: .86em;
+  line-height: 1.02;
+  padding: .2em .15em;
+}
+.dtd-doc-sign-head b,
+.dtd-doc-sign-head span {
+  display: block;
+}
+.dtd-doc-sign-body {
+  padding: .55em .55em .42em;
+  font-size: .78em;
+  line-height: 1.12;
+  justify-content: flex-start;
+}
+.dtd-doc-sign-body small {
+  display: block;
+  min-height: 2.55em;
+  line-height: 1.16;
+  text-align: center;
+}
+.dtd-doc-sign-line {
+  margin-top: auto;
+  padding-top: 2.15em;
+  letter-spacing: -.06em;
+  white-space: nowrap;
+}
+.dtd-doc-sign-date {
+  margin-top: .42em;
+  white-space: nowrap;
+}
+.dtd-doc-sign-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: .75em;
+  margin-top: auto;
+  padding-top: .28em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.dtd-doc-sign-footer span:last-child {
+  margin-left: auto;
+}
+.dtd-doc-sign-customer .dtd-doc-sign-body {
+  padding-bottom: .45em;
+}
+.dtd-doc-sign-customer .dtd-doc-sign-line {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: .6em;
+  padding-top: 2.55em;
+}
+.dtd-doc-sign-customer .dtd-doc-sign-date {
+  margin-top: .2em;
+}
+.dtd-doc-sign-customer .dtd-doc-sign-footer {
+  padding-top: .2em;
+}
+
+/* Keep footer proportions inside exported A4 page */
+.dtd-pdf-stage .dtd-document-page .dtd-doc-signatures,
+.dtd-document-page.dtd-pdf-page .dtd-doc-signatures {
+  height: 15.4%;
+}
+
+/* ==========================================================
+   PDF FONT 12PX — balanced readable layout
+   Base PDF font reduced from 14px to 12px while keeping
+   customer, items, amounts, totals, signatures, notes, and
+   legal/payment conditions comparatively prominent.
+   ========================================================== */
+.dtd-pdf-stage .dtd-document-page,
+.dtd-document-page.dtd-pdf-page {
+  font-size: 12px;
+}
+
+/* Customer and shipping information remain easy to read. */
+.dtd-doc-party-box {
+  font-size: 1.08em;
+  line-height: 1.28;
+}
+
+/* Metadata values and item data. */
+.dtd-doc-meta-table td,
+.dtd-doc-items-table td {
+  font-size: 1.06em;
+  line-height: 1.22;
+}
+.dtd-doc-meta-table thead th,
+.dtd-doc-items-table th {
+  font-size: .92em;
+  line-height: 1.04;
+}
+.dtd-doc-meta-table th span,
+.dtd-doc-items-table th span {
+  font-size: .8em;
+}
+
+/* Keep Payment Term compact enough to fit both languages. */
+.dtd-doc-meta-table thead th:nth-child(5) {
+  font-size: .72em;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+.dtd-doc-meta-table thead th:nth-child(5) span {
+  font-size: .82em;
+}
+
+/* Quantity, unit price, and amount values. */
+.dtd-doc-items-table td:nth-child(4),
+.dtd-doc-items-table td:nth-child(5),
+.dtd-doc-items-table td:nth-child(6) {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+/* Totals and amount-in-words. */
+.dtd-doc-totals span {
+  font-size: .98em;
+  line-height: 1.08;
+}
+.dtd-doc-totals strong {
+  font-size: 1.14em;
+}
+.dtd-doc-baht {
+  font-size: 1.04em;
+}
+.dtd-doc-baht strong {
+  font-size: 1.04em;
+}
+
+/* Notes, terms, and signatures stay readable at 12px base. */
+.dtd-doc-payment-note {
+  font-size: .92em;
+  line-height: 1.24;
+}
+.dtd-doc-terms {
+  font-size: .88em;
+  line-height: 1.24;
+}
+.dtd-doc-officer-label {
+  font-size: .94em;
+}
+.dtd-doc-sign-head {
+  font-size: .94em;
+  line-height: 1.04;
+}
+.dtd-doc-sign-body {
+  font-size: .88em;
+  line-height: 1.16;
+}
+.dtd-doc-sign-body small {
+  font-size: .96em;
+  line-height: 1.18;
+}
+.dtd-doc-sign-footer {
+  font-size: .96em;
+}
+
+/* ==========================================================
+   FOOTER COMPACT FIT FOR A4
+   Reduce excessive empty space in the signature section so the
+   footer stays within A4 while keeping it writable.
+   ========================================================== */
+.dtd-doc-terms {
+  height: 3.9%;
+  padding-top: 0;
+  align-items: center;
+}
+.dtd-doc-terms-copy {
+  line-height: 1.14;
+  padding: 0 .8em;
+}
+.dtd-doc-officer-label {
+  align-self: center;
+  padding-bottom: 0;
+}
+.dtd-doc-signatures,
+.dtd-pdf-stage .dtd-document-page .dtd-doc-signatures,
+.dtd-document-page.dtd-pdf-page .dtd-doc-signatures {
+  height: 11.8%;
+  grid-template-columns: 1.8fr 1.02fr 1fr 1fr 1fr;
+}
+.dtd-doc-sign-box {
+  grid-template-rows: 27% 73%;
+}
+.dtd-doc-sign-head {
+  font-size: .9em;
+  line-height: 1.02;
+  padding: .16em .12em;
+}
+.dtd-doc-sign-body {
+  padding: .34em .42em .24em;
+  font-size: .84em;
+  line-height: 1.1;
+}
+.dtd-doc-sign-body small {
+  min-height: 1.55em;
+  line-height: 1.1;
+}
+.dtd-doc-sign-line {
+  padding-top: 1.05em;
+  margin-top: auto;
+}
+.dtd-doc-sign-date {
+  margin-top: .18em;
+}
+.dtd-doc-sign-footer {
+  gap: .45em;
+  padding-top: .12em;
+  margin-top: auto;
+  font-size: .92em;
+}
+.dtd-doc-sign-customer .dtd-doc-sign-body {
+  padding-bottom: .22em;
+}
+.dtd-doc-sign-customer .dtd-doc-sign-line {
+  gap: .4em;
+  padding-top: 1.2em;
+}
+.dtd-doc-sign-customer .dtd-doc-sign-date,
+.dtd-doc-sign-customer .dtd-doc-sign-footer {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* ==========================================================
+   CLOSED TABLE GRID LINES
+   Add clear closing borders between header/data sections and
+   throughout table rows so the table appears fully enclosed.
+   ========================================================== */
+.dtd-doc-meta-table tbody td {
+  border-bottom: 1px solid var(--doc-blue);
+}
+.dtd-doc-meta-table tbody tr:last-child td {
+  border-bottom: 1px solid var(--doc-blue);
+}
+.dtd-doc-items-table thead th {
+  border-bottom: 1px solid var(--doc-blue);
+}
+.dtd-doc-items-table tbody td {
+  border-bottom: 1px solid var(--doc-blue);
+}
+.dtd-doc-items-table tbody tr:last-child td {
+  border-bottom: 1px solid var(--doc-blue);
+}
+
+/* ==========================================================
+   REMOVE HORIZONTAL LINES INSIDE ITEM BODY
+   Keep the table outer frame and header divider, but remove
+   horizontal row separators in the product-detail area to match
+   the printed form reference.
+   ========================================================== */
+.dtd-doc-items-table tbody td,
+.dtd-doc-items-table tbody tr:last-child td {
+  border-bottom: 0 !important;
+}
+.dtd-doc-items-table tbody tr.empty td,
+.dtd-doc-items-table tbody tr.dtd-data-row td {
+  border-bottom: 0 !important;
+}
+
+/* Optional document dates */
+.dtd-optional-date-field > span small {
+  color: #6b7280;
+  font-weight: 500;
+}
+.dtd-optional-date-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+.dtd-optional-date-control input { min-width: 0; }
+.dtd-clear-date {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #bfd2e8;
+  border-radius: 8px;
+  background: #f7fbff;
+  color: var(--dtd-blue);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.dtd-clear-date:hover {
+  background: #eaf4ff;
+  border-color: var(--dtd-blue);
+}
+.dtd-optional-date-hint {
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1.35;
+}
+@media (max-width: 760px) {
+  .dtd-optional-date-control { grid-template-columns: 1fr; }
+}
+
+
+/* =====================================================================
+   PRINTED FORM MATCH REFINEMENT
+   Make the delivery/tax document visually closer to the supplied sample.
+   - ignore the red pre-printed book/no marks
+   - use tighter typography and lighter form styling similar to the paper form
+   ===================================================================== */
+.dtd-document-page {
+  --doc-blue: #0c447c;
+  padding: 1.35% 1.55% 1.28%;
+  background: #fff;
+  color: var(--doc-blue);
+  border: 0;
+  box-shadow: none;
+  font-family: "Leelawadee UI", Tahoma, "Noto Sans Thai", Arial, sans-serif;
+  font-size: clamp(6px, .69vw, 10.6px);
+  line-height: 1.16;
+}
+.dtd-document-page * { box-sizing: border-box; }
+.dtd-doc-header {
+  grid-template-columns: 1.54fr .78fr;
+  gap: 1.15%;
+  min-height: 11.4%;
+}
+.dtd-doc-company { gap: 1.6%; }
+.dtd-doc-company img {
+  width: 11.4%;
+  max-width: 76px;
+  margin-top: .2em;
+}
+.dtd-doc-company-th {
+  font-size: 1.72em;
+  line-height: 1.03;
+  font-weight: 700;
+  padding-bottom: .18em;
+  border-bottom: 1px solid var(--doc-blue);
+  letter-spacing: -.025em;
+}
+.dtd-doc-company-en {
+  font-size: 1.16em;
+  line-height: 1.04;
+  font-weight: 700;
+  margin: .32em 0 .52em;
+  letter-spacing: -.02em;
+  font-family: "Times New Roman", Georgia, serif;
+  font-style: italic;
+}
+.dtd-doc-contact {
+  font-size: .95em;
+  line-height: 1.08;
+  margin: .13em 0;
+}
+.dtd-doc-tax {
+  font-size: 1.02em;
+  line-height: 1.08;
+  margin-top: .24em;
+}
+.dtd-doc-title {
+  padding-right: .2em;
+  text-align: center;
+  font-family: "Leelawadee UI", Tahoma, "Noto Sans Thai", Arial, sans-serif;
+}
+.dtd-doc-no {
+  min-height: 1.15em;
+  font-size: .98em;
+  line-height: 1.05;
+  margin-bottom: .12em;
+}
+.dtd-doc-no strong {
+  font-size: 1.12em;
+  font-weight: 700;
+}
+.dtd-doc-title h3 {
+  font-size: 1.42em;
+  line-height: 1.03;
+  margin: .22em 0;
+  font-weight: 700;
+}
+.dtd-doc-title h2 {
+  font-size: 1.28em;
+  line-height: 1.08;
+  margin: .2em 0;
+  font-weight: 700;
+}
+.dtd-doc-title > div:not(.dtd-doc-no) {
+  font-size: .98em;
+  line-height: 1.08;
+  font-family: "Times New Roman", Georgia, serif;
+  font-weight: 700;
+}
+.dtd-doc-title h4 {
+  font-size: 1.14em;
+  line-height: 1.08;
+  margin: .26em 0 .12em;
+  font-weight: 700;
+}
+.dtd-doc-title small {
+  font-size: .92em;
+  line-height: 1.08;
+}
+.dtd-doc-party-grid {
+  grid-template-columns: 1.74fr .98fr;
+  gap: 1.1%;
+  height: 12.05%;
+  margin-bottom: .72%;
+}
+.dtd-doc-party-box {
+  border: 1.05px solid var(--doc-blue);
+  border-radius: .82em;
+  padding: 1.02% 1.12%;
+  font-size: .98em;
+  line-height: 1.18;
+}
+.dtd-doc-party-box > div { margin-bottom: .48em; }
+.dtd-doc-party-bottom {
+  bottom: .55em;
+  left: 1.05%;
+  right: 1.05%;
+}
+.dtd-doc-meta-table {
+  height: 7.62%;
+  margin-bottom: .76%;
+}
+.dtd-doc-meta-table th,
+.dtd-doc-meta-table td {
+  border-right: 1.05px solid var(--doc-blue);
+  border-bottom: 1.05px solid var(--doc-blue);
+  padding: .34em .2em;
+}
+.dtd-doc-meta-table th:first-child,
+.dtd-doc-meta-table td:first-child { border-left: 1.05px solid var(--doc-blue); }
+.dtd-doc-meta-table thead th {
+  border-top: 1.05px solid var(--doc-blue);
+  border-radius: .52em .52em 0 0;
+  font-size: .97em;
+  line-height: 1.02;
+  font-weight: 700;
+}
+.dtd-doc-meta-table th span,
+.dtd-doc-items-table th span {
+  font-size: .83em;
+  line-height: 1.02;
+  font-family: "Times New Roman", Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+}
+.dtd-doc-meta-table td {
+  height: 3.08em;
+  font-size: .98em;
+  line-height: 1.1;
+  vertical-align: middle;
+}
+.dtd-doc-items-section {
+  height: 47.35%;
+  border: 1.05px solid var(--doc-blue);
+  border-radius: .62em;
+}
+.dtd-doc-items-table {
+  height: 76.8%;
+}
+.dtd-doc-items-table th,
+.dtd-doc-items-table td {
+  border-right: 1.05px solid var(--doc-blue);
+  padding: .38em .28em;
+}
+.dtd-doc-items-table th {
+  height: 4.02em;
+  font-size: .99em;
+  line-height: 1.03;
+  font-weight: 700;
+  border-bottom: 1.05px solid var(--doc-blue);
+}
+.dtd-doc-items-table tbody tr,
+.dtd-doc-items-table tbody tr.empty { height: 2.95em; }
+.dtd-doc-items-table td {
+  font-size: 1em;
+  line-height: 1.2;
+  vertical-align: top;
+}
+.dtd-doc-desc { line-height: 1.2; }
+.dtd-doc-watermark {
+  width: 30%;
+  opacity: .085;
+  left: 39%;
+  top: 32%;
+}
+.dtd-doc-bottom-area {
+  height: 22.45%;
+  grid-template-columns: 2.05fr .95fr;
+}
+.dtd-doc-payment-note {
+  padding: 1.12% 1.2% 1.05%;
+  font-size: .81em;
+  line-height: 1.18;
+  gap: .26em;
+}
+.dtd-doc-baht {
+  height: 3.72em;
+  border: 1.05px solid var(--doc-blue);
+  border-radius: .78em;
+  grid-template-columns: 11% 1fr;
+  padding: 0 1.25%;
+  margin-top: .32em;
+}
+.dtd-doc-baht b {
+  line-height: 1.05;
+  font-weight: 700;
+}
+.dtd-doc-baht strong {
+  font-size: 1.35em;
+  font-weight: 700;
+}
+.dtd-doc-totals {
+  gap: .46em;
+  padding: .72em .62em .72em .48em;
+}
+.dtd-doc-totals > div {
+  border: 1.05px solid var(--doc-blue);
+  border-radius: .68em;
+}
+.dtd-doc-totals span {
+  font-size: .98em;
+  line-height: 1.06;
+  border-right: 1.05px solid var(--doc-blue);
+  font-weight: 700;
+}
+.dtd-doc-totals strong {
+  font-size: 1.02em;
+  padding-right: .58em;
+  font-weight: 700;
+}
+.dtd-doc-terms {
+  height: 5.08%;
+  grid-template-columns: 65% 35%;
+  font-size: .74em;
+  line-height: 1.22;
+}
+.dtd-doc-officer-label {
+  padding-bottom: .1em;
+  font-size: .98em;
+}
+.dtd-doc-signatures {
+  height: 12.85%;
+  grid-template-columns: 1.75fr repeat(4, 1fr);
+}
+.dtd-doc-sign-box {
+  border: 1.05px solid var(--doc-blue);
+  border-right: 0;
+  grid-template-rows: 31% 69%;
+}
+.dtd-doc-sign-box:first-child { border-radius: .68em 0 0 .68em; }
+.dtd-doc-sign-box:last-child {
+  border-right: 1.05px solid var(--doc-blue);
+  border-radius: 0 .68em .68em 0;
+}
+.dtd-doc-sign-head {
+  border-bottom: 1.05px solid var(--doc-blue);
+  font-size: .88em;
+  line-height: 1.02;
+  font-weight: 700;
+}
+.dtd-doc-sign-head span {
+  font-family: "Times New Roman", Georgia, serif;
+  font-style: italic;
+}
+.dtd-doc-sign-body {
+  padding: .38em .44em .34em;
+  font-size: .74em;
+  line-height: 1.14;
+}
+.dtd-doc-sign-body small {
+  min-height: 2.2em;
+  line-height: 1.18;
+}
+.dtd-doc-sign-line {
+  margin-top: auto;
+  letter-spacing: -.06em;
+}
+.dtd-doc-sign-date {
+  margin-top: .15em;
+  font-size: .94em;
+}
+.dtd-doc-sign-footer {
+  margin-top: .1em;
+  font-size: .98em;
+}
+.dtd-pdf-stage .dtd-document-page,
+.dtd-document-page.dtd-pdf-page {
+  font-size: 10.4px;
+}
+#dtd-live-preview .dtd-document-page {
+  box-shadow: 0 12px 30px rgba(15, 42, 70, .16);
+}
+
+
+/* ==========================================================
+   INLINE CUSTOMER SIGNATURE + DATE LAYOUT
+   Match the hand-drawn reference:
+   [signature line] ผู้รับสินค้า/Receiver   __/__/__ วันที่/Date
+   ========================================================== */
+.dtd-doc-sign-customer .dtd-doc-sign-body {
+  justify-content: flex-start;
+}
+.dtd-customer-sign-row {
+  display: grid;
+  grid-template-columns: minmax(4.5em, 1fr) auto minmax(4.8em, .72fr) auto;
+  align-items: end;
+  column-gap: .46em;
+  width: 100%;
+  margin-top: auto;
+  padding: 0 .2em .12em;
+  white-space: nowrap;
+}
+.dtd-customer-write-line {
+  display: block;
+  min-width: 0;
+  height: 1.05em;
+  border-bottom: 1px solid var(--doc-blue);
+}
+.dtd-customer-sign-label,
+.dtd-customer-date-label {
+  font-weight: 600;
+  line-height: 1;
+}
+.dtd-customer-date-line {
+  display: block;
+  min-width: 4.8em;
+  text-align: center;
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+.dtd-customer-date-label {
+  text-align: right;
+}
+
+/* ==========================================================
+   DELIVERY/TAX PDF BLUE-TEXT READABILITY
+   Increase only the small blue/static form text so it is closer
+   to the black entered values, while preserving the A4 layout.
+   ========================================================== */
+.dtd-pdf-stage .dtd-document-page,
+.dtd-document-page.dtd-pdf-page {
+  font-size: 10.4px;
+}
+
+/* Company header and document title */
+.dtd-document-page .dtd-doc-company-th {
+  font-size: 1.45em;
+  line-height: 1.08;
+  padding-bottom: .14em;
+  white-space: nowrap;
+}
+.dtd-document-page .dtd-doc-company-en {
+  font-size: 1.23em;
+  line-height: 1.02;
+  margin: .22em 0 .38em;
+}
+.dtd-document-page .dtd-doc-contact {
+  font-size: 1.20em;
+  line-height: 1.10;
+  margin: .08em 0;
+}
+.dtd-document-page .dtd-doc-tax {
+  font-size: 1.08em;
+  line-height: 1.04;
+  margin-top: .16em;
+}
+.dtd-document-page .dtd-doc-no {
+  font-size: 1.04em;
+  line-height: 1.02;
+}
+.dtd-document-page .dtd-doc-title h3 {
+  font-size: 1.50em;
+  line-height: 1.01;
+  margin: .16em 0;
+}
+.dtd-document-page .dtd-doc-title h2 {
+  font-size: 1.35em;
+  line-height: 1.03;
+  margin: .14em 0;
+}
+.dtd-document-page .dtd-doc-title > div:not(.dtd-doc-no) {
+  font-size: 1.03em;
+  line-height: 1.02;
+}
+.dtd-document-page .dtd-doc-title h4 {
+  font-size: 1.20em;
+  line-height: 1.03;
+  margin: .17em 0 .06em;
+}
+.dtd-document-page .dtd-doc-title small {
+  font-size: .98em;
+  line-height: 1.02;
+}
+
+/* Customer, shipping and tax-detail boxes */
+.dtd-document-page .dtd-doc-party-box {
+  font-size: 1.30em;
+  line-height: 1.16;
+  padding-top: .88%;
+  padding-bottom: .88%;
+}
+.dtd-document-page .dtd-doc-party-box > div {
+  margin-bottom: .34em;
+}
+
+/* Top metadata table and product-table headings */
+.dtd-document-page .dtd-doc-meta-table thead th {
+  font-size: 1.04em;
+  line-height: 1.00;
+  padding-top: .28em;
+  padding-bottom: .28em;
+}
+.dtd-document-page .dtd-doc-meta-table th span,
+.dtd-document-page .dtd-doc-items-table th span {
+  font-size: .88em;
+  line-height: 1.00;
+}
+.dtd-document-page .dtd-doc-meta-table thead th:nth-child(1) span,
+.dtd-document-page .dtd-doc-items-table thead th:nth-child(1) span {
+  font-size: .68em;
+  letter-spacing: -.02em;
+  white-space: normal;
+  word-break: break-word;
+  display: block;
+}
+.dtd-document-page .dtd-doc-items-table th {
+  font-size: 1.05em;
+  line-height: 1.01;
+  padding-top: .28em;
+  padding-bottom: .28em;
+}
+
+/* Totals, notes and signatures */
+.dtd-document-page .dtd-doc-payment-note {
+  font-size: .86em;
+  line-height: 1.11;
+  gap: .18em;
+}
+.dtd-document-page .dtd-doc-totals span {
+  font-size: 1.04em;
+  line-height: 1.01;
+}
+.dtd-document-page .dtd-doc-terms {
+  font-size: .79em;
+  line-height: 1.12;
+}
+.dtd-document-page .dtd-doc-officer-label {
+  font-size: 1.04em;
+  line-height: 1.02;
+}
+.dtd-document-page .dtd-doc-sign-head {
+  font-size: .94em;
+  line-height: 1.00;
+}
+.dtd-document-page .dtd-doc-sign-body {
+  font-size: .78em;
+  line-height: 1.08;
+  padding-top: .30em;
+  padding-bottom: .24em;
+}
+.dtd-document-page .dtd-doc-sign-body small {
+  line-height: 1.08;
+}
+.dtd-document-page .dtd-doc-sign-footer {
+  font-size: 1.03em;
+}
+
+
+/* =====================================================================
+   A4 PRINT FONT ENLARGEMENT
+   Slightly increase printable text size for easier reading on paper,
+   while keeping the overall A4 layout intact.
+   ===================================================================== */
+.dtd-pdf-stage .dtd-document-page,
+.dtd-document-page.dtd-pdf-page {
+  font-size: 10.9px;
+}
+
+/* Main readable content */
+.dtd-document-page .dtd-doc-contact,
+.dtd-document-page .dtd-doc-tax,
+.dtd-document-page .dtd-doc-no,
+.dtd-document-page .dtd-doc-title > div:not(.dtd-doc-no),
+.dtd-document-page .dtd-doc-party-box,
+.dtd-document-page .dtd-doc-meta-table tbody td,
+.dtd-document-page .dtd-doc-items-table tbody td,
+.dtd-document-page .dtd-doc-baht {
+  font-size: 1.08em;
+  line-height: 1.12;
+}
+
+/* Headings and labels */
+.dtd-document-page .dtd-doc-meta-table thead th,
+.dtd-document-page .dtd-doc-items-table thead th,
+.dtd-document-page .dtd-doc-totals span,
+.dtd-document-page .dtd-doc-officer-label {
+  font-size: 1.08em;
+  line-height: 1.02;
+}
+
+.dtd-document-page .dtd-doc-meta-table th span,
+.dtd-document-page .dtd-doc-items-table th span {
+  font-size: .9em;
+}
+
+/* Amounts and totals */
+.dtd-document-page .dtd-doc-baht strong {
+  font-size: 1.42em;
+}
+.dtd-document-page .dtd-doc-totals strong {
+  font-size: 1.08em;
+}
+
+/* Notes, conditions, and signatures */
+.dtd-document-page .dtd-doc-payment-note,
+.dtd-document-page .dtd-doc-terms {
+  font-size: .84em;
+  line-height: 1.14;
+}
+.dtd-document-page .dtd-doc-sign-head {
+  font-size: .98em;
+}
+.dtd-document-page .dtd-doc-sign-body,
+.dtd-document-page .dtd-doc-sign-body small {
+  font-size: .82em;
+  line-height: 1.10;
+}
+.dtd-document-page .dtd-doc-sign-date {
+  font-size: .98em;
+}
+.dtd-document-page .dtd-doc-sign-footer,
+.dtd-document-page .dtd-customer-sign-label,
+.dtd-document-page .dtd-customer-date-label {
+  font-size: 1em;
+}
+
+/* Keep the enlarged text within the same printable footprint */
+.dtd-document-page .dtd-doc-meta-table th,
+.dtd-document-page .dtd-doc-meta-table td,
+.dtd-document-page .dtd-doc-items-table th,
+.dtd-document-page .dtd-doc-items-table td {
+  padding-top: .24em;
+  padding-bottom: .24em;
+}
+.dtd-document-page .dtd-doc-sign-body {
+  padding-top: .24em;
+  padding-bottom: .2em;
+}
+
+
+/* Linked document selector filters */
+.dtd-linked-selector-head,.dtd-linked-context{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;padding:10px 12px;background:linear-gradient(120deg,#f5f9ff,#eef5ff);border:1px solid #d7e5f7;border-radius:10px}
+.dtd-linked-selector-head>div{display:flex;flex-direction:column;gap:2px} .dtd-linked-selector-head small,.dtd-linked-context small{font-size:10px;color:#64748b}
+.dtd-linked-branch-badge,.dtd-linked-context b{white-space:nowrap;background:#fff;color:var(--dtd-blue-dark);border:1px solid #bfd4ef;border-radius:999px;padding:5px 10px;font-size:11px}
+.dtd-linked-filter-row{display:grid;grid-template-columns:110px 130px minmax(180px,1fr) auto;gap:8px;align-items:end;margin-bottom:8px}
+.dtd-linked-filter-row label{display:flex;flex-direction:column;gap:4px} .dtd-linked-filter-row label span{font-size:10px;font-weight:700;color:#64748b}
+.dtd-linked-filter-row input,.dtd-linked-filter-row select{height:36px;border:1px solid #cbd5e1;border-radius:8px;padding:0 9px;font:inherit;font-size:12px;background:#fff}
+.dtd-linked-context{flex-wrap:wrap;justify-content:flex-start} .dtd-linked-context span{font-size:11px;color:#64748b;font-weight:700}
+.dtd-linked-filter-grid{align-items:end}
+@media(max-width:760px){.dtd-linked-filter-row{grid-template-columns:1fr 1fr}.dtd-linked-search{grid-column:1/-1}}
+
+
+/* Compatibility additions kept from the newer data version */
+.dtd-dual-year-hint{display:block;margin-top:4px;color:#56708b;font-size:10px;font-weight:700}
+.dtd-source-evidence-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px}
+.dtd-source-evidence-item{min-width:0;padding:8px;border:1px solid #cfe0f3;border-radius:10px;background:#f8fbff;text-align:center}
+.dtd-source-evidence-item img{width:100%;height:92px;object-fit:cover;border-radius:7px;border:1px solid #d6e3ef;background:#fff}
+.dtd-source-evidence-icon{height:92px;display:grid;place-items:center;border-radius:7px;background:#eaf4ff;color:#0868c9;font-weight:900;font-size:20px}
+.dtd-source-evidence-name{margin-top:6px;font-size:10px;font-weight:700;color:#334155;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dtd-source-evidence-item a{display:inline-block;margin-top:4px;font-size:10px;color:#0868c9;font-weight:800;text-decoration:none}
+.dtd-source-evidence-item small,.dtd-source-evidence-empty{font-size:10px;color:#718096}
+.dtd-source-evidence-empty{padding:12px;border:1px dashed #cbd9e8;border-radius:9px;background:#fbfdff;text-align:center}
+
+/* Formal / bank-style corners — sharp edges to match official tax-form conventions */
+.dtd-doc-party-box,
+.dtd-doc-meta-table thead th,
+.dtd-doc-items-section,
+.dtd-doc-baht,
+.dtd-doc-totals > div,
+.dtd-doc-sign-box:first-child,
+.dtd-doc-sign-box:last-child {
+  border-radius: 2px;
+}
+
+
+/* User-friendly editor refinement */
+.dtd-form-section{transition:background .15s ease}
+.dtd-form-section:hover{background:rgba(248,251,255,.7)}
+.dtd-field:focus-within{padding:6px;border-radius:10px;background:#f8fbff;box-shadow:0 4px 12px rgba(8,104,201,.06)}
+.dtd-field input,.dtd-field select,.dtd-field textarea{min-height:42px;border-width:1.5px}
+.dtd-section-title{font-size:15px}
+.dtd-summary-box{min-height:48px}
+@media(max-width:760px){.dtd-grid-2,.dtd-grid-3,.dtd-grid-4{grid-template-columns:1fr!important}.dtd-span-2{grid-column:auto!important}}

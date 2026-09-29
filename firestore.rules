@@ -1,0 +1,224 @@
+rules_version = '2';
+
+// =====================================================================
+// Firestore Security Rules — Multi-tenant SaaS ERP
+// ---------------------------------------------------------------------
+// IMPORTANT MODEL
+// users/{uid}                              -> bootstrap: tenantId, active
+// tenants/{tenantId}                       -> company + subscription
+// tenants/{tenantId}/members/{uid}         -> role + allowedBranches
+// tenants/{tenantId}/branches/{branchId}   -> Branch Master
+// tenants/{tenantId}/quotes/{docId}        -> business data
+// ... same pattern for invoices, receipts, products, etc.
+//
+// The client never gets permission to read another tenant path. Hiding UI is
+// not considered security; these rules are the enforcement layer.
+// =====================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function bootstrap() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function belongsToTenant(tenantId) {
+      return signedIn()
+        && bootstrap().data.active == true
+        && bootstrap().data.tenantId == tenantId;
+    }
+
+    function memberRef(tenantId) {
+      return get(/databases/$(database)/documents/tenants/$(tenantId)/members/$(request.auth.uid));
+    }
+
+    function tenantRef(tenantId) {
+      return get(/databases/$(database)/documents/tenants/$(tenantId));
+    }
+
+    function activeMember(tenantId) {
+      return belongsToTenant(tenantId)
+        && exists(/databases/$(database)/documents/tenants/$(tenantId)/members/$(request.auth.uid))
+        && memberRef(tenantId).data.active == true;
+    }
+
+    function role(tenantId) {
+      return memberRef(tenantId).data.role;
+    }
+
+    function tenantWideRole(tenantId) {
+      return activeMember(tenantId)
+        && role(tenantId) in ['owner', 'admin'];
+    }
+
+    function managerRole(tenantId) {
+      return activeMember(tenantId)
+        && role(tenantId) in ['owner', 'admin', 'manager'];
+    }
+
+    function editorRole(tenantId) {
+      return activeMember(tenantId)
+        && role(tenantId) in ['owner', 'admin', 'manager', 'sales', 'accounting', 'warehouse', 'purchasing'];
+    }
+
+    function activeBranch(tenantId, branchId) {
+      return branchId is string
+        && exists(/databases/$(database)/documents/tenants/$(tenantId)/branches/$(branchId))
+        && get(/databases/$(database)/documents/tenants/$(tenantId)/branches/$(branchId)).data.active == true;
+    }
+
+    function branchAllowed(tenantId, branchId) {
+      return activeMember(tenantId)
+        && activeBranch(tenantId, branchId)
+        && (
+          tenantWideRole(tenantId)
+          || '*' in memberRef(tenantId).data.allowedBranches
+          || branchId in memberRef(tenantId).data.allowedBranches
+        );
+    }
+
+    function trialStillValid(tenantId) {
+      return tenantRef(tenantId).data.subscriptionStatus == 'trial'
+        && tenantRef(tenantId).data.trialExpiresAt is timestamp
+        && tenantRef(tenantId).data.trialExpiresAt > request.time;
+    }
+
+    function subscriptionCanWrite(tenantId) {
+      return activeMember(tenantId)
+        && tenantRef(tenantId).data.active == true
+        && (
+          tenantRef(tenantId).data.subscriptionStatus in ['active', 'grace_period']
+          || trialStillValid(tenantId)
+        );
+    }
+
+    function validTenantPayload(tenantId) {
+      return request.resource.data.tenantId == tenantId
+        && request.resource.data.companyId == tenantId;
+    }
+
+    function canCreateBranchRecord(tenantId) {
+      return subscriptionCanWrite(tenantId)
+        && validTenantPayload(tenantId)
+        && branchAllowed(tenantId, request.resource.data.branch);
+    }
+
+    function canUpdateBranchRecord(tenantId) {
+      return subscriptionCanWrite(tenantId)
+        && resource.data.tenantId == tenantId
+        && validTenantPayload(tenantId)
+        && request.resource.data.branch == resource.data.branch
+        && branchAllowed(tenantId, resource.data.branch);
+    }
+
+    function canReadBranchRecord(tenantId) {
+      return activeMember(tenantId)
+        && resource.data.tenantId == tenantId
+        && (
+          tenantWideRole(tenantId)
+          || branchAllowed(tenantId, resource.data.branch)
+        );
+    }
+
+    // Global user bootstrap: a user may only read their own immutable mapping.
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create, update, delete: if false;
+    }
+
+    match /tenants/{tenantId} {
+      allow read: if activeMember(tenantId);
+      // Company/subscription settings are changed only through Admin SDK / Vercel API.
+      allow create, update, delete: if false;
+
+      match /members/{uid} {
+        allow read: if activeMember(tenantId)
+          && (request.auth.uid == uid || managerRole(tenantId));
+        allow create, update, delete: if false;
+      }
+
+      match /branches/{branchId} {
+        allow read: if activeMember(tenantId);
+        // Branch creation must go through a trusted server so branchLimit cannot
+        // be bypassed from DevTools.
+        allow create, update, delete: if false;
+      }
+
+      // Tenant-level settings / Customer-Supplier-Product Master snapshot.
+      match /settings/{docId} {
+        allow read: if activeMember(tenantId);
+        allow create, update: if subscriptionCanWrite(tenantId)
+          && request.resource.data.tenantId == tenantId
+          && (docId != 'businessRules' || managerRole(tenantId));
+        allow delete: if managerRole(tenantId);
+      }
+
+      // Customer/Supplier contacts and Product Master are individual documents,
+      // not a single large Firestore document, so CSV imports can scale safely.
+      match /contacts/{docId} {
+        allow read: if activeMember(tenantId);
+        allow create, update: if subscriptionCanWrite(tenantId)
+          && editorRole(tenantId)
+          && request.resource.data.tenantId == tenantId
+          && request.resource.data.companyId == tenantId;
+        allow delete: if subscriptionCanWrite(tenantId) && editorRole(tenantId);
+      }
+
+      match /products/{docId} {
+        allow read: if activeMember(tenantId);
+        allow create, update: if subscriptionCanWrite(tenantId)
+          && editorRole(tenantId)
+          && request.resource.data.tenantId == tenantId
+          && request.resource.data.companyId == tenantId;
+        allow delete: if subscriptionCanWrite(tenantId) && editorRole(tenantId);
+      }
+
+      // Normal business data. The branch field is immutable after creation.
+      match /{collectionName}/{docId} {
+        allow read: if collectionName in [
+          'quotes', 'invoices', 'receipts', 'issuedInvoices', 'issuedReceipts',
+          'productions', 'expenses', 'purchaseOrders', 'goodsReceipts', 'salesArchive'
+        ] && canReadBranchRecord(tenantId);
+
+        allow create: if collectionName in [
+          'quotes', 'invoices', 'receipts', 'issuedInvoices', 'issuedReceipts',
+          'productions', 'expenses', 'purchaseOrders', 'goodsReceipts', 'salesArchive'
+        ] && canCreateBranchRecord(tenantId);
+
+        allow update: if collectionName in [
+          'quotes', 'invoices', 'receipts', 'issuedInvoices', 'issuedReceipts',
+          'productions', 'expenses', 'purchaseOrders', 'goodsReceipts', 'salesArchive'
+        ] && canUpdateBranchRecord(tenantId);
+
+        // Production-like policy: deletion is restricted. Prefer Void/Recycle Bin.
+        allow delete: if collectionName in [
+          'quotes', 'invoices', 'receipts', 'issuedInvoices', 'issuedReceipts',
+          'productions', 'expenses', 'purchaseOrders', 'goodsReceipts', 'salesArchive'
+        ] && managerRole(tenantId) && canReadBranchRecord(tenantId);
+      }
+
+      // Stock ledger is append-only for clients.
+      match /inventoryMovements/{docId} {
+        allow read: if canReadBranchRecord(tenantId);
+        allow create: if canCreateBranchRecord(tenantId);
+        allow update, delete: if false;
+      }
+
+      // Audit log is append-only and cannot be edited/deleted from the browser.
+      match /auditLogs/{docId} {
+        allow read: if managerRole(tenantId) && canReadBranchRecord(tenantId);
+        allow create: if canCreateBranchRecord(tenantId);
+        allow update, delete: if false;
+      }
+    }
+
+    // Deny legacy top-level business collections and everything not explicitly allowed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

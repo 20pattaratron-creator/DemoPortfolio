@@ -1,0 +1,2026 @@
+:root {
+  --rcp-blue: #0868c9;
+  --rcp-blue-dark: #064c9b;
+  --rcp-blue-soft: #eef7ff;
+  --rcp-border: #d8e2ee;
+  --rcp-text: #1f2a37;
+}
+
+.rcp-nav-item { color: var(--rcp-blue-dark); }
+.rcp-page-shell { min-width: 0; color: var(--rcp-text); }
+.rcp-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fff;
+  border: 1px solid var(--rcp-border);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(15, 73, 134, .06);
+}
+.rcp-brand-title { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.rcp-brand-title img { width: 58px; height: 58px; object-fit: contain; }
+.rcp-brand-title h2 { margin: 2px 0 0; font-size: 22px; color: #111827; }
+.rcp-company-mini { color: var(--rcp-blue-dark); font-size: 13px; font-weight: 700; }
+.rcp-toolbar-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.rcp-btn {
+  border: 1px solid var(--rcp-blue);
+  color: var(--rcp-blue-dark);
+  background: #fff;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.rcp-btn:hover { background: var(--rcp-blue-soft); }
+.rcp-btn:disabled { opacity: .55; cursor: wait; }
+.rcp-btn-primary { background: var(--rcp-blue); color: #fff; }
+.rcp-btn-primary:hover { background: var(--rcp-blue-dark); }
+
+.rcp-workspace {
+  display: grid;
+  grid-template-columns: minmax(560px, 1.05fr) minmax(520px, .95fr);
+  gap: 12px;
+  align-items: start;
+}
+.rcp-editor-card, .rcp-preview-card {
+  background: #fff;
+  border: 1px solid var(--rcp-border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(15, 73, 134, .06);
+}
+.rcp-form-section { padding: 14px 16px; border-bottom: 1px solid #e7edf4; }
+.rcp-form-section:last-child { border-bottom: 0; }
+.rcp-section-title { display: flex; align-items: center; gap: 8px; color: var(--rcp-blue-dark); font-weight: 800; font-size: 14px; margin-bottom: 12px; }
+.rcp-section-title span { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; background: var(--rcp-blue); font-size: 12px; }
+.rcp-grid { display: grid; gap: 10px 12px; }
+.rcp-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.rcp-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.rcp-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.rcp-span-2 { grid-column: span 2; }
+/* Force optional document dates onto a new row for easier data entry */
+.rcp-grid-line-break{grid-column:1/-1;height:0;min-height:0;margin:0;padding:0;border:0;overflow:hidden}
+
+.rcp-full-field { grid-column: 1 / -1; }
+.rcp-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.rcp-field > span { font-size: 12px; color: #374151; font-weight: 700; }
+.rcp-field input, .rcp-field select, .rcp-field textarea {
+  width: 100%; box-sizing: border-box; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: #111827; padding: 8px 10px; font: inherit; font-size: 13px; outline: none;
+}
+.rcp-field textarea { min-height: 72px; resize: vertical; }
+.rcp-field input:focus, .rcp-field select:focus, .rcp-field textarea:focus { border-color: var(--rcp-blue); box-shadow: 0 0 0 3px rgba(8, 104, 201, .12); }
+.rcp-company-settings { margin-top: 12px; border: 1px dashed #b8cbe0; border-radius: 9px; background: #f8fbff; }
+.rcp-company-settings summary { cursor: pointer; padding: 10px 12px; color: var(--rcp-blue-dark); font-weight: 700; font-size: 12px; }
+.rcp-company-settings[open] .rcp-grid { padding: 0 12px 12px; }
+
+.rcp-branch-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.rcp-branch-option { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; align-items: center; column-gap: 8px; border: 1px solid #bfd0e3; border-radius: 9px; padding: 9px 10px; background: #fff; color: #334155; cursor: pointer; text-align: left; font: inherit; }
+.rcp-branch-option:hover { background: #f4f9ff; border-color: var(--rcp-blue); }
+.rcp-branch-option.active { border-color: var(--rcp-blue); background: var(--rcp-blue-soft); box-shadow: 0 0 0 2px rgba(8,104,201,.1); color: var(--rcp-blue-dark); }
+.rcp-branch-option:disabled { opacity: .42; cursor: not-allowed; }
+.rcp-branch-option b { font-size: 13px; }
+.rcp-branch-option small { grid-column: 2; font-size: 10px; color: #64748b; }
+.rcp-branch-dot { grid-row: 1 / span 2; width: 11px; height: 11px; border-radius: 50%; background: var(--rcp-blue); }
+.rcp-branch-dot.ub { background: #7c4cc4; }
+.rcp-branch-lock-note, .rcp-vat-help { color: #64748b; font-size: 10px; line-height: 1.35; }
+.rcp-items-wrap { overflow-x: auto; border: 1px solid #cfdbea; border-radius: 8px; }
+.rcp-items-editor { width: 100%; min-width: 790px; border-collapse: collapse; font-size: 12px; }
+.rcp-items-editor th { background: linear-gradient(180deg, #1484d7, #0870c4); color: #fff; padding: 8px 6px; white-space: nowrap; }
+.rcp-items-editor td { border-top: 1px solid #dbe5ef; padding: 4px; text-align: center; }
+.rcp-items-editor input, .rcp-items-editor textarea { width: 100%; box-sizing: border-box; border: 1px solid transparent; border-radius: 4px; padding: 7px 6px; font: inherit; background: #fff; }
+.rcp-items-editor textarea { min-height: 50px; resize: vertical; line-height: 1.35; }
+.rcp-items-editor input:focus, .rcp-items-editor textarea:focus { border-color: var(--rcp-blue); outline: none; background: #f7fbff; }
+.rcp-item-amount { min-width: 92px; font-weight: 700; text-align: right !important; }
+.rcp-remove-item { border: 0; background: transparent; cursor: pointer; padding: 5px; }
+.rcp-add-item { margin-top: 10px; border: 1px solid var(--rcp-blue); color: var(--rcp-blue); background: #fff; border-radius: 7px; padding: 7px 12px; font-weight: 700; cursor: pointer; }
+.rcp-item-limit { margin-top: 7px; color: #718096; font-size: 11px; }
+.rcp-summary-grid { display: grid; grid-template-columns: 1.1fr repeat(3, 1fr); gap: 10px; align-items: end; }
+.rcp-summary-box { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; background: #f8fafc; border: 1px solid #d8e2ee; border-radius: 8px; padding: 8px 10px; min-height: 40px; }
+.rcp-summary-box span { font-size: 11px; color: #475569; }
+.rcp-summary-box strong { font-size: 14px; text-align: right; }
+.rcp-summary-box em { font-size: 11px; color: #64748b; font-style: normal; }
+.rcp-summary-grand { background: #eaf5ff; border-color: #b9daf8; }
+.rcp-summary-grand strong { color: var(--rcp-blue); font-size: 16px; }
+.rcp-template-upload { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border: 1.5px dashed #5ba6e7; border-radius: 10px; min-height: 110px; cursor: pointer; color: var(--rcp-blue-dark); background: #fbfdff; }
+.rcp-template-upload input { display: none; }
+.rcp-template-upload strong { font-size: 14px; }
+.rcp-template-upload small { color: #64748b; margin-top: 3px; font-size: 11px; }
+.rcp-upload-icon { font-size: 31px; line-height: 1; color: var(--rcp-blue); }
+.rcp-template-status { margin-top: 8px; font-size: 12px; color: #475569; }
+.rcp-template-status button { border: 0; background: transparent; color: var(--rcp-blue); cursor: pointer; text-decoration: underline; }
+
+.rcp-preview-card { position: sticky; top: 8px; padding: 12px; }
+.rcp-preview-heading { font-weight: 800; font-size: 13px; margin-bottom: 9px; }
+.rcp-preview-tabs { display: grid; grid-template-columns: .9fr .8fr 1.4fr; border: 1px solid #cbd5e1; border-radius: 7px; overflow: hidden; margin-bottom: 9px; }
+.rcp-preview-tabs button { border: 0; border-right: 1px solid #cbd5e1; background: #f8fafc; padding: 9px 6px; font: inherit; font-size: 11px; cursor: pointer; color: #334155; }
+.rcp-preview-tabs button:last-child { border-right: 0; }
+.rcp-preview-tabs button.active { background: var(--rcp-blue); color: #fff; font-weight: 800; }
+.rcp-preview-scroll { max-height: calc(100vh - 220px); min-height: 620px; overflow: auto; padding: 8px; background: #eef3f8; border-radius: 8px; }
+.rcp-template-preview { margin-top: 12px; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; }
+.rcp-template-preview-head { display: flex; justify-content: space-between; padding: 8px 10px; background: #f8fafc; font-size: 12px; }
+.rcp-template-preview iframe { display: block; width: 100%; height: 620px; border: 0; }
+
+.rcp-live-preview-stack { display: flex; flex-direction: column; gap: 14px; }
+.rcp-document-page {
+  --doc-blue: #0758b6;
+  width: 100%;
+  aspect-ratio: 210 / 297;
+  box-sizing: border-box;
+  background: #fff;
+  color: var(--doc-blue);
+  border: 1px solid #cfd9e5;
+  padding: 1.85%;
+  font-family: Tahoma, 'Noto Sans Thai', Arial, sans-serif;
+  font-size: clamp(6.15px, .72vw, 11.2px);
+  line-height: 1.2;
+  overflow: hidden;
+  position: relative;
+}
+.rcp-doc-topbar { display: flex; justify-content: flex-end; align-items: baseline; margin-bottom: .7%; }
+.rcp-doc-serial-no { display: flex; align-items: baseline; gap: .4em; font-size: 1.05em; }
+.rcp-doc-serial-no span { font-weight: 700; }
+.rcp-doc-serial-no strong { color: #c62828; font-weight: 800; font-size: 1.15em; margin-left: .1em; }
+.rcp-doc-header { display: grid; grid-template-columns: 1.48fr .82fr; gap: 1.7%; min-height: 13.5%; }
+.rcp-doc-company { display: flex; gap: 2%; min-width: 0; align-items: flex-start; }
+.rcp-doc-company img { width: 13.5%; max-width: 86px; aspect-ratio: 1; object-fit: contain; flex: 0 0 auto; }
+.rcp-doc-company-th { font-size: 1.86em; line-height: 1.08; font-weight: 800; border-bottom: 1px solid var(--doc-blue); padding-bottom: .28em; white-space: nowrap; letter-spacing: -.015em; }
+.rcp-doc-company-en { font-size: 1.25em; line-height: 1.08; font-weight: 800; margin: .48em 0 .72em; white-space: nowrap; letter-spacing: -.015em; }
+.rcp-doc-contact { font-size: 1.02em; line-height: 1.18; margin: .18em 0; min-height: 1em; }
+.rcp-doc-tax { font-size: 1.13em; line-height: 1.15; font-weight: 800; margin-top: .3em; }
+.rcp-doc-title { text-align: center; font-weight: 700; }
+.rcp-doc-no { text-align: right; font-size: 1.08em; min-height: 1.35em; }
+.rcp-doc-no strong { margin-left: .45em; font-size: 1.18em; }
+.rcp-doc-title h3 { font-size: 1.52em; line-height: 1.08; margin: .38em 0; }
+.rcp-doc-title h2 { font-size: 1.42em; line-height: 1.12; margin: .28em 0; }
+.rcp-doc-title h4 { font-size: 1.3em; line-height: 1.12; margin: .45em 0 .2em; }
+.rcp-doc-title small { font-size: 1em; }
+.rcp-doc-party-grid { display: grid; grid-template-columns: 1.8fr .95fr; gap: 1.4%; height: 12.2%; margin-bottom: .9%; }
+.rcp-doc-party-box { border: 1.35px solid var(--doc-blue); border-radius: .85em; padding: 1.15%; position: relative; overflow: hidden; font-size: 1.04em; line-height: 1.26; }
+.rcp-doc-party-box > div { margin-bottom: .55em; }
+.rcp-doc-party-bottom { position: absolute; bottom: .7em; left: 1.1%; right: 1.1%; margin: 0 !important; }
+.rcp-doc-meta-table, .rcp-doc-items-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+.rcp-doc-meta-table { height: 8.1%; margin-bottom: 1%; }
+.rcp-doc-meta-table th, .rcp-doc-meta-table td { border-right: 1px solid var(--doc-blue); border-bottom: 1px solid var(--doc-blue); text-align: center; padding: .45em .25em; }
+.rcp-doc-meta-table th:first-child, .rcp-doc-meta-table td:first-child { border-left: 1px solid var(--doc-blue); }
+.rcp-doc-meta-table thead th { border-top: 1px solid var(--doc-blue); border-radius: .55em .55em 0 0; font-size: 1.12em; line-height: 1.08; font-weight: 800; overflow: hidden; }
+.rcp-doc-meta-table th span, .rcp-doc-items-table th span { font-size: .84em; line-height: 1.05; font-style: italic; }
+.rcp-doc-meta-table td { height: 3.35em; color: #111827; font-size: 1.02em; line-height: 1.15; }
+.rcp-doc-items-section { height: 47.2%; position: relative; border: 1px solid var(--doc-blue); border-radius: .65em; overflow: hidden; }
+.rcp-doc-items-table { height: 77%; color: var(--doc-blue); }
+.rcp-doc-items-table th, .rcp-doc-items-table td { border-right: 1px solid var(--doc-blue); border-bottom: 1px solid #b9d2ef; padding: .45em .35em; text-align: center; }
+.rcp-doc-items-table th:last-child, .rcp-doc-items-table td:last-child { border-right: 0; }
+.rcp-doc-items-table th { height: 4em; font-size: 1.12em; line-height: 1.08; font-weight: 800; }
+.rcp-doc-items-table th:nth-child(1) { width: 13%; }
+.rcp-doc-items-table th:nth-child(2) { width: 39%; }
+.rcp-doc-items-table th:nth-child(3) { width: 10%; }
+.rcp-doc-items-table th:nth-child(4) { width: 10%; }
+.rcp-doc-items-table th:nth-child(5) { width: 13%; }
+.rcp-doc-items-table th:nth-child(6) { width: 15%; }
+.rcp-doc-items-table tbody tr { height: 3.15em; }
+.rcp-doc-items-table tbody tr.empty { height: 3.15em; }
+.rcp-doc-items-table td { color: #111827; font-size: 1.03em; line-height: 1.28; vertical-align: top; }
+.rcp-doc-items-table td.num { text-align: right; padding-right: .7em; }
+.rcp-doc-desc { text-align: left !important; }
+.rcp-doc-watermark { position: absolute; width: 28%; opacity: .055; left: 39%; top: 30%; transform: translate(-50%, -50%); pointer-events: none; }
+.rcp-doc-bottom-area { position: absolute; left: 0; right: 0; bottom: 0; height: 23%; display: grid; grid-template-columns: 2.05fr .95fr; }
+.rcp-doc-payment-note { padding: 1.4%; font-size: .87em; line-height: 1.25; display: flex; flex-direction: column; justify-content: flex-end; gap: .38em; }
+.rcp-doc-baht { height: 4.1em; border: 1px solid var(--doc-blue); border-radius: .8em; display: grid; grid-template-columns: 12% 1fr; align-items: center; padding: 0 1.4%; margin-top: .45em; }
+.rcp-doc-baht b span { font-style: italic; }
+.rcp-doc-baht strong { color: #111827; text-align: center; font-weight: 500; }
+.rcp-doc-totals { display: grid; grid-template-rows: repeat(3, 1fr); gap: .55em; padding: .8em; }
+.rcp-doc-totals > div { display: grid; grid-template-columns: 58% 42%; border: 1px solid var(--doc-blue); border-radius: .7em; overflow: hidden; }
+.rcp-doc-totals span { display: grid; place-items: center; text-align: center; font-weight: 700; padding: .2em; border-right: 1px solid var(--doc-blue); }
+.rcp-doc-totals em { font-style: italic; }
+.rcp-doc-totals strong { display: grid; place-items: center end; padding-right: .6em; color: #111827; font-size: 1.08em; }
+.rcp-doc-terms { height: 5.4%; display: grid; grid-template-columns: 64% 36%; align-items: center; font-size: .82em; line-height: 1.35; }
+.rcp-doc-terms-copy { text-align: center; padding: 0 .8em; }
+.rcp-doc-officer-label { align-self: end; text-align: center; padding-bottom: .25em; font-size: 1.18em; font-weight: 700; }
+.rcp-doc-officer-label span { font-style: italic; font-weight: 500; }
+.rcp-doc-signatures { height: 13%; display: grid; grid-template-columns: 1.8fr repeat(4, 1fr); }
+.rcp-doc-sign-box { border: 1px solid var(--doc-blue); border-right: 0; display: grid; grid-template-rows: 31% 69%; overflow: hidden; }
+.rcp-doc-sign-box:first-child { border-radius: .7em 0 0 .7em; }
+.rcp-doc-sign-box:last-child { border-right: 1px solid var(--doc-blue); border-radius: 0 .7em .7em 0; }
+.rcp-doc-sign-head { display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 1px solid var(--doc-blue); font-size: 1em; line-height: 1.08; }
+.rcp-doc-sign-head span { font-style: italic; font-weight: 700; }
+.rcp-doc-sign-body { padding: .5em; display: flex; flex-direction: column; justify-content: space-between; text-align: center; font-size: .82em; line-height: 1.18; }
+.rcp-doc-sign-body small { min-height: 2.5em; line-height: 1.25; }
+.rcp-doc-sign-line { margin-top: auto; letter-spacing: -.1em; white-space: nowrap; }
+.rcp-doc-sign-date { margin-top: .25em; white-space: nowrap; }
+.rcp-doc-sign-footer { display: flex; justify-content: space-between; gap: .6em; margin-top: .18em; font-weight: 600; white-space: nowrap; }
+.rcp-doc-sign-footer span:last-child { margin-left: auto; }
+.rcp-doc-sign-customer .rcp-doc-sign-line { display: grid; grid-template-columns: 1fr auto 1fr; }
+
+.rcp-pdf-stage { position: fixed; left: -10000px; top: 0; width: 794px; z-index: -9999; background: #fff; }
+.rcp-pdf-stage .rcp-document-page, .rcp-document-page.rcp-pdf-page { width: 794px; height: 1123px; aspect-ratio: auto; border: 0; font-size: 10.2px; margin: 0; }
+
+@media (max-width: 1250px) {
+  .rcp-workspace { grid-template-columns: 1fr; }
+  .rcp-preview-card { position: static; }
+  .rcp-preview-scroll { max-height: none; }
+}
+@media (max-width: 760px) {
+  .rcp-toolbar { align-items: flex-start; flex-direction: column; }
+  .rcp-toolbar-actions { width: 100%; justify-content: flex-start; }
+  .rcp-brand-title h2 { font-size: 18px; }
+  .rcp-grid-4, .rcp-grid-3, .rcp-grid-2, .rcp-summary-grid { grid-template-columns: 1fr; }
+  .rcp-span-2 { grid-column: span 1; }
+  .rcp-preview-tabs { grid-template-columns: 1fr; }
+  .rcp-preview-tabs button { border-right: 0; border-bottom: 1px solid #cbd5e1; }
+  .rcp-preview-scroll { min-height: 440px; }
+}
+
+#rcp-live-preview .rcp-document-page + .rcp-document-page { margin-top: 14px; }
+.rcp-doc-page-counter { display: block; margin-top: .15em; font-size: .82em; font-weight: 600; }
+.rcp-doc-next-page-note { font-weight: 800; text-align: center; color: var(--doc-blue); }
+.rcp-doc-desc { white-space: normal; overflow-wrap: anywhere; line-height: 1.25; }
+.rcp-doc-items-table tbody tr.rcp-data-row td { vertical-align: top; }
+
+
+/* Document readability refinement: closer to the printed company form */
+.rcp-doc-meta-table th:nth-child(1), .rcp-doc-meta-table td:nth-child(1) { width: 13.5%; }
+.rcp-doc-meta-table th:nth-child(2), .rcp-doc-meta-table td:nth-child(2) { width: 14%; }
+.rcp-doc-meta-table th:nth-child(3), .rcp-doc-meta-table td:nth-child(3) { width: 14%; }
+.rcp-doc-meta-table th:nth-child(4), .rcp-doc-meta-table td:nth-child(4) { width: 14%; }
+.rcp-doc-meta-table th:nth-child(5), .rcp-doc-meta-table td:nth-child(5) { width: 15.5%; }
+.rcp-doc-meta-table th:nth-child(6), .rcp-doc-meta-table td:nth-child(6) { width: 14.5%; }
+.rcp-doc-meta-table th:nth-child(7), .rcp-doc-meta-table td:nth-child(7) { width: 14.5%; }
+.rcp-doc-meta-table thead th:nth-child(5) {
+  font-size: .88em;
+  line-height: 1.02;
+  padding-left: .12em;
+  padding-right: .12em;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+.rcp-doc-meta-table thead th:nth-child(5) span { font-size: .88em; letter-spacing: -.02em; }
+.rcp-doc-items-table tbody td { border-bottom: 0; }
+.rcp-doc-items-table tbody tr.rcp-data-row td { padding-top: .65em; }
+.rcp-doc-totals span { font-size: 1.02em; line-height: 1.12; }
+.rcp-doc-baht { font-size: 1.02em; }
+.rcp-doc-party-box b, .rcp-doc-no span { font-weight: 800; }
+
+/* =====================================================================
+   UI/UX + PDF typography refinement
+   - Productive form layout inspired by enterprise design-system patterns
+   - Compact print typography close to the original pre-printed form
+   ===================================================================== */
+
+/* Application shell */
+.rcp-page-shell {
+  padding: 12px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(8, 104, 201, .08), transparent 30%),
+    linear-gradient(180deg, #f8fbff 0%, #f3f7fb 100%);
+}
+.rcp-toolbar {
+  position: sticky;
+  top: 8px;
+  z-index: 20;
+  min-height: 68px;
+  border-color: #cbdbea;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 10px 28px rgba(15, 73, 134, .10);
+  backdrop-filter: blur(10px);
+}
+.rcp-brand-title img {
+  width: 52px;
+  height: 52px;
+  filter: drop-shadow(0 5px 8px rgba(8, 104, 201, .14));
+}
+.rcp-brand-title h2 {
+  font-size: 21px;
+  letter-spacing: -.02em;
+}
+.rcp-company-mini {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--rcp-blue-soft);
+  color: var(--rcp-blue-dark);
+  font-size: 11px;
+}
+.rcp-toolbar-actions { gap: 7px; }
+.rcp-btn {
+  min-height: 40px;
+  border-radius: 10px;
+  padding: 9px 13px;
+  box-shadow: 0 2px 5px rgba(15, 73, 134, .06);
+  transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+.rcp-btn:hover {
+  border-color: var(--rcp-blue-dark);
+  box-shadow: 0 5px 12px rgba(8, 104, 201, .12);
+  transform: translateY(-1px);
+}
+.rcp-btn:focus-visible,
+.rcp-add-item:focus-visible,
+.rcp-branch-option:focus-visible,
+.rcp-preview-tabs button:focus-visible {
+  outline: 3px solid rgba(8, 104, 201, .25);
+  outline-offset: 2px;
+}
+.rcp-btn-primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #0b76d9, #0758b6);
+  box-shadow: 0 7px 15px rgba(8, 104, 201, .22);
+}
+
+/* Form layout */
+.rcp-workspace {
+  grid-template-columns: minmax(600px, 1.04fr) minmax(560px, .96fr);
+  gap: 16px;
+}
+.rcp-editor-card {
+  padding: 2px 0 10px;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.rcp-form-section {
+  margin: 10px;
+  padding: 16px 17px;
+  border: 1px solid #d9e5f0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(20, 65, 110, .055);
+}
+.rcp-form-section:last-child { border-bottom: 1px solid #d9e5f0; }
+.rcp-section-title {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9f0f6;
+  color: #074d98;
+  font-size: 14px;
+  letter-spacing: -.01em;
+}
+.rcp-section-title span {
+  width: 25px;
+  height: 25px;
+  box-shadow: 0 4px 10px rgba(8, 104, 201, .22);
+}
+.rcp-grid { gap: 12px 14px; }
+.rcp-field { gap: 6px; }
+.rcp-field > span {
+  color: #334155;
+  font-size: 11px;
+  letter-spacing: .01em;
+}
+.rcp-field input,
+.rcp-field select,
+.rcp-field textarea {
+  min-height: 40px;
+  border-color: #c9d7e5;
+  border-radius: 9px;
+  padding: 9px 11px;
+  background: #fbfdff;
+  font-size: 13px;
+  transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.rcp-field textarea { min-height: 78px; line-height: 1.45; }
+.rcp-field input:hover,
+.rcp-field select:hover,
+.rcp-field textarea:hover { border-color: #93b6d8; background: #fff; }
+.rcp-field input:focus,
+.rcp-field select:focus,
+.rcp-field textarea:focus {
+  border-color: #0b76d9;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(8, 104, 201, .13);
+}
+.rcp-company-settings {
+  border-style: solid;
+  border-color: #d1dfec;
+  background: #f8fbff;
+}
+.rcp-company-settings summary { padding: 11px 13px; }
+.rcp-branch-options { gap: 10px; }
+.rcp-branch-option {
+  min-height: 62px;
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 7px rgba(15, 73, 134, .04);
+  transition: .16s ease;
+}
+.rcp-branch-option:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(8, 104, 201, .09); }
+.rcp-branch-option.active {
+  background: linear-gradient(180deg, #f4faff, #e9f5ff);
+  box-shadow: inset 0 0 0 1px rgba(8,104,201,.12), 0 6px 15px rgba(8,104,201,.08);
+}
+.rcp-branch-dot { width: 13px; height: 13px; box-shadow: 0 0 0 4px rgba(8,104,201,.09); }
+.rcp-branch-dot.ub { box-shadow: 0 0 0 4px rgba(124,76,196,.10); }
+
+/* Product-entry table */
+.rcp-items-wrap {
+  border-color: #c9d9e8;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+}
+.rcp-items-editor { font-size: 12px; }
+.rcp-items-editor th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 38px;
+  padding: 8px;
+  background: linear-gradient(180deg, #0f7bd5, #075eb8);
+  letter-spacing: .01em;
+}
+.rcp-items-editor td { padding: 5px; background: #fff; }
+.rcp-items-editor tbody tr:nth-child(even) td { background: #f8fbfe; }
+.rcp-items-editor tbody tr:hover td { background: #eef7ff; }
+.rcp-items-editor input,
+.rcp-items-editor textarea {
+  border-radius: 7px;
+  padding: 8px;
+  background: transparent;
+}
+.rcp-add-item {
+  min-height: 38px;
+  border-radius: 9px;
+  padding: 8px 13px;
+  background: #f5faff;
+}
+.rcp-summary-grid { gap: 12px; }
+.rcp-summary-box {
+  min-height: 50px;
+  border-radius: 11px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(15,73,134,.045);
+}
+.rcp-summary-grand {
+  background: linear-gradient(135deg, #eaf6ff, #f7fbff);
+  border-color: #a9d1f3;
+}
+.rcp-template-upload {
+  min-height: 126px;
+  border-radius: 13px;
+  background: linear-gradient(180deg, #fbfdff, #f4f9ff);
+  transition: border-color .16s ease, background .16s ease, transform .16s ease;
+}
+.rcp-template-upload:hover { border-color: #0b76d9; background: #eef7ff; transform: translateY(-1px); }
+
+/* Preview area */
+.rcp-preview-card {
+  top: 90px;
+  border-color: #cfdeeb;
+  border-radius: 16px;
+  padding: 13px;
+  box-shadow: 0 12px 30px rgba(15, 73, 134, .10);
+}
+.rcp-preview-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #15324f;
+  font-size: 13px;
+}
+.rcp-preview-heading::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, .10);
+}
+.rcp-preview-tabs {
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #d3dfeb;
+  border-radius: 11px;
+  background: #eef3f8;
+}
+.rcp-preview-tabs button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #475569;
+}
+.rcp-preview-tabs button.active {
+  background: #fff;
+  color: #0758b6;
+  box-shadow: 0 3px 10px rgba(15,73,134,.12);
+}
+.rcp-preview-scroll {
+  padding: 16px;
+  border: 1px solid #d6e0ea;
+  border-radius: 12px;
+  background:
+    linear-gradient(45deg, rgba(8,104,201,.025) 25%, transparent 25%) 0 0/18px 18px,
+    linear-gradient(-45deg, rgba(8,104,201,.025) 25%, transparent 25%) 0 0/18px 18px,
+    #edf2f7;
+}
+#rcp-live-preview .rcp-document-page {
+  border: 0;
+  box-shadow: 0 12px 34px rgba(15, 42, 70, .18);
+}
+
+/* Print/PDF typography: compact and close to the original paper form */
+.rcp-document-page {
+  padding: 1.75%;
+  font-size: clamp(5.5px, .60vw, 9.2px);
+}
+.rcp-doc-header { grid-template-columns: 1.52fr .82fr; gap: 1.55%; min-height: 13%; }
+.rcp-doc-company { gap: 1.6%; }
+.rcp-doc-company > div { min-width: 0; flex: 1 1 auto; }
+.rcp-doc-company img {
+  width: 11.5%;
+  max-width: 68px;
+  min-width: 42px;
+}
+.rcp-doc-company-th {
+  font-size: 1.34em;
+  line-height: 1.12;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  letter-spacing: -.01em;
+}
+.rcp-doc-company-en {
+  font-size: 1.02em;
+  line-height: 1.12;
+  margin: .38em 0 .55em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.rcp-doc-contact { font-size: .84em; line-height: 1.22; margin: .12em 0; }
+.rcp-doc-tax { font-size: .94em; line-height: 1.15; margin-top: .22em; }
+.rcp-doc-no { font-size: .92em; min-height: 1.25em; }
+.rcp-doc-no strong { font-size: 1.02em; margin-left: .35em; }
+.rcp-doc-title h3 { font-size: 1.16em; line-height: 1.1; margin: .32em 0; }
+.rcp-doc-title h2 { font-size: 1.08em; line-height: 1.14; margin: .26em 0; }
+.rcp-doc-title h4 { font-size: 1.02em; line-height: 1.12; margin: .35em 0 .18em; }
+.rcp-doc-title > div:not(.rcp-doc-no) { font-size: .9em; line-height: 1.12; }
+.rcp-doc-title small { font-size: .82em; }
+.rcp-doc-party-grid { height: 12.1%; margin-bottom: .85%; }
+.rcp-doc-party-box {
+  padding: 1.05%;
+  border-width: 1px;
+  font-size: .9em;
+  line-height: 1.24;
+}
+.rcp-doc-party-box > div { margin-bottom: .42em; }
+.rcp-doc-party-bottom { bottom: .62em; }
+.rcp-doc-meta-table { height: 8%; margin-bottom: .9%; }
+.rcp-doc-meta-table th,
+.rcp-doc-meta-table td { padding: .38em .2em; }
+.rcp-doc-meta-table thead th {
+  font-size: .9em;
+  line-height: 1.05;
+  font-weight: 800;
+}
+.rcp-doc-meta-table th span,
+.rcp-doc-items-table th span { font-size: .82em; line-height: 1.02; }
+.rcp-doc-meta-table td { height: 3.1em; font-size: .94em; line-height: 1.12; }
+.rcp-doc-meta-table thead th:nth-child(5) {
+  font-size: .82em;
+  line-height: 1.0;
+  letter-spacing: -.025em;
+}
+.rcp-doc-meta-table thead th:nth-child(5) span { font-size: .86em; }
+.rcp-doc-items-section { height: 47.6%; border-width: 1px; }
+.rcp-doc-items-table th,
+.rcp-doc-items-table td { padding: .38em .3em; }
+.rcp-doc-items-table th { height: 3.75em; font-size: .9em; line-height: 1.05; }
+.rcp-doc-items-table td { font-size: .94em; line-height: 1.24; }
+.rcp-doc-items-table tbody tr.rcp-data-row td { padding-top: .52em; }
+.rcp-doc-payment-note { font-size: .74em; line-height: 1.24; }
+.rcp-doc-baht { height: 3.75em; font-size: .9em; }
+.rcp-doc-totals { gap: .45em; padding: .65em; }
+.rcp-doc-totals span { font-size: .86em; line-height: 1.08; }
+.rcp-doc-totals strong { font-size: .92em; }
+.rcp-doc-terms { font-size: .7em; line-height: 1.28; }
+.rcp-doc-officer-label { font-size: .9em; }
+.rcp-doc-sign-head { font-size: .84em; line-height: 1.05; }
+.rcp-doc-sign-body { font-size: .68em; line-height: 1.16; }
+.rcp-doc-sign-body small { min-height: 2.3em; }
+.rcp-doc-page-counter { font-size: .72em; }
+.rcp-doc-watermark { width: 25%; opacity: .045; }
+
+/* Fixed A4 rendering size used by the PDF generator */
+.rcp-pdf-stage .rcp-document-page,
+.rcp-document-page.rcp-pdf-page {
+  width: 794px;
+  height: 1123px;
+  font-size: 8.9px;
+}
+.rcp-pdf-stage .rcp-document-page { box-shadow: none; }
+
+@media (max-width: 1250px) {
+  .rcp-page-shell { padding: 8px; }
+  .rcp-toolbar { position: static; }
+  .rcp-preview-card { top: auto; }
+}
+@media (max-width: 760px) {
+  .rcp-page-shell { padding: 4px; border-radius: 12px; }
+  .rcp-form-section { margin: 8px; padding: 14px; }
+  .rcp-toolbar { border-radius: 12px; }
+  .rcp-toolbar-actions .rcp-btn { flex: 1 1 calc(50% - 8px); }
+}
+
+/* Final compact-header tuning requested by user */
+.rcp-doc-party-box { overflow-wrap: anywhere; }
+.rcp-doc-meta-table thead th,
+.rcp-doc-items-table th { font-size: .84em; }
+.rcp-doc-meta-table thead th:nth-child(5) { font-size: .78em; }
+.rcp-doc-meta-table thead th:nth-child(5) span { font-size: .84em; }
+
+/* ==========================================================
+   PDF / PRINT READABILITY V3 — 14px real A4 base size
+   Requested for clearer customer, product, quantity, price,
+   totals, signatures, notes, and payment/legal conditions.
+   ========================================================== */
+.rcp-document-page {
+  font-size: clamp(8.8px, .86vw, 12.4px);
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fixed A4 page captured by html2canvas and exported by jsPDF. */
+.rcp-pdf-stage .rcp-document-page,
+.rcp-document-page.rcp-pdf-page {
+  font-size: 14px;
+}
+
+/* Customer / ship-to information. */
+.rcp-doc-party-box {
+  font-size: 1em;
+  line-height: 1.24;
+}
+.rcp-doc-party-box > div { margin-bottom: .38em; }
+
+/* Metadata and item tables. */
+.rcp-doc-meta-table thead th,
+.rcp-doc-items-table th {
+  font-size: .86em;
+  line-height: 1.03;
+}
+.rcp-doc-meta-table td,
+.rcp-doc-items-table td {
+  font-size: 1em;
+  line-height: 1.2;
+}
+.rcp-doc-meta-table th span,
+.rcp-doc-items-table th span {
+  font-size: .78em;
+  line-height: 1;
+}
+
+/* Payment Term stays slightly smaller so both languages fit. */
+.rcp-doc-meta-table thead th:nth-child(5) {
+  font-size: .68em;
+  line-height: 1;
+  letter-spacing: -.035em;
+  padding-left: .08em;
+  padding-right: .08em;
+}
+.rcp-doc-meta-table thead th:nth-child(5) span {
+  font-size: .8em;
+  letter-spacing: -.025em;
+}
+
+/* Totals and amount in words. */
+.rcp-doc-totals span {
+  font-size: .94em;
+  line-height: 1.08;
+}
+.rcp-doc-totals strong { font-size: 1.06em; }
+.rcp-doc-baht { font-size: 1em; }
+.rcp-doc-baht strong { font-size: 1em; }
+
+/* Notes, conditions, and signature area. */
+.rcp-doc-payment-note {
+  font-size: .86em;
+  line-height: 1.22;
+}
+.rcp-doc-terms {
+  font-size: .82em;
+  line-height: 1.24;
+}
+.rcp-doc-officer-label { font-size: .9em; }
+.rcp-doc-sign-head {
+  font-size: .9em;
+  line-height: 1.04;
+}
+.rcp-doc-sign-body {
+  font-size: .82em;
+  line-height: 1.14;
+}
+.rcp-doc-sign-body small {
+  min-height: 2em;
+  line-height: 1.16;
+}
+.rcp-doc-page-counter { font-size: .78em; }
+
+/* Keep document header proportionate to the new 14px base. */
+.rcp-doc-company-th { font-size: 1.26em; }
+.rcp-doc-company-en { font-size: .96em; }
+.rcp-doc-contact { font-size: .8em; }
+.rcp-doc-tax { font-size: .9em; }
+.rcp-doc-no { font-size: .86em; }
+.rcp-doc-no strong { font-size: 1em; }
+.rcp-doc-title h3 { font-size: 1.08em; }
+.rcp-doc-title h2 { font-size: 1em; }
+.rcp-doc-title h4 { font-size: .96em; }
+.rcp-doc-title > div:not(.rcp-doc-no) { font-size: .84em; }
+.rcp-doc-title small { font-size: .78em; }
+
+@media (max-width: 900px) {
+  #rcp-live-preview .rcp-document-page {
+    font-size: 9px;
+  }
+}
+
+/* ==========================================================
+   FOOTER WRITING SPACE REFINEMENT
+   Increase signature writing area to match the paper sample
+   ========================================================== */
+.rcp-doc-terms {
+  height: 4.9%;
+  align-items: end;
+  padding-top: .15em;
+}
+.rcp-doc-terms-copy {
+  padding: 0 1em;
+  line-height: 1.18;
+}
+.rcp-doc-officer-label {
+  align-self: end;
+  padding-bottom: .2em;
+}
+.rcp-doc-signatures {
+  height: 15.4%;
+  grid-template-columns: 1.9fr 1.08fr 1fr 1fr 1fr;
+  align-items: stretch;
+}
+.rcp-doc-sign-box {
+  grid-template-rows: 24% 76%;
+}
+.rcp-doc-sign-head {
+  font-size: .86em;
+  line-height: 1.02;
+  padding: .2em .15em;
+}
+.rcp-doc-sign-head b,
+.rcp-doc-sign-head span {
+  display: block;
+}
+.rcp-doc-sign-body {
+  padding: .55em .55em .42em;
+  font-size: .78em;
+  line-height: 1.12;
+  justify-content: flex-start;
+}
+.rcp-doc-sign-body small {
+  display: block;
+  min-height: 2.55em;
+  line-height: 1.16;
+  text-align: center;
+}
+.rcp-doc-sign-line {
+  margin-top: auto;
+  padding-top: 2.15em;
+  letter-spacing: -.06em;
+  white-space: nowrap;
+}
+.rcp-doc-sign-date {
+  margin-top: .42em;
+  white-space: nowrap;
+}
+.rcp-doc-sign-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: .75em;
+  margin-top: auto;
+  padding-top: .28em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.rcp-doc-sign-footer span:last-child {
+  margin-left: auto;
+}
+.rcp-doc-sign-customer .rcp-doc-sign-body {
+  padding-bottom: .45em;
+}
+.rcp-doc-sign-customer .rcp-doc-sign-line {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: end;
+  gap: .6em;
+  padding-top: 2.55em;
+}
+.rcp-doc-sign-customer .rcp-doc-sign-date {
+  margin-top: .2em;
+}
+.rcp-doc-sign-customer .rcp-doc-sign-footer {
+  padding-top: .2em;
+}
+
+/* Keep footer proportions inside exported A4 page */
+.rcp-pdf-stage .rcp-document-page .rcp-doc-signatures,
+.rcp-document-page.rcp-pdf-page .rcp-doc-signatures {
+  height: 15.4%;
+}
+
+/* ==========================================================
+   PDF FONT 12PX — balanced readable layout
+   Base PDF font reduced from 14px to 12px while keeping
+   customer, items, amounts, totals, signatures, notes, and
+   legal/payment conditions comparatively prominent.
+   ========================================================== */
+.rcp-pdf-stage .rcp-document-page,
+.rcp-document-page.rcp-pdf-page {
+  font-size: 12px;
+}
+
+/* Customer and shipping information remain easy to read. */
+.rcp-doc-party-box {
+  font-size: 1.08em;
+  line-height: 1.28;
+}
+
+/* Metadata values and item data. */
+.rcp-doc-meta-table td,
+.rcp-doc-items-table td {
+  font-size: 1.06em;
+  line-height: 1.22;
+}
+.rcp-doc-meta-table thead th,
+.rcp-doc-items-table th {
+  font-size: .92em;
+  line-height: 1.04;
+}
+.rcp-doc-meta-table th span,
+.rcp-doc-items-table th span {
+  font-size: .8em;
+}
+
+/* Keep Payment Term compact enough to fit both languages. */
+.rcp-doc-meta-table thead th:nth-child(5) {
+  font-size: .72em;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+.rcp-doc-meta-table thead th:nth-child(5) span {
+  font-size: .82em;
+}
+
+/* Quantity, unit price, and amount values. */
+.rcp-doc-items-table td:nth-child(4),
+.rcp-doc-items-table td:nth-child(5),
+.rcp-doc-items-table td:nth-child(6) {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+/* Totals and amount-in-words. */
+.rcp-doc-totals span {
+  font-size: .98em;
+  line-height: 1.08;
+}
+.rcp-doc-totals strong {
+  font-size: 1.14em;
+}
+.rcp-doc-baht {
+  font-size: 1.04em;
+}
+.rcp-doc-baht strong {
+  font-size: 1.04em;
+}
+
+/* Notes, terms, and signatures stay readable at 12px base. */
+.rcp-doc-payment-note {
+  font-size: .92em;
+  line-height: 1.24;
+}
+.rcp-doc-terms {
+  font-size: .88em;
+  line-height: 1.24;
+}
+.rcp-doc-officer-label {
+  font-size: .94em;
+}
+.rcp-doc-sign-head {
+  font-size: .94em;
+  line-height: 1.04;
+}
+.rcp-doc-sign-body {
+  font-size: .88em;
+  line-height: 1.16;
+}
+.rcp-doc-sign-body small {
+  font-size: .96em;
+  line-height: 1.18;
+}
+.rcp-doc-sign-footer {
+  font-size: .96em;
+}
+
+/* ==========================================================
+   FOOTER COMPACT FIT FOR A4
+   Reduce excessive empty space in the signature section so the
+   footer stays within A4 while keeping it writable.
+   ========================================================== */
+.rcp-doc-terms {
+  height: 3.9%;
+  padding-top: 0;
+  align-items: center;
+}
+.rcp-doc-terms-copy {
+  line-height: 1.14;
+  padding: 0 .8em;
+}
+.rcp-doc-officer-label {
+  align-self: center;
+  padding-bottom: 0;
+}
+.rcp-doc-signatures,
+.rcp-pdf-stage .rcp-document-page .rcp-doc-signatures,
+.rcp-document-page.rcp-pdf-page .rcp-doc-signatures {
+  height: 11.8%;
+  grid-template-columns: 1.8fr 1.02fr 1fr 1fr 1fr;
+}
+.rcp-doc-sign-box {
+  grid-template-rows: 27% 73%;
+}
+.rcp-doc-sign-head {
+  font-size: .9em;
+  line-height: 1.02;
+  padding: .16em .12em;
+}
+.rcp-doc-sign-body {
+  padding: .34em .42em .24em;
+  font-size: .84em;
+  line-height: 1.1;
+}
+.rcp-doc-sign-body small {
+  min-height: 1.55em;
+  line-height: 1.1;
+}
+.rcp-doc-sign-line {
+  padding-top: 1.05em;
+  margin-top: auto;
+}
+.rcp-doc-sign-date {
+  margin-top: .18em;
+}
+.rcp-doc-sign-footer {
+  gap: .45em;
+  padding-top: .12em;
+  margin-top: auto;
+  font-size: .92em;
+}
+.rcp-doc-sign-customer .rcp-doc-sign-body {
+  padding-bottom: .22em;
+}
+.rcp-doc-sign-customer .rcp-doc-sign-line {
+  gap: .4em;
+  padding-top: 1.2em;
+}
+.rcp-doc-sign-customer .rcp-doc-sign-date,
+.rcp-doc-sign-customer .rcp-doc-sign-footer {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* ==========================================================
+   CLOSED TABLE GRID LINES
+   Add clear closing borders between header/data sections and
+   throughout table rows so the table appears fully enclosed.
+   ========================================================== */
+.rcp-doc-meta-table tbody td {
+  border-bottom: 1px solid var(--doc-blue);
+}
+.rcp-doc-meta-table tbody tr:last-child td {
+  border-bottom: 1px solid var(--doc-blue);
+}
+.rcp-doc-items-table thead th {
+  border-bottom: 1px solid var(--doc-blue);
+}
+.rcp-doc-items-table tbody td {
+  border-bottom: 1px solid var(--doc-blue);
+}
+.rcp-doc-items-table tbody tr:last-child td {
+  border-bottom: 1px solid var(--doc-blue);
+}
+
+/* ==========================================================
+   REMOVE HORIZONTAL LINES INSIDE ITEM BODY
+   Keep the table outer frame and header divider, but remove
+   horizontal row separators in the product-detail area to match
+   the printed form reference.
+   ========================================================== */
+.rcp-doc-items-table tbody td,
+.rcp-doc-items-table tbody tr:last-child td {
+  border-bottom: 0 !important;
+}
+.rcp-doc-items-table tbody tr.empty td,
+.rcp-doc-items-table tbody tr.rcp-data-row td {
+  border-bottom: 0 !important;
+}
+
+/* ==========================================================
+   RECEIPT DOCUMENT — 3-page receipt form
+   ========================================================== */
+.rcp-receipt-party-grid {
+  grid-template-columns: 1fr;
+  height: 13.6%;
+  gap: 0;
+}
+.rcp-receipt-party-box {
+  width: 100%;
+  font-size: 1em;
+}
+.rcp-receipt-contact {
+  margin-top: .3em;
+}
+.rcp-receipt-terms {
+  height: 4.2%;
+  grid-template-columns: 72% 28%;
+  font-size: .76em;
+  line-height: 1.18;
+}
+.rcp-receipt-footer {
+  height: 12.3%;
+  display: grid;
+  grid-template-columns: 1.55fr 1.25fr .78fr .78fr;
+  color: var(--doc-blue);
+}
+.rcp-receipt-footer-box {
+  border: 1px solid var(--doc-blue);
+  border-right: 0;
+  display: grid;
+  grid-template-rows: 29% 71%;
+  overflow: hidden;
+}
+.rcp-receipt-footer-box:first-child {
+  border-radius: .7em 0 0 .7em;
+}
+.rcp-receipt-footer-box:last-child {
+  border-right: 1px solid var(--doc-blue);
+  border-radius: 0 .7em .7em 0;
+}
+.rcp-receipt-footer-head {
+  border-bottom: 1px solid var(--doc-blue);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: .86em;
+  line-height: 1.05;
+  font-weight: 700;
+}
+.rcp-receipt-footer-head span {
+  font-style: italic;
+}
+.rcp-receipt-footer-body {
+  padding: .45em .55em .32em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  font-size: .78em;
+  line-height: 1.12;
+}
+.rcp-receipt-footer-body small {
+  font-size: .92em;
+}
+.rcp-receipt-two-lines {
+  display: grid;
+  grid-template-columns: 1fr .82fr;
+  gap: 1em;
+  margin-top: auto;
+}
+.rcp-receipt-two-lines span,
+.rcp-receipt-sign-line {
+  border-bottom: 1px solid var(--doc-blue);
+  min-height: 1.7em;
+}
+.rcp-receipt-footer-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: .7em;
+  font-weight: 600;
+}
+.rcp-receipt-validity-box {
+  grid-template-rows: 1fr;
+}
+.rcp-receipt-validity-text {
+  padding: .8em .7em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: .7em;
+  line-height: 1.35;
+}
+.rcp-receipt-validity-en {
+  margin-top: .65em;
+  color: #234f8f;
+}
+.rcp-receipt-sign-box .rcp-receipt-footer-body {
+  justify-content: flex-end;
+  gap: .45em;
+}
+.rcp-receipt-date-line {
+  white-space: nowrap;
+  font-size: .86em;
+}
+.rcp-doc-items-table tbody td,
+.rcp-doc-items-table tbody tr:last-child td,
+.rcp-doc-items-table tbody tr.empty td,
+.rcp-doc-items-table tbody tr.rcp-data-row td {
+  border-bottom: 0 !important;
+}
+
+/* Keep receipt within A4 in preview, print, and PDF. */
+.rcp-doc-header { min-height: 13%; }
+.rcp-doc-meta-table { height: 7.7%; margin-bottom: .8%; }
+.rcp-doc-items-section { height: 47%; }
+.rcp-pdf-stage .rcp-document-page,
+.rcp-document-page.rcp-pdf-page {
+  font-size: 12px;
+}
+
+/* Optional document dates */
+.rcp-optional-date-field > span small {
+  color: #6b7280;
+  font-weight: 500;
+}
+.rcp-optional-date-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+.rcp-optional-date-control input { min-width: 0; }
+.rcp-clear-date {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #bfd2e8;
+  border-radius: 8px;
+  background: #f7fbff;
+  color: var(--rcp-blue);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.rcp-clear-date:hover {
+  background: #eaf4ff;
+  border-color: var(--rcp-blue);
+}
+.rcp-optional-date-hint {
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1.35;
+}
+@media (max-width: 760px) {
+  .rcp-optional-date-control { grid-template-columns: 1fr; }
+}
+
+
+/* =====================================================================
+   PRINTED FORM MATCH REFINEMENT
+   Make the receipt document visually closer to the supplied sample.
+   - ignore the red pre-printed book/no marks
+   - use a cleaner white page and tighter form typography
+   ===================================================================== */
+.rcp-document-page {
+  --doc-blue: #7daa89;
+  padding: 1.35% 1.55% 1.25%;
+  background: #fff;
+  color: var(--doc-blue);
+  border: 0;
+  box-shadow: none;
+  font-family: "Leelawadee UI", Tahoma, "Noto Sans Thai", Arial, sans-serif;
+  font-size: clamp(6px, .69vw, 10.6px);
+  line-height: 1.16;
+}
+.rcp-document-page * { box-sizing: border-box; }
+.rcp-doc-header {
+  grid-template-columns: 1.54fr .78fr;
+  gap: 1.15%;
+  min-height: 11.5%;
+}
+.rcp-doc-company { gap: 1.6%; }
+.rcp-doc-company img {
+  width: 11.4%;
+  max-width: 76px;
+  margin-top: .2em;
+}
+.rcp-doc-company-th {
+  font-size: 1.68em;
+  line-height: 1.03;
+  font-weight: 700;
+  padding-bottom: .16em;
+  border-bottom: 1px solid var(--doc-blue);
+  letter-spacing: -.025em;
+}
+.rcp-doc-company-en {
+  font-size: 1.15em;
+  line-height: 1.04;
+  font-weight: 700;
+  margin: .28em 0 .48em;
+  letter-spacing: -.02em;
+  font-family: "Times New Roman", Georgia, serif;
+  font-style: italic;
+}
+.rcp-doc-contact {
+  font-size: .94em;
+  line-height: 1.08;
+  margin: .13em 0;
+}
+.rcp-doc-tax {
+  font-size: 1em;
+  line-height: 1.08;
+  margin-top: .24em;
+}
+.rcp-doc-title {
+  padding-right: .2em;
+  text-align: center;
+  font-family: "Leelawadee UI", Tahoma, "Noto Sans Thai", Arial, sans-serif;
+}
+.rcp-doc-no {
+  min-height: 1.15em;
+  font-size: .98em;
+  line-height: 1.05;
+  margin-bottom: .12em;
+}
+.rcp-doc-no strong {
+  font-size: 1.12em;
+  font-weight: 700;
+}
+.rcp-doc-title h3 {
+  font-size: 1.42em;
+  line-height: 1.03;
+  margin: .18em 0;
+  font-weight: 700;
+}
+.rcp-doc-title h2 {
+  font-size: 1.28em;
+  line-height: 1.08;
+  margin: .18em 0;
+  font-weight: 700;
+}
+.rcp-doc-title > div:not(.rcp-doc-no) {
+  font-size: .98em;
+  line-height: 1.08;
+  font-family: "Times New Roman", Georgia, serif;
+  font-weight: 700;
+}
+.rcp-doc-title h4 {
+  font-size: 1.12em;
+  line-height: 1.08;
+  margin: .24em 0 .1em;
+  font-weight: 700;
+}
+.rcp-doc-title small {
+  font-size: .92em;
+  line-height: 1.08;
+}
+.rcp-receipt-party-grid {
+  height: 12.2%;
+  margin-bottom: .72%;
+}
+.rcp-receipt-party-box,
+.rcp-doc-party-box {
+  border: 1.05px solid var(--doc-blue);
+  border-radius: .82em;
+  padding: 1.02% 1.12%;
+  font-size: .98em;
+  line-height: 1.18;
+}
+.rcp-doc-party-bottom {
+  bottom: .55em;
+  left: 1.05%;
+  right: 1.05%;
+}
+.rcp-receipt-contact { margin-top: .22em; }
+.rcp-doc-meta-table {
+  height: 7.62%;
+  margin-bottom: .76%;
+}
+.rcp-doc-meta-table th,
+.rcp-doc-meta-table td {
+  border-right: 1.05px solid var(--doc-blue);
+  border-bottom: 1.05px solid var(--doc-blue);
+  padding: .34em .2em;
+}
+.rcp-doc-meta-table th:first-child,
+.rcp-doc-meta-table td:first-child { border-left: 1.05px solid var(--doc-blue); }
+.rcp-doc-meta-table thead th {
+  border-top: 1.05px solid var(--doc-blue);
+  border-radius: .52em .52em 0 0;
+  font-size: .97em;
+  line-height: 1.02;
+  font-weight: 700;
+}
+.rcp-doc-meta-table th span,
+.rcp-doc-items-table th span {
+  font-size: .83em;
+  line-height: 1.02;
+  font-family: "Times New Roman", Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+}
+.rcp-doc-meta-table td {
+  height: 3.08em;
+  font-size: .98em;
+  line-height: 1.1;
+  vertical-align: middle;
+}
+.rcp-doc-items-section {
+  height: 46.9%;
+  border: 1.05px solid var(--doc-blue);
+  border-radius: .62em;
+}
+.rcp-doc-items-table { height: 76.5%; }
+.rcp-doc-items-table th,
+.rcp-doc-items-table td {
+  border-right: 1.05px solid var(--doc-blue);
+  padding: .38em .28em;
+}
+.rcp-doc-items-table th {
+  height: 4.02em;
+  font-size: .99em;
+  line-height: 1.03;
+  font-weight: 700;
+  border-bottom: 1.05px solid var(--doc-blue);
+}
+.rcp-doc-items-table tbody tr,
+.rcp-doc-items-table tbody tr.empty { height: 2.95em; }
+.rcp-doc-items-table td {
+  font-size: 1em;
+  line-height: 1.2;
+  vertical-align: top;
+}
+.rcp-doc-desc { line-height: 1.2; }
+.rcp-doc-watermark {
+  width: 30%;
+  opacity: .085;
+  left: 39%;
+  top: 32%;
+}
+.rcp-doc-bottom-area {
+  height: 22.55%;
+  grid-template-columns: 2.05fr .95fr;
+}
+.rcp-doc-payment-note {
+  padding: 1.12% 1.2% 1.05%;
+  font-size: .81em;
+  line-height: 1.18;
+  gap: .26em;
+}
+.rcp-doc-baht {
+  height: 3.72em;
+  border: 1.05px solid var(--doc-blue);
+  border-radius: .78em;
+  grid-template-columns: 11% 1fr;
+  padding: 0 1.25%;
+  margin-top: .32em;
+}
+.rcp-doc-baht b { line-height: 1.05; font-weight: 700; }
+.rcp-doc-baht strong {
+  font-size: 1.02em;
+  font-weight: 600;
+}
+.rcp-doc-totals {
+  gap: .46em;
+  padding: .72em .62em .72em .48em;
+}
+.rcp-doc-totals > div {
+  border: 1.05px solid var(--doc-blue);
+  border-radius: .68em;
+}
+.rcp-doc-totals span {
+  font-size: .98em;
+  line-height: 1.06;
+  border-right: 1.05px solid var(--doc-blue);
+  font-weight: 700;
+}
+.rcp-doc-totals strong {
+  font-size: 1.02em;
+  padding-right: .58em;
+  font-weight: 700;
+}
+.rcp-receipt-terms {
+  height: 4.1%;
+  grid-template-columns: 72% 28%;
+  font-size: .72em;
+  line-height: 1.16;
+}
+.rcp-doc-officer-label {
+  padding-bottom: .08em;
+  font-size: .94em;
+}
+.rcp-receipt-footer {
+  height: 12.15%;
+  grid-template-columns: 1.52fr 1.24fr .8fr .8fr;
+}
+.rcp-receipt-footer-box {
+  border: 1.05px solid var(--doc-blue);
+  border-right: 0;
+  grid-template-rows: 29% 71%;
+}
+.rcp-receipt-footer-box:first-child { border-radius: .68em 0 0 .68em; }
+.rcp-receipt-footer-box:last-child {
+  border-right: 1.05px solid var(--doc-blue);
+  border-radius: 0 .68em .68em 0;
+}
+.rcp-receipt-footer-head {
+  border-bottom: 1.05px solid var(--doc-blue);
+  font-size: .86em;
+  line-height: 1.03;
+  font-weight: 700;
+}
+.rcp-receipt-footer-head span {
+  font-family: "Times New Roman", Georgia, serif;
+  font-style: italic;
+}
+.rcp-receipt-footer-body {
+  padding: .34em .46em .3em;
+  font-size: .71em;
+  line-height: 1.12;
+}
+.rcp-receipt-footer-body small {
+  font-size: .96em;
+  line-height: 1.16;
+}
+.rcp-receipt-two-lines {
+  grid-template-columns: 1fr .86fr;
+  gap: .75em;
+}
+.rcp-receipt-two-lines span,
+.rcp-receipt-sign-line {
+  border-bottom: 1px solid var(--doc-blue);
+  min-height: 1.55em;
+}
+.rcp-receipt-footer-labels {
+  font-size: .96em;
+  gap: .55em;
+  font-weight: 600;
+}
+.rcp-receipt-validity-text {
+  padding: .6em .55em;
+  font-size: .68em;
+  line-height: 1.26;
+}
+.rcp-receipt-validity-en { margin-top: .45em; }
+.rcp-receipt-sign-box .rcp-receipt-footer-body {
+  justify-content: flex-end;
+  gap: .32em;
+}
+.rcp-receipt-date-line {
+  font-size: .9em;
+  letter-spacing: .01em;
+}
+.rcp-pdf-stage .rcp-document-page,
+.rcp-document-page.rcp-pdf-page {
+  font-size: 10.4px;
+}
+#rcp-live-preview .rcp-document-page {
+  box-shadow: 0 12px 30px rgba(15, 42, 70, .16);
+}
+
+
+/* Receipt logo color + customer footer spacing refinement */
+.rcp-document-page .rcp-doc-company img {
+  filter: hue-rotate(-95deg) saturate(0.78) brightness(1.02);
+}
+.rcp-document-page .rcp-doc-watermark {
+  filter: hue-rotate(-95deg) saturate(0.55) brightness(1.04);
+  opacity: .05;
+}
+.rcp-receipt-customer-box .rcp-receipt-two-lines {
+  grid-template-columns: 1fr .72fr;
+  gap: 1.05em;
+}
+.rcp-receipt-customer-box .rcp-receipt-footer-labels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  width: 100%;
+  gap: 1.15em;
+}
+.rcp-receipt-customer-box .rcp-receipt-footer-labels span:first-child {
+  justify-self: start;
+  text-align: left;
+}
+.rcp-receipt-customer-box .rcp-receipt-footer-labels span:last-child {
+  justify-self: end;
+  text-align: right;
+  margin-left: 0;
+}
+
+
+/* ==========================================================
+   INLINE PAYER + DATE LAYOUT FOR RECEIPT
+   Match the hand-drawn reference:
+   [signature line] ผู้ส่งมอบ/Payer   __/__/__ วันที่/Date
+   ========================================================== */
+.rcp-receipt-customer-box .rcp-receipt-footer-body {
+  justify-content: flex-start;
+}
+.rcp-receipt-payer-row {
+  display: grid;
+  grid-template-columns: minmax(4.5em, 1fr) auto minmax(4.8em, .72fr) auto;
+  align-items: end;
+  column-gap: .46em;
+  width: 100%;
+  margin-top: auto;
+  padding: 0 .18em .08em;
+  white-space: nowrap;
+}
+.rcp-receipt-write-line {
+  display: block;
+  min-width: 0;
+  height: 1.05em;
+  border-bottom: 1px solid var(--doc-blue);
+}
+.rcp-receipt-payer-label,
+.rcp-receipt-date-label {
+  font-weight: 600;
+  line-height: 1;
+}
+.rcp-receipt-date-write {
+  display: block;
+  min-width: 4.8em;
+  text-align: center;
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+.rcp-receipt-date-label {
+  text-align: right;
+}
+
+/* ==========================================================
+   RECEIPT PDF BLUE/GREEN-TEXT READABILITY
+   Match the readability treatment used on the delivery/tax PDF:
+   enlarge only small static form text while preserving the A4 layout.
+   ========================================================== */
+.rcp-pdf-stage .rcp-document-page,
+.rcp-document-page.rcp-pdf-page {
+  font-size: 10.4px;
+}
+
+/* Company header and receipt title */
+.rcp-document-page .rcp-doc-company-th {
+  font-size: 1.45em;
+  line-height: 1.08;
+  padding-bottom: .14em;
+  white-space: nowrap;
+}
+.rcp-document-page .rcp-doc-company-en {
+  font-size: 1.23em;
+  line-height: 1.02;
+  margin: .22em 0 .38em;
+}
+.rcp-document-page .rcp-doc-contact {
+  font-size: 1.01em;
+  line-height: 1.04;
+  margin: .08em 0;
+}
+.rcp-document-page .rcp-doc-tax {
+  font-size: 1.08em;
+  line-height: 1.04;
+  margin-top: .16em;
+}
+.rcp-document-page .rcp-doc-no {
+  font-size: 1.04em;
+  line-height: 1.02;
+}
+.rcp-document-page .rcp-doc-title h3 {
+  font-size: 1.50em;
+  line-height: 1.01;
+  margin: .16em 0;
+}
+.rcp-document-page .rcp-doc-title h2 {
+  font-size: 1.35em;
+  line-height: 1.03;
+  margin: .14em 0;
+}
+.rcp-document-page .rcp-doc-title > div:not(.rcp-doc-no) {
+  font-size: 1.03em;
+  line-height: 1.02;
+}
+.rcp-document-page .rcp-doc-title h4 {
+  font-size: 1.20em;
+  line-height: 1.03;
+  margin: .17em 0 .06em;
+}
+.rcp-document-page .rcp-doc-title small {
+  font-size: .98em;
+  line-height: 1.02;
+}
+
+/* Customer / receipt information boxes */
+.rcp-document-page .rcp-receipt-party-box,
+.rcp-document-page .rcp-doc-party-box {
+  font-size: 1.06em;
+  line-height: 1.10;
+  padding-top: .88%;
+  padding-bottom: .88%;
+}
+.rcp-document-page .rcp-receipt-party-box > div,
+.rcp-document-page .rcp-doc-party-box > div {
+  margin-bottom: .34em;
+}
+.rcp-document-page .rcp-receipt-contact {
+  font-size: 1em;
+  line-height: 1.08;
+  margin-top: .16em;
+}
+
+/* Metadata and item-table headings */
+.rcp-document-page .rcp-doc-meta-table thead th {
+  font-size: 1.04em;
+  line-height: 1.00;
+  padding-top: .28em;
+  padding-bottom: .28em;
+}
+.rcp-document-page .rcp-doc-meta-table th span,
+.rcp-document-page .rcp-doc-items-table th span {
+  font-size: .88em;
+  line-height: 1.00;
+}
+.rcp-document-page .rcp-doc-items-table th {
+  font-size: 1.05em;
+  line-height: 1.01;
+  padding-top: .28em;
+  padding-bottom: .28em;
+}
+
+/* Totals, notes and receipt footer */
+.rcp-document-page .rcp-doc-payment-note {
+  font-size: .86em;
+  line-height: 1.11;
+  gap: .18em;
+}
+.rcp-document-page .rcp-doc-totals span {
+  font-size: 1.04em;
+  line-height: 1.01;
+}
+.rcp-document-page .rcp-receipt-terms {
+  font-size: .78em;
+  line-height: 1.10;
+}
+.rcp-document-page .rcp-doc-officer-label {
+  font-size: 1.03em;
+  line-height: 1.02;
+}
+.rcp-document-page .rcp-receipt-footer-head {
+  font-size: .93em;
+  line-height: 1.00;
+}
+.rcp-document-page .rcp-receipt-footer-body {
+  font-size: .77em;
+  line-height: 1.08;
+  padding-top: .28em;
+  padding-bottom: .22em;
+}
+.rcp-document-page .rcp-receipt-footer-body small {
+  font-size: .99em;
+  line-height: 1.08;
+}
+.rcp-document-page .rcp-receipt-footer-labels {
+  font-size: 1.03em;
+  line-height: 1.00;
+}
+.rcp-document-page .rcp-receipt-validity-text {
+  font-size: .73em;
+  line-height: 1.16;
+  padding-top: .42em;
+  padding-bottom: .42em;
+}
+.rcp-document-page .rcp-receipt-date-line,
+.rcp-document-page .rcp-receipt-date-label,
+.rcp-document-page .rcp-receipt-payer-label {
+  font-size: 1.02em;
+}
+
+/* ==========================================================
+   RECEIPT PDF FONT 12PX READABILITY REFINEMENT
+   Keep the existing A4 geometry, but raise the actual readable
+   text sizes to the proposed range:
+   - main content: 11.5–12px
+   - notes / terms / signature details: 9–10px
+   ========================================================== */
+
+/* Main document information */
+.rcp-document-page .rcp-doc-contact,
+.rcp-document-page .rcp-doc-tax,
+.rcp-document-page .rcp-doc-no,
+.rcp-document-page .rcp-receipt-party-box,
+.rcp-document-page .rcp-doc-party-box,
+.rcp-document-page .rcp-receipt-contact,
+.rcp-document-page .rcp-doc-meta-table td,
+.rcp-document-page .rcp-doc-items-table td {
+  font-size: 12px;
+}
+
+/* Main table labels and total labels */
+.rcp-document-page .rcp-doc-meta-table thead th,
+.rcp-document-page .rcp-doc-items-table th,
+.rcp-document-page .rcp-doc-totals span,
+.rcp-document-page .rcp-doc-officer-label {
+  font-size: 11.5px;
+}
+
+/* Main entered values and money totals */
+.rcp-document-page .rcp-doc-totals strong,
+.rcp-document-page .rcp-doc-items-table tbody td,
+.rcp-document-page .rcp-doc-meta-table tbody td {
+  font-size: 12px;
+}
+
+/* English sub-labels inside table headings */
+.rcp-document-page .rcp-doc-meta-table th span,
+.rcp-document-page .rcp-doc-items-table th span {
+  font-size: 9.5px;
+}
+
+/* Bottom notes and payment instructions */
+.rcp-document-page .rcp-doc-payment-note,
+.rcp-document-page .rcp-receipt-terms,
+.rcp-document-page .rcp-receipt-validity-text {
+  font-size: 9px;
+  line-height: 1.12;
+}
+
+/* Signature headers and details */
+.rcp-document-page .rcp-receipt-footer-head {
+  font-size: 10px;
+}
+.rcp-document-page .rcp-receipt-footer-body,
+.rcp-document-page .rcp-receipt-footer-body small,
+.rcp-document-page .rcp-receipt-footer-labels,
+.rcp-document-page .rcp-receipt-payer-label,
+.rcp-document-page .rcp-receipt-date-label,
+.rcp-document-page .rcp-receipt-date-line {
+  font-size: 9.5px;
+}
+
+/* Keep the larger text within the same A4 footprint */
+.rcp-document-page .rcp-doc-contact,
+.rcp-document-page .rcp-doc-tax,
+.rcp-document-page .rcp-receipt-party-box,
+.rcp-document-page .rcp-doc-party-box,
+.rcp-document-page .rcp-doc-meta-table th,
+.rcp-document-page .rcp-doc-meta-table td,
+.rcp-document-page .rcp-doc-items-table th,
+.rcp-document-page .rcp-doc-items-table td,
+.rcp-document-page .rcp-doc-totals span,
+.rcp-document-page .rcp-doc-totals strong,
+.rcp-document-page .rcp-receipt-footer-head,
+.rcp-document-page .rcp-receipt-footer-body {
+  line-height: 1.03;
+}
+.rcp-document-page .rcp-doc-meta-table th,
+.rcp-document-page .rcp-doc-meta-table td,
+.rcp-document-page .rcp-doc-items-table th,
+.rcp-document-page .rcp-doc-items-table td {
+  padding-top: .22em;
+  padding-bottom: .22em;
+}
+.rcp-document-page .rcp-receipt-footer-body {
+  padding-top: .20em;
+  padding-bottom: .18em;
+}
+.rcp-document-page .rcp-receipt-validity-text {
+  padding-top: .28em;
+  padding-bottom: .28em;
+}
+
+
+/* =====================================================================
+   RECEIPT GREEN INK + FOOTER READABILITY + BAHT TEXT REFINEMENT
+   - Green receipt logo and all receipt-form ink labels
+   - Move validity text away from the upper border
+   - Enlarge black baht-in-words text without changing A4 geometry
+   ===================================================================== */
+:root {
+  --rcp-blue: #0c447c;
+  --rcp-blue-dark: #082f57;
+  --rcp-blue-soft: #eaf1fa;
+  --rcp-border: #c3d4e8;
+}
+
+.rcp-document-page {
+  --doc-blue: #0c447c !important;
+  color: var(--doc-blue);
+}
+
+/* Logo/watermark now use the original blue logo.png as-is (formal/bank theme) — no color filter. */
+.rcp-document-page .rcp-doc-watermark { opacity: .055 !important; }
+
+/* Override the one remaining hard-coded blue text in the receipt footer. */
+.rcp-document-page .rcp-receipt-validity-en {
+  color: var(--doc-blue) !important;
+}
+
+/* The validity box must use its full height; later generic footer rules
+   previously split it into 29%/71%, pushing the text against the top line. */
+.rcp-document-page .rcp-receipt-validity-box {
+  display: grid !important;
+  grid-template-rows: 1fr !important;
+}
+.rcp-document-page .rcp-receipt-validity-text {
+  align-self: stretch;
+  justify-content: center !important;
+  padding: 1.05em .72em .48em !important;
+  transform: translateY(.28em);
+  color: var(--doc-blue);
+}
+.rcp-document-page .rcp-receipt-validity-en {
+  margin-top: .52em;
+}
+
+/* Enlarge the black amount-in-words inside the Baht box. */
+.rcp-document-page .rcp-doc-baht b {
+  font-size: 10.5px;
+  line-height: 1.02;
+}
+.rcp-document-page .rcp-doc-baht strong {
+  color: #111827 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.08 !important;
+  padding: 0 .35em;
+  overflow-wrap: anywhere;
+}
+
+
+/* =====================================================================
+   A4 PRINT FONT ENLARGEMENT
+   Slightly increase printable text size for easier reading on paper,
+   while keeping the overall A4 layout intact.
+   ===================================================================== */
+.rcp-pdf-stage .rcp-document-page,
+.rcp-document-page.rcp-pdf-page {
+  font-size: 10.9px;
+}
+
+/* Main readable content */
+.rcp-document-page .rcp-doc-contact,
+.rcp-document-page .rcp-doc-tax,
+.rcp-document-page .rcp-doc-no,
+.rcp-document-page .rcp-doc-title > div:not(.rcp-doc-no),
+.rcp-document-page .rcp-receipt-party-box,
+.rcp-document-page .rcp-doc-party-box,
+.rcp-document-page .rcp-doc-meta-table tbody td,
+.rcp-document-page .rcp-doc-items-table tbody td,
+.rcp-document-page .rcp-doc-baht {
+  font-size: 1.08em;
+  line-height: 1.12;
+}
+
+/* Headings and labels */
+.rcp-document-page .rcp-doc-meta-table thead th,
+.rcp-document-page .rcp-doc-items-table thead th,
+.rcp-document-page .rcp-doc-totals span,
+.rcp-document-page .rcp-doc-officer-label,
+.rcp-document-page .rcp-receipt-footer-head,
+.rcp-document-page .rcp-receipt-footer-labels {
+  font-size: 1.08em;
+  line-height: 1.02;
+}
+
+.rcp-document-page .rcp-doc-meta-table th span,
+.rcp-document-page .rcp-doc-items-table th span {
+  font-size: .9em;
+}
+
+/* Amounts and totals */
+.rcp-document-page .rcp-doc-baht strong {
+  font-size: 1.08em;
+}
+.rcp-document-page .rcp-doc-totals strong {
+  font-size: 1.08em;
+}
+
+/* Notes, conditions, and signatures */
+.rcp-document-page .rcp-doc-payment-note,
+.rcp-document-page .rcp-receipt-terms,
+.rcp-document-page .rcp-receipt-validity-text {
+  font-size: .84em;
+  line-height: 1.14;
+}
+.rcp-document-page .rcp-receipt-footer-body,
+.rcp-document-page .rcp-receipt-footer-body small,
+.rcp-document-page .rcp-receipt-payer-label,
+.rcp-document-page .rcp-receipt-date-label,
+.rcp-document-page .rcp-receipt-date-line {
+  font-size: .84em;
+  line-height: 1.10;
+}
+
+/* Keep the enlarged text within the same printable footprint */
+.rcp-document-page .rcp-doc-meta-table th,
+.rcp-document-page .rcp-doc-meta-table td,
+.rcp-document-page .rcp-doc-items-table th,
+.rcp-document-page .rcp-doc-items-table td {
+  padding-top: .24em;
+  padding-bottom: .24em;
+}
+.rcp-document-page .rcp-receipt-footer-body,
+.rcp-document-page .rcp-receipt-validity-text {
+  padding-top: .22em;
+  padding-bottom: .2em;
+}
+
+
+/* Override earlier fixed baht-text size so the printed amount in words is easier to read. */
+.rcp-document-page .rcp-doc-baht b {
+  font-size: 11px !important;
+}
+.rcp-document-page .rcp-doc-baht strong {
+  font-size: 13px !important;
+  line-height: 1.1 !important;
+}
+
+
+/* =====================================================================
+   LINK RECEIPT TO DELIVERY / TAX INVOICE
+   ===================================================================== */
+.rcp-invoice-link-section { background: #f6fbf7; }
+.rcp-invoice-link-box {
+  border: 1px solid #b7d8be;
+  border-radius: 10px;
+  background: #fff;
+  padding: 12px;
+}
+.rcp-invoice-link-actions { justify-content: flex-end; }
+.rcp-invoice-link-actions .rcp-btn { width: 100%; padding: 8px 10px; }
+.rcp-source-invoice-status {
+  margin-top: 9px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: #eef8f0;
+  color: #356b40;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.rcp-source-invoice-status strong { color: #1f5b2b; }
+@media (max-width: 760px) {
+  .rcp-invoice-link-actions { grid-column: 1 / -1; }
+}
+
+
+/* Linked document selector filters */
+.rcp-linked-selector-head,.rcp-linked-context{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;padding:10px 12px;background:linear-gradient(120deg,#f5f9ff,#eef5ff);border:1px solid #d7e5f7;border-radius:10px}
+.rcp-linked-selector-head>div{display:flex;flex-direction:column;gap:2px} .rcp-linked-selector-head small,.rcp-linked-context small{font-size:10px;color:#64748b}
+.rcp-linked-branch-badge,.rcp-linked-context b{white-space:nowrap;background:#fff;color:var(--rcp-blue-dark);border:1px solid #bfd4ef;border-radius:999px;padding:5px 10px;font-size:11px}
+.rcp-linked-filter-row{display:grid;grid-template-columns:110px 130px minmax(180px,1fr) auto;gap:8px;align-items:end;margin-bottom:8px}
+.rcp-linked-filter-row label{display:flex;flex-direction:column;gap:4px} .rcp-linked-filter-row label span{font-size:10px;font-weight:700;color:#64748b}
+.rcp-linked-filter-row input,.rcp-linked-filter-row select{height:36px;border:1px solid #cbd5e1;border-radius:8px;padding:0 9px;font:inherit;font-size:12px;background:#fff}
+.rcp-linked-context{flex-wrap:wrap;justify-content:flex-start} .rcp-linked-context span{font-size:11px;color:#64748b;font-weight:700}
+.rcp-linked-filter-grid{align-items:end}
+@media(max-width:760px){.rcp-linked-filter-row{grid-template-columns:1fr 1fr}.rcp-linked-search{grid-column:1/-1}}
+
+
+/* Compatibility additions kept from the newer data version */
+.rcp-source-evidence-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px}
+.rcp-source-evidence-item{min-width:0;padding:8px;border:1px solid #cfe0f3;border-radius:10px;background:#f8fbff;text-align:center}
+.rcp-source-evidence-item img{width:100%;height:92px;object-fit:cover;border-radius:7px;border:1px solid #d6e3ef;background:#fff}
+.rcp-source-evidence-icon{height:92px;display:grid;place-items:center;border-radius:7px;background:#eaf4ff;color:#0868c9;font-weight:900;font-size:20px}
+.rcp-source-evidence-name{margin-top:6px;font-size:10px;font-weight:700;color:#334155;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rcp-source-evidence-item a{display:inline-block;margin-top:4px;font-size:10px;color:#0868c9;font-weight:800;text-decoration:none}
+.rcp-source-evidence-item small,.rcp-source-evidence-empty{font-size:10px;color:#718096}
+.rcp-source-evidence-empty{padding:12px;border:1px dashed #cbd9e8;border-radius:9px;background:#fbfdff;text-align:center}
+
+/* Formal / bank-style corners — sharp edges to match official tax-form conventions */
+.rcp-doc-party-box,
+.rcp-doc-meta-table thead th,
+.rcp-doc-items-section,
+.rcp-doc-baht,
+.rcp-doc-totals > div,
+.rcp-receipt-footer-box:first-child,
+.rcp-receipt-footer-box:last-child {
+  border-radius: 2px;
+}
+
+
+/* User-friendly editor refinement */
+.rcp-form-section{transition:background .15s ease}
+.rcp-form-section:hover{background:rgba(248,251,255,.7)}
+.rcp-field:focus-within{padding:6px;border-radius:10px;background:#f8fbff;box-shadow:0 4px 12px rgba(8,104,201,.06)}
+.rcp-field input,.rcp-field select,.rcp-field textarea{min-height:42px;border-width:1.5px}
+.rcp-section-title{font-size:15px}
+.rcp-summary-box{min-height:48px}
+@media(max-width:760px){.rcp-grid-2,.rcp-grid-3,.rcp-grid-4{grid-template-columns:1fr!important}.rcp-span-2{grid-column:auto!important}}

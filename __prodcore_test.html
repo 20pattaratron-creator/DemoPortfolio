@@ -1,0 +1,31 @@
+<!doctype html><html><body>
+<div id="panel-audit-log"></div>
+<input id="po-no"><input id="po-date"><select id="po-branch"><option value="ubon">u</option><option value="khonkaen">k</option></select><input id="po-expected"><input id="po-supplier"><textarea id="po-supplier-address"></textarea><input id="po-supplier-tax"><select id="po-status"><option value="draft">d</option><option value="ordered">o</option></select><tbody id="po-items-body"></tbody><div id="po-total"></div><textarea id="po-note"></textarea><div id="po-list-table"></div><span id="po-list-count"></span>
+<input id="gr-no"><input id="gr-date"><select id="gr-branch"><option value="ubon">u</option><option value="khonkaen">k</option></select><select id="gr-po"></select><input id="gr-supplier"><tbody id="gr-items-body"></tbody><textarea id="gr-note"></textarea><div id="gr-list-table"></div><span id="gr-list-count"></span>
+<select id="inv-branch-filter"><option value="all">all</option><option value="ubon">u</option><option value="khonkaen">k</option></select><input id="inv-search"><div id="inventory-stock-table"></div><div id="inventory-kpis"></div><span id="inventory-movement-count"></span><div id="inventory-movement-table"></div>
+<input id="adj-date"><select id="adj-branch"><option value="ubon">u</option></select><input id="adj-product"><select id="adj-type"><option value="increase">i</option><option value="decrease">d</option></select><input id="adj-qty"><input id="adj-reason">
+<select id="audit-action"><option value=""></option></select><input id="audit-search"><div id="audit-kpis"></div><div id="audit-table"></div>
+<datalist id="product-master-list"></datalist>
+<script>
+window.notify=(m)=>console.log('NOTICE',m);
+window.go=()=>{};
+window.productMasterRows=()=>[{code:'ST-001',name:'สินค้า A',category:'test',unit:'ชิ้น',flowType:'inventory',fulfillmentType:'stock',openingStockUbon:10,openingStockKhonkaen:0,reorderPoint:3,standardCost:100}];
+window.productMasterMeta=(name,code)=>window.productMasterRows()[0];
+window.productEstimatedStock=(p,b)=>{const base=b==='khonkaen'?0:b==='ubon'?10:10;return base+(window.ERPProductionCore?.inventoryMovementNet?.(p,b)||0)};
+window.findContactMaster=(name)=>({name,address:'Supplier Addr',taxId:'0000000000000'});
+window.docsForYear=()=>[];window.allYears=()=>[2026];window.contactMasterRows=()=>[];
+</script>
+<script type="module" src="./erp-production-core.js"></script>
+<script type="module">
+setTimeout(()=>{
+  document.getElementById('po-supplier').value='Supplier A'; pcApplySupplierToPo();
+  const tr=document.querySelector('#po-items-body tr');
+  tr.querySelector('[data-f="product"]').value='สินค้า A'; pcApplyPoProduct(tr.querySelector('[data-f="product"]'));
+  tr.querySelector('[data-f="qty"]').value='5';tr.querySelector('[data-f="cost"]').value='100';pcCalcPo();pcSavePo();
+  document.getElementById('gr-branch').value='ubon';pcPopulateOpenPo();const poSel=document.getElementById('gr-po');poSel.value=poSel.options[1]?.value||'';pcLoadPoForReceipt();pcPostGoodsReceipt();
+  document.getElementById('adj-product').value='สินค้า A';document.getElementById('adj-branch').value='ubon';document.getElementById('adj-type').value='decrease';document.getElementById('adj-qty').value='2';document.getElementById('adj-reason').value='test adjust';pcPostAdjustment();
+  const result={po:JSON.parse(localStorage.getItem('comform_purchase_orders_v1')||'[]'),gr:JSON.parse(localStorage.getItem('comform_goods_receipts_v1')||'[]'),mov:JSON.parse(localStorage.getItem('comform_inventory_movements_v1')||'[]'),audit:JSON.parse(localStorage.getItem('comform_audit_log_v1')||'[]'),stock:window.ERPProductionCore.stockOnHand(window.productMasterRows()[0],'ubon')};
+  document.body.innerHTML='<pre id="result">'+JSON.stringify(result,null,2).replace(/</g,'&lt;')+'</pre>';
+},500);
+</script>
+</body></html>

@@ -1,0 +1,48 @@
+rules_version = '2';
+
+// Firebase Storage isolation for future/production attachments.
+// Expected object path:
+//   tenants/{tenantId}/{branchId}/{module}/{documentId}/{fileName}
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function bootstrap() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid));
+    }
+
+    function member(tenantId) {
+      return firestore.get(/databases/(default)/documents/tenants/$(tenantId)/members/$(request.auth.uid));
+    }
+
+    function belongsToTenant(tenantId) {
+      return signedIn()
+        && bootstrap().data.active == true
+        && bootstrap().data.tenantId == tenantId
+        && member(tenantId).data.active == true;
+    }
+
+    function branchAllowed(tenantId, branchId) {
+      return belongsToTenant(tenantId)
+        && firestore.exists(/databases/(default)/documents/tenants/$(tenantId)/branches/$(branchId))
+        && firestore.get(/databases/(default)/documents/tenants/$(tenantId)/branches/$(branchId)).data.active == true
+        && (
+          member(tenantId).data.role in ['owner', 'admin']
+          || '*' in member(tenantId).data.allowedBranches
+          || branchId in member(tenantId).data.allowedBranches
+        );
+    }
+
+    match /tenants/{tenantId}/{branchId}/{allPaths=**} {
+      allow read: if branchAllowed(tenantId, branchId);
+      allow write: if branchAllowed(tenantId, branchId)
+        && request.resource.size < 20 * 1024 * 1024;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

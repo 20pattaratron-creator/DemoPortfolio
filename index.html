@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ERP Business Platform</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="delivery-tax-document.css">
+<link rel="stylesheet" href="quotation-document.css">
+<link rel="stylesheet" href="receipt-document.css">
+<link rel="stylesheet" href="trial-mode.css">
+<link rel="stylesheet" href="business-rules.css">
+</head>
+<body>
+
+<div id="app-content">
+<div class="topbar comform-topbar">
+  <img class="company-logo" src="./logo.png" alt="Company Logo">
+  <div class="company-title-wrap">
+    <div class="company-main-title" id="tenant-company-title">ERP Business Platform</div>
+    <div class="company-sub-title" id="tenant-company-subtitle">ฝ่ายขาย / จัดซื้อ / คลังสินค้า / ค่าใช้จ่าย / วิเคราะห์ธุรกิจ</div>
+  </div>
+  <span id="topbar-ctx" class="company-date"></span>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detail-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h3 id="modal-title">รายละเอียด</h3>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<div class="layout">
+<nav class="sidebar">
+  <div class="nav-sec">ภาพรวม</div>
+  <div class="nav-item active" onclick="go('dashboard',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>แดชบอร์ด</div>
+  <div class="nav-item" onclick="go('analytics',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-7"/><circle cx="7" cy="15" r="1"/><circle cx="11" cy="11" r="1"/><circle cx="14" cy="14" r="1"/><circle cx="19" cy="7" r="1"/></svg>Business Analytics</div>
+  <div class="nav-sec">ข้อมูลหลัก</div>
+  <div class="nav-item" onclick="go('master-data',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="3"/><path d="M2 21v-2a6 6 0 0112 0v2"/><rect x="15" y="4" width="7" height="7" rx="1"/><path d="M16 16h6M16 20h6"/></svg>ลูกค้า / ผู้จำหน่าย / สินค้า</div>
+  <div class="nav-item" onclick="go('business-rules',this);window.BusinessRulesService?.render?.()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h3M14 12h2M8 16h8"/></svg>สูตร / Business Rules</div>
+  <div class="nav-sec">เอกสารขาย</div>
+  <div class="nav-item" onclick="go('quote-form',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>ใบเสนอราคา</div>
+  <div class="nav-item" onclick="go('invoice-form',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7-7 7 7"/></svg>ใบส่งสินค้า / ใบกำกับภาษี</div>
+  <div class="nav-item" onclick="go('receipt-form',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>ใบเสร็จรับเงิน</div>
+  <div class="nav-sec">ฝ่ายผลิต</div>
+  <div class="nav-item" onclick="go('production-form',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8 4V7l8 4v10"/><path d="M9 17h1M14 17h1M19 17h1"/></svg>สั่งผลิตสินค้า</div>
+  <div class="nav-item" onclick="go('production-list',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>รายการสั่งผลิต</div>
+  <div class="nav-sec">จัดซื้อ &amp; คลังสินค้า</div>
+  <div class="nav-item" onclick="go('purchase-order',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2l1 4h12l-2 8H8L6 2H3"/><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg>ใบสั่งซื้อ (PO)</div>
+  <div class="nav-item" onclick="go('goods-receipt',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>รับสินค้าเข้าคลัง</div>
+  <div class="nav-item" onclick="go('inventory',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M16 4v5"/></svg>คลังสินค้า / Stock</div>
+  <div class="nav-sec">ค่าใช้จ่าย</div>
+  <div class="nav-item" onclick="go('expense-form',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7 7 7-7"/></svg>บันทึกค่าใช้จ่ายองค์กร</div>
+  <div class="nav-sec">ติดตามงาน</div>
+  <div class="nav-item" onclick="go('linked-flow',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="12" cy="19" r="2"/><path d="M7 11l3.5-4M13.5 7L17 11M17 13l-3.5 4M10.5 17L7 13"/></svg>ศูนย์เชื่อมโยงเอกสาร</div>
+  <div class="nav-sec">ค้นหา & รายการ</div>
+  <div class="nav-item" onclick="go('quote-list',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>ใบเสนอราคา</div>
+  <div class="nav-item" onclick="go('invoice-list',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>ใบส่งสินค้า / ใบกำกับภาษี</div>
+  <div class="nav-item" onclick="go('receipt-list',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>ใบเสร็จรับเงิน</div>
+  <div class="nav-item" onclick="go('expense-list',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>ค่าใช้จ่าย</div>
+  <div class="nav-sec">ควบคุมระบบ</div>
+  <div class="nav-item" onclick="go('audit-log',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Audit / Control Center</div>
+  <div class="nav-item" onclick="go('saas-admin',this);window.SaaSService?.renderPanel?.()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 9h.01M15 9h.01"/></svg>บริษัท / แพ็กเกจ SaaS</div>
+  <div class="nav-sec">ไฟล์</div>
+  <div class="nav-item" onclick="go('files',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>Export / Import</div>
+</nav>
+
+<div class="main">
+
+<!-- DASHBOARD -->
+<div id="panel-dashboard" class="panel active">
+  <div class="dash-tabs">
+    <button class="dtab active" id="dt-all" onclick="switchDashTab('all')">รวมทั้ง 2 สาขา</button>
+    <button class="dtab ub" id="dt-ub" onclick="switchDashTab('ubon')">🟣 สาขาสำนักงานใหญ่</button>
+    <button class="dtab kk" id="dt-kk" onclick="switchDashTab('khonkaen')">🔵 สาขาที่ 00001</button>
+  </div>
+
+  <!-- Filter row for dashboard -->
+  <div class="filter-bar" style="margin-bottom:.75rem">
+    <div><label>เดือน</label>
+      <select id="dash-month" onchange="renderDash()">
+        <option value="-1">ทุกเดือน</option>
+      </select>
+    </div>
+    <div><label>ปี</label>
+      <select id="dash-year" onchange="onYearChange();renderDash()"></select>
+    </div>
+    <span id="dash-badge" style="background:var(--blue-lt);color:var(--blue);font-size:12px;padding:5px 14px;border-radius:20px;font-weight:600;align-self:flex-end"></span>
+  </div>
+
+  <div id="dash-combined">
+    <div class="metrics" id="metrics-total"></div>
+    <div class="compare-grid">
+      <div class="bc ub"><div class="bname">🟣 สาขาสำนักงานใหญ่</div><div id="dash-ub-rows"></div></div>
+      <div class="bc kk"><div class="bname">🔵 สาขาที่ 00001</div><div id="dash-kk-rows"></div></div>
+    </div>
+  </div>
+  <div id="dash-single" style="display:none">
+    <div class="metrics" id="metrics-single"></div>
+  </div>
+  <section class="prodcore-dashboard-ops">
+    <div class="card-title chart-title-row"><span>🏢 Operational Control · จัดซื้อและคลังสินค้า</span><span class="analytics-mini-label">PO · Stock · Reorder · Receipt</span></div>
+    <div id="prodcore-dashboard-kpis" class="prodcore-kpis"></div>
+    <div id="prodcore-dashboard-alerts" class="target-alerts"></div>
+  </section>
+
+  <!-- EXECUTIVE COMPARISON -->
+  <section class="dash-decision-section" aria-labelledby="dash-decision-title">
+    <div class="dash-decision-head">
+      <div>
+        <h3 id="dash-decision-title">📌 สรุปเปรียบเทียบสำหรับตัดสินใจ</h3>
+        <p>ดูยอดขาย การส่งมอบ การรับเงิน และกำไรเทียบช่วงก่อนหน้าและปีก่อนในจุดเดียว</p>
+      </div>
+      <span id="dash-compare-period" class="dash-compare-period"></span>
+    </div>
+    <div id="dash-compare-kpis" class="dash-compare-kpis"></div>
+    <div class="card dash-monthly-compare-card">
+      <div class="card-title chart-title-row">
+        <span>📅 ตารางเปรียบเทียบรายเดือน</span>
+        <span class="analytics-mini-label">MoM · YoY · Delivery · Collection · Margin</span>
+      </div>
+      <div id="dash-monthly-compare-table"></div>
+    </div>
+  </section>
+
+  <!-- MONTHLY DELIVERY TARGET -->
+  <section class="target-section" aria-labelledby="target-section-title">
+    <div class="target-heading">
+      <div>
+        <h3 id="target-section-title">🎯 เป้าหมายยอดส่งสินค้ารายเดือน</h3>
+        <p>ติดตามเป้าหมายตามวันทำการ จันทร์–ศุกร์ โดยไม่นับวันเสาร์และวันอาทิตย์</p>
+      </div>
+      <div class="target-setting">
+        <label for="delivery-monthly-target">เป้าหมายของมุมมองนี้</label>
+        <div class="target-input-wrap">
+          <input id="delivery-monthly-target" type="number" min="0" step="10000" inputmode="decimal" value="1600000" aria-label="เป้าหมายยอดส่งสินค้าต่อเดือน">
+          <span>บาท</span>
+          <button type="button" onclick="saveDeliveryTarget()">บันทึกเป้าหมาย</button>
+        </div>
+        <small id="target-scope-note"></small>
+      </div>
+    </div>
+
+    <div id="target-status-banner" class="target-status-banner"></div>
+    <div id="target-metrics" class="target-metrics"></div>
+
+    <div class="target-grid">
+      <div class="card target-card">
+        <div class="card-title target-title-row">
+          <span>ยอดส่งสินค้าสะสมเทียบเป้าหมาย</span>
+          <span id="target-period-label" class="target-period-label"></span>
+        </div>
+        <div id="target-progress" class="target-progress-wrap"></div>
+        <div id="target-chart" class="target-chart" role="img" aria-label="กราฟยอดส่งสินค้าสะสมเทียบเป้าหมาย"></div>
+        <div id="target-chart-note" class="chart-summary"></div>
+      </div>
+
+      <div class="card target-card">
+        <div class="card-title">แผนการทำยอดในวันทำการที่เหลือ</div>
+        <div id="target-workday-summary"></div>
+        <div class="target-divider"></div>
+        <div class="card-title target-subtitle">คำแนะนำอัตโนมัติ</div>
+        <div id="target-alerts" class="target-alerts"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONTHLY SALES TARGET -->
+  <section class="target-section sales-target-section" aria-labelledby="sales-target-section-title">
+    <div class="target-heading">
+      <div>
+        <h3 id="sales-target-section-title">💰 เป้าหมายยอดขายรายเดือน</h3>
+        <p>ยอดขายใช้มูลค่าขายก่อน VAT จากใบสั่งผลิต และแยกจากยอดส่งสินค้าจริงเพื่อไม่ให้คำนวณซ้ำ</p>
+      </div>
+      <div class="target-setting">
+        <label for="sales-monthly-target">เป้าหมายของมุมมองนี้</label>
+        <div class="target-input-wrap sales-target-input">
+          <input id="sales-monthly-target" type="number" min="0" step="10000" inputmode="decimal" value="2000000" aria-label="เป้าหมายยอดขายต่อเดือน">
+          <span>บาท</span>
+          <button type="button" onclick="saveSalesTarget()">บันทึกเป้าหมาย</button>
+        </div>
+        <small id="sales-target-scope-note"></small>
+      </div>
+    </div>
+
+    <div id="sales-target-status-banner" class="target-status-banner"></div>
+    <div id="sales-target-metrics" class="target-metrics"></div>
+
+    <div class="target-grid">
+      <div class="card target-card">
+        <div class="card-title target-title-row">
+          <span>ยอดขายสะสมเทียบเป้าหมาย</span>
+          <span id="sales-target-period-label" class="target-period-label"></span>
+        </div>
+        <div id="sales-target-progress" class="target-progress-wrap"></div>
+        <div id="sales-target-chart" class="target-chart" role="img" aria-label="กราฟยอดขายสะสมเทียบเป้าหมาย"></div>
+        <div id="sales-target-chart-note" class="chart-summary"></div>
+      </div>
+
+      <div class="card target-card">
+        <div class="card-title">ภาพรวมยอดขายและการส่งมอบ</div>
+        <div id="sales-target-workday-summary"></div>
+        <div class="target-divider"></div>
+        <div class="card-title target-subtitle">คำแนะนำอัตโนมัติ</div>
+        <div id="sales-target-alerts" class="target-alerts"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALES FORECAST -->
+  <div class="forecast-section">
+    <div class="forecast-heading">
+      <div>
+        <h3>🔮 Sales Forecast แบบมาตรฐาน</h3>
+        <p>ใช้ Time-series Forecasting และเลือกโมเดลจากความแม่นยำย้อนหลังด้วย Rolling-origin Cross-validation; Pipeline แสดงแยกเป็น Scenario ไม่ปนกับค่าพยากรณ์สถิติ</p>
+      </div>
+      <div class="forecast-controls">
+        <label><span>ข้อมูลย้อนหลัง</span><select id="forecast-history" onchange="renderSalesForecast()" aria-label="จำนวนเดือนย้อนหลังที่ใช้คาดการณ์">
+          <option value="6">6 เดือน</option>
+          <option value="12" selected>12 เดือน</option>
+          <option value="24">24 เดือน</option>
+          <option value="36">36 เดือน</option>
+        </select></label>
+        <label><span>วิธีพยากรณ์</span><select id="forecast-method" onchange="renderSalesForecast()" aria-label="วิธีพยากรณ์ยอดขาย">
+          <option value="auto" selected>Auto — เลือก RMSE ต่ำสุด</option>
+          <option value="sma">Moving Average 3 เดือน</option>
+          <option value="ses">Simple Exponential Smoothing</option>
+          <option value="holt">Holt Trend (Damped)</option>
+          <option value="hw">Holt-Winters Additive (12 เดือน)</option>
+          <option value="linear">Linear Regression (Benchmark)</option>
+        </select></label>
+      </div>
+    </div>
+    <div id="forecast-model-banner" class="forecast-model-banner"></div>
+    <div id="forecast-metrics" class="forecast-metrics"></div>
+    <div class="forecast-grid">
+      <div class="card forecast-card">
+        <div class="card-title chart-title-row"><span>ยอดจริงและยอดคาดการณ์ 6 เดือนข้างหน้า</span><span class="analytics-mini-label">Base Forecast</span></div>
+        <div id="forecast-chart" class="forecast-chart"></div>
+        <div id="forecast-note" class="chart-summary"></div>
+        <div id="forecast-future-table" class="forecast-table-slot"></div>
+      </div>
+      <div class="card forecast-card">
+        <div class="card-title">ภาพรวมปีถัดไป</div>
+        <div id="forecast-year-summary"></div>
+        <div class="forecast-divider"></div>
+        <div class="card-title forecast-subtitle">สิ่งที่ควรติดตาม</div>
+        <div id="forecast-alerts" class="forecast-alerts"></div>
+      </div>
+    </div>
+    <div class="card forecast-card forecast-model-card">
+      <div class="card-title chart-title-row"><span>🧪 เปรียบเทียบความแม่นยำของโมเดล</span><span class="analytics-mini-label">Rolling-origin CV · RMSE / WAPE / Bias / Tracking Signal</span></div>
+      <div id="forecast-accuracy-table"></div>
+      <div id="forecast-diagnostic-summary" class="forecast-diagnostic-summary"></div>
+      <div id="forecast-method-note" class="chart-summary"></div>
+    </div>
+  </div>
+
+
+  <!-- QUANT BUSINESS INTELLIGENCE -->
+  <section class="quant-section" aria-labelledby="quant-dashboard-title">
+    <div class="quant-section-head">
+      <div>
+        <div class="quant-eyebrow">QUANT BUSINESS INTELLIGENCE</div>
+        <h3 id="quant-dashboard-title">🧠 มุมมองเชิง Quant สำหรับผู้บริหาร</h3>
+        <p>วัดความผันผวน ความกระจุกตัว ความเสี่ยง รายได้ผิดปกติ และความน่าจะเป็นของ Forecast โดยใช้ข้อมูลจริงในระบบ</p>
+      </div>
+      <span class="quant-method-badge">Risk · Probability · Backtest</span>
+    </div>
+    <div id="quant-dashboard-kpis" class="quant-kpi-grid"></div>
+    <div class="quant-dashboard-grid">
+      <div class="card quant-card">
+        <div class="card-title chart-title-row"><span>🎲 Monte Carlo Forecast</span><span class="analytics-mini-label">5,000 simulations</span></div>
+        <div id="quant-dashboard-montecarlo"></div>
+        <div id="quant-dashboard-tailrisk"></div>
+      </div>
+      <div class="card quant-card">
+        <div class="card-title chart-title-row"><span>🧭 Business Regime & Risk Signals</span><span class="analytics-mini-label">Decision Support</span></div>
+        <div id="quant-dashboard-risklist"></div>
+      </div>
+    </div>
+    <div class="card quant-card quant-decision-card">
+      <div class="card-title chart-title-row"><span>📋 Quant Decision Matrix</span><span class="analytics-mini-label">Risk · Bias · Target · Action</span></div>
+      <div id="quant-dashboard-decision-table"></div>
+      <div id="quant-dashboard-decision-summary" class="chart-summary"></div>
+    </div>
+    <div class="quant-disclaimer">ค่าจาก Quant Layer เป็นเครื่องมือช่วยตัดสินใจ ไม่ใช่ผลลัพธ์ที่รับประกัน โดยเฉพาะ Probability/Monte Carlo จะขึ้นกับปริมาณข้อมูลและสมมติฐานของโมเดล</div>
+  </section>
+
+  <!-- PRODUCTION VS DELIVERY COMPARISON -->
+  <div class="flow-section">
+    <div class="flow-heading">
+      <div>
+        <h3>🏭 ยอดสั่งผลิตเทียบยอดส่งสินค้า</h3>
+        <p>เปรียบเทียบมูลค่าขายก่อน VAT จากใบสั่งผลิต กับยอดขายก่อน VAT จากบิลใบส่งสินค้า</p>
+      </div>
+      <span id="flow-period-label" class="flow-period-label"></span>
+    </div>
+    <div id="flow-metrics" class="flow-metrics"></div>
+    <div class="flow-grid">
+      <div class="card flow-card">
+        <div class="card-title">เปรียบเทียบรายเดือน</div>
+        <div class="flow-legend">
+          <span><i class="flow-dot production"></i>ยอดสั่งผลิต</span>
+          <span><i class="flow-dot delivery"></i>ยอดส่งสินค้า</span>
+        </div>
+        <div id="flow-chart" class="flow-chart"></div>
+        <div id="flow-chart-note" class="chart-summary"></div>
+      </div>
+      <div class="card flow-card">
+        <div class="card-title">สถานะการเปลี่ยนใบสั่งผลิตเป็นใบส่งสินค้า</div>
+        <div id="flow-conversion"></div>
+        <div class="flow-divider"></div>
+        <div class="card-title flow-subtitle">รายการที่ยังไม่ออกบิล</div>
+        <div id="flow-pending-list" class="flow-pending-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD CHARTS -->
+  <div class="dash-chart-grid">
+    <div class="card chart-card">
+      <div class="card-title chart-title-row">
+        <span>📊 กราฟเปรียบเทียบข้อมูล</span>
+        <div class="chart-controls">
+          <select id="dash-chart-range" onchange="renderDashCharts()">
+            <option value="monthly">รายเดือนในปีที่เลือก</option>
+            <option value="yearly">เปรียบเทียบรายปี</option>
+          </select>
+          <select id="dash-chart-metric" onchange="renderDashCharts()">
+            <option value="sales">ยอดขายจากใบสั่งผลิต / ข้อมูลย้อนหลัง</option>
+            <option value="delivery">ยอดส่งสินค้า</option>
+            <option value="production">ยอดสั่งผลิตสินค้า</option>
+            <option value="profit">กำไรสุทธิ</option>
+            <option value="expense">ค่าใช้จ่าย</option>
+          </select>
+        </div>
+      </div>
+      <div id="dash-bar-chart" class="bar-chart"></div>
+      <div id="dash-bar-summary" class="chart-summary"></div>
+    </div>
+
+    <div class="card chart-card">
+      <div class="card-title chart-title-row">
+        <span>👥 ลูกค้าที่ซื้อ / สั่งผลิตมากที่สุด</span>
+        <div class="chart-controls">
+          <select id="dash-customer-source" onchange="renderDashCharts()">
+            <option value="all">รวมบิลใบส่งสินค้า + สั่งผลิต</option>
+            <option value="invoices">จากบิลใบส่งสินค้า</option>
+            <option value="productions">จากใบสั่งผลิต</option>
+          </select>
+          <select id="dash-customer-mode" onchange="renderDashCharts()">
+            <option value="value">เรียงตามมูลค่า</option>
+            <option value="count">เรียงตามจำนวนเอกสาร</option>
+          </select>
+        </div>
+      </div>
+      <div id="dash-customer-chart" class="bar-chart customer-chart"></div>
+      <div id="dash-customer-summary" class="chart-summary"></div>
+    </div>
+
+    <div class="card chart-card dashboard-agency-card">
+      <div class="card-title chart-title-row">
+        <span>🏛️ สัดส่วนลูกค้าตามกลุ่มธุรกิจ</span>
+        <span class="analytics-mini-label">ราชการ · รัฐวิสาหกิจ · รพ. · รร. · เอกชน</span>
+      </div>
+      <div id="dash-agency-chart" class="bar-chart customer-chart"></div>
+      <div id="dash-agency-summary" class="chart-summary"></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="card"><div class="card-title">ใบเสนอราคาล่าสุด</div><div id="dash-quotes"></div></div>
+    <div class="card"><div class="card-title">บิลขายล่าสุด</div><div id="dash-invs"></div></div>
+  </div>
+</div>
+
+
+<!-- BUSINESS ANALYTICS -->
+<div id="panel-analytics" class="panel">
+  <div class="analytics-page-head">
+    <div>
+      <div class="analytics-eyebrow">BUSINESS ANALYTICS & CUSTOMER INTELLIGENCE</div>
+      <h2>ศูนย์วิเคราะห์ธุรกิจ</h2>
+      <p>เปลี่ยนข้อมูลขาย ผลิต ส่งสินค้า รับเงิน และกลุ่มลูกค้าให้เป็น Business Insight สำหรับวางแผนยอดขาย เครดิตลูกค้า กำไร และการติดตามงาน</p>
+    </div>
+    <button type="button" class="btn btn-ghost" onclick="refreshDataAnalytics(true)">↻ ดึงข้อมูลล่าสุด</button>
+  </div>
+
+  <div class="analytics-filter-card">
+    <div class="analytics-principles">
+      <span>Business Overview: ภาพรวมยอดขายและกำไร</span>
+      <span>Customer Analytics: ลูกค้าหลักและลูกค้าเสี่ยง</span>
+      <span>Forecast: แนวโน้มเดือนถัดไป</span>
+      <span>Action Plan: สิ่งที่ควรติดตาม</span>
+    </div>
+    <div class="analytics-filter-grid">
+      <label><span>สาขา</span><select id="analytics-branch" onchange="renderDataAnalytics()"><option value="">รวมทุกสาขา</option><option value="ubon">สาขาสำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select></label>
+      <label><span>ปี</span><select id="analytics-year" onchange="renderDataAnalytics()"></select></label>
+      <label><span>เดือน</span><select id="analytics-month" onchange="renderDataAnalytics()"><option value="">ทุกเดือน</option></select></label>
+      <label><span>สินค้า (วิเคราะห์สินค้า)</span><select id="analytics-product" onchange="renderDataAnalytics()"><option value="">สินค้าทั้งหมด</option></select></label>
+      <label><span>มุมมองหลัก</span><select id="analytics-focus" onchange="renderDataAnalytics()"><option value="sales">ภาพรวมธุรกิจ / กำไร</option><option value="delivery">ส่งสินค้า / เครดิต / รับเงิน</option><option value="quality">คุณภาพข้อมูล / ความเสี่ยง</option></select></label>
+      <label><span>ประเภทหน่วยงาน</span><select id="analytics-agency-group" onchange="populateAnalyticsAgencyTypeOptions(true)"><option value="">ทุกประเภทหน่วยงาน</option></select></label>
+      <label><span>ประเภทย่อย</span><select id="analytics-agency-type" onchange="renderDataAnalytics()"><option value="">ทุกประเภทย่อย</option></select></label>
+      <label><span>สูตรพยากรณ์</span><select id="analytics-forecast-method" onchange="renderDataAnalytics()"><option value="auto">Auto — เลือก RMSE ต่ำสุด</option><option value="sma">Moving Average 3 เดือน</option><option value="ses">Simple Exponential Smoothing</option><option value="holt">Holt Trend (Damped)</option><option value="hw">Holt-Winters Additive</option><option value="linear">Linear Regression (Benchmark)</option></select></label>
+    </div>
+  </div>
+
+  <div id="analytics-kpis" class="analytics-kpis"></div>
+  <div id="analytics-insights" class="analytics-insights"></div>
+  <div id="analytics-executive-summary" class="analytics-executive-summary"></div>
+  <div id="business-segment-cards" class="business-segment-cards"></div>
+
+  <div class="analytics-grid">
+    <div class="card analytics-card">
+      <div class="card-title chart-title-row"><span>📈 Business Forecast รายเดือน</span><span id="analytics-trend-label" class="analytics-mini-label"></span></div>
+      <div id="analytics-trend-chart" class="bar-chart analytics-chart"></div>
+      <div id="analytics-trend-summary" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card">
+      <div class="card-title chart-title-row"><span>👥 Business Analytics ลูกค้า</span><span class="analytics-mini-label">Top 10</span></div>
+      <div id="analytics-customer-chart" class="bar-chart analytics-chart"></div>
+      <div id="analytics-customer-summary" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card">
+      <div class="card-title chart-title-row"><span>🏛️ ลูกค้าตามกลุ่มธุรกิจ</span><span class="analytics-mini-label">Agency Segment</span></div>
+      <div id="analytics-agency-chart" class="bar-chart analytics-chart"></div>
+      <div id="analytics-agency-summary" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card">
+      <div class="card-title chart-title-row"><span>📦 สินค้าและงานที่สร้างยอด</span><span class="analytics-mini-label">Product Analytics</span></div>
+      <div id="analytics-product-chart" class="bar-chart analytics-chart"></div>
+      <div id="analytics-product-summary" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card analytics-product-season-card">
+      <div class="card-title chart-title-row"><span>🗓️ สินค้าขายดีตามเดือน</span><span class="analytics-mini-label">Seasonality</span></div>
+      <div id="analytics-product-season-chart" class="bar-chart analytics-chart"></div>
+      <div id="analytics-product-season-summary" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card">
+      <div class="card-title chart-title-row"><span>🧹 คุณภาพข้อมูลก่อนตัดสินใจ</span><span class="analytics-mini-label">ก่อนตัดสินใจ</span></div>
+      <div id="analytics-quality-chart" class="bar-chart analytics-chart"></div>
+      <div id="analytics-quality-summary" class="chart-summary"></div>
+    </div>
+  </div>
+
+  <div class="analytics-detail-grid">
+    <div class="card analytics-card">
+      <div class="card-title chart-title-row"><span>🔮 รายละเอียดการคาดการณ์ธุรกิจ</span><span class="analytics-mini-label">Forecast Model</span></div>
+      <div id="analytics-forecast-summary"></div>
+      <div id="analytics-method-summary" class="chart-summary"></div>
+      <div class="analytics-forecast-subtitle">ความแม่นยำย้อนหลังของแต่ละโมเดล</div>
+      <div id="analytics-forecast-accuracy-table"></div>
+      <div id="analytics-forecast-diagnostic-summary" class="forecast-diagnostic-summary"></div>
+      <div class="analytics-forecast-subtitle">พยากรณ์ 6 เดือนข้างหน้า</div>
+      <div id="analytics-forecast-future-table"></div>
+    </div>
+    <div class="card analytics-card">
+      <div class="card-title chart-title-row"><span>🧭 Business Funnel: ผลิต → ส่ง → รับเงิน</span><span class="analytics-mini-label">Conversion</span></div>
+      <div id="analytics-funnel-chart" class="analytics-funnel"></div>
+      <div id="analytics-funnel-summary" class="chart-summary"></div>
+    </div>
+  </div>
+
+
+  <!-- QUANT ANALYTICS LAB -->
+  <section class="quant-analytics-lab" aria-labelledby="quant-analytics-title">
+    <div class="quant-section-head">
+      <div>
+        <div class="quant-eyebrow">QUANT RISK & DECISION LAB</div>
+        <h3 id="quant-analytics-title">📐 วิเคราะห์ความเสี่ยงและสถานการณ์เชิงปริมาณ</h3>
+        <p>ใช้ Time-series validation, HHI concentration, Coefficient of Variation, Modified Z-score และ Scenario Stress Test เพื่อดู “ความเสี่ยง” ควบคู่กับ “ยอดขาย”</p>
+      </div>
+      <span class="quant-method-badge">Explainable Quant</span>
+    </div>
+    <div id="quant-analytics-kpis" class="quant-kpi-grid"></div>
+
+    <div class="quant-lab-grid">
+      <div class="card quant-card">
+        <div class="card-title chart-title-row"><span>🌡️ Business Regime</span><span class="analytics-mini-label">Growth / Stable / Slowdown</span></div>
+        <div id="quant-regime-card"></div>
+      </div>
+      <div class="card quant-card">
+        <div class="card-title chart-title-row"><span>🧪 Stress Test</span><span class="analytics-mini-label">What-if Scenario</span></div>
+        <div class="quant-stress-controls">
+          <label><span>ยอดขายเปลี่ยน</span><input id="quant-stress-sales" type="number" value="-10" min="-90" max="200" step="1" onchange="renderDataAnalytics()"><em>%</em></label>
+          <label><span>ต้นทุนเปลี่ยน</span><input id="quant-stress-cost" type="number" value="5" min="-90" max="200" step="1" onchange="renderDataAnalytics()"><em>%</em></label>
+          <label><span>Conversion Pipeline เปลี่ยน</span><input id="quant-stress-conversion" type="number" value="-20" min="-100" max="200" step="1" onchange="renderDataAnalytics()"><em>%</em></label>
+        </div>
+        <div id="quant-stress-output"></div>
+      </div>
+    </div>
+
+    <div class="analytics-table-grid quant-table-grid">
+      <div class="card analytics-card analytics-wide-card">
+        <div class="card-title chart-title-row"><span>🎯 Quote Probability Proxy & Expected Pipeline</span><span class="analytics-mini-label">Historical Approval Ratio</span></div>
+        <div id="quant-pipeline-table"></div>
+        <div id="quant-pipeline-summary" class="chart-summary"></div>
+      </div>
+      <div class="card analytics-card analytics-wide-card">
+        <div class="card-title chart-title-row"><span>🧩 Customer Concentration</span><span class="analytics-mini-label">HHI · Top Share</span></div>
+        <div id="quant-concentration-table"></div>
+        <div id="quant-concentration-summary" class="chart-summary"></div>
+      </div>
+      <div class="card analytics-card analytics-wide-card">
+        <div class="card-title chart-title-row"><span>🚨 Robust Anomaly Detection</span><span class="analytics-mini-label">Modified Z-score · MAD</span></div>
+        <div id="quant-anomaly-table"></div>
+        <div id="quant-anomaly-summary" class="chart-summary"></div>
+      </div>
+      <div class="card analytics-card analytics-wide-card">
+        <div class="card-title chart-title-row"><span>🛡️ Quant Decision Matrix</span><span class="analytics-mini-label">Model Governance · Risk Budget</span></div>
+        <div id="quant-decision-table"></div>
+        <div id="quant-decision-summary" class="chart-summary"></div>
+      </div>
+    </div>
+    <div id="quant-methodology-note" class="quant-methodology-note"></div>
+  </section>
+
+  <div class="analytics-table-grid">
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>📅 ตารางสรุปรายเดือนแบบละเอียด</span><span class="analytics-mini-label">MoM · YoY · Margin · Delivery · Collection</span></div>
+      <div id="analytics-monthly-table"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>👥 Business Analytics วิเคราะห์ลูกค้าเชิงลึก</span><span class="analytics-mini-label">Customer Deep Dive</span></div>
+      <div id="analytics-customer-table"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>🎯 แผนติดตามลูกค้าและโอกาสทางธุรกิจ</span><span class="analytics-mini-label">Customer Action Plan</span></div>
+      <div id="analytics-customer-strategy-table"></div>
+      <div id="analytics-customer-strategy-summary" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>🏛️ วิเคราะห์กลุ่มลูกค้า: ราชการ รัฐวิสาหกิจ โรงพยาบาล โรงเรียน บริษัทเอกชน</span><span class="analytics-mini-label">Agency Deep Dive</span></div>
+      <div id="analytics-agency-table"></div>
+      <div id="analytics-agency-explain" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>📦 วิเคราะห์สินค้า/งานเชิงลึก</span><span class="analytics-mini-label">Product Deep Dive</span></div>
+      <div id="analytics-product-table"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>📊 ยอดขายสินค้ารายไตรมาส</span><span class="analytics-mini-label">Q1 · Q2 · Q3 · Q4</span></div>
+      <div id="analytics-product-quarter-table"></div>
+      <div class="chart-summary">เลือกสินค้าในตัวกรองด้านบน เพื่อดูว่าแต่ละสินค้าเดือนไหนและไตรมาสไหนสร้างยอดสูงสุด</div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>🧑‍💼 วิเคราะห์พนักงานขาย</span><span class="analytics-mini-label">Sales Performance</span></div>
+      <div id="analytics-salesperson-table"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>🏢 เปรียบเทียบสาขา</span><span class="analytics-mini-label">Branch Compare</span></div>
+      <div id="analytics-branch-table"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>💰 ลูกหนี้ค้างรับและเครดิตลูกค้า</span><span class="analytics-mini-label">AR Aging</span></div>
+      <div id="analytics-ar-table"></div>
+      <div id="analytics-ar-summary" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>🚚 งานใกล้ครบกำหนด / เลยกำหนดส่ง</span><span class="analytics-mini-label">Delivery Control</span></div>
+      <div id="analytics-delivery-control-table"></div>
+      <div id="analytics-delivery-control-summary" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>🏭 กำหนดชำระผู้ผลิต</span><span class="analytics-mini-label">Supplier Payable</span></div>
+      <div id="analytics-supplier-payable-table"></div>
+      <div id="analytics-supplier-payable-summary" class="chart-summary"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>⚠️ ตัวอย่างข้อมูลที่ควรตรวจ</span><span class="analytics-mini-label">Data Risks</span></div>
+      <div id="analytics-risk-table"></div>
+    </div>
+    <div class="card analytics-card analytics-wide-card">
+      <div class="card-title chart-title-row"><span>📘 คู่มืออ่าน Business Analytics</span><span class="analytics-mini-label">Business Analytics Guide</span></div>
+      <div id="analytics-explain-panel"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MASTER DATA -->
+<div id="panel-master-data" class="panel">
+  <section class="master-page-head">
+    <div><small>FLOWACCOUNT-INSPIRED MASTER DATA</small><h2>📚 ข้อมูลหลักสำหรับลูกค้า ผู้จำหน่าย และสินค้า</h2><p>บันทึกข้อมูลไว้ในเครื่องนี้ เพื่อเรียกกลับมาใช้ในเอกสารครั้งถัดไป ลดการพิมพ์ซ้ำ และแยกสินค้าสต็อก/สั่งผลิตให้ชัดเจน</p></div>
+    <span class="master-local-pill">💾 Local Master</span>
+  </section>
+  <div class="master-tabs">
+    <button class="active" data-master-tab="customer" onclick="switchMasterTab('customer',this)">👤 ลูกค้า</button>
+    <button data-master-tab="supplier" onclick="switchMasterTab('supplier',this)">🏭 ผู้จำหน่าย / ผู้ผลิต</button>
+    <button data-master-tab="product" onclick="switchMasterTab('product',this)">📦 สินค้า & สต็อก</button>
+  </div>
+
+  <section id="master-tab-customer" class="master-tab-panel active">
+    <div class="card master-editor-card">
+      <div class="card-title">👤 เพิ่ม / แก้ไขลูกค้า</div>
+      <div class="master-form-grid">
+        <label><span>ชื่อลูกค้า / บริษัท *</span><input id="md-c-name" placeholder="เช่น โรงเรียนตัวอย่าง"></label>
+        <label><span>ประเภทกิจการ</span><select id="md-c-entity"><option value="company">นิติบุคคล</option><option value="person">บุคคลธรรมดา</option></select></label>
+        <label><span>สถานะผู้ติดต่อ</span><select id="md-c-role"><option value="customer">ลูกค้า</option><option value="both">ลูกค้าและผู้จำหน่าย</option></select></label>
+        <label><span>เลขประจำตัวผู้เสียภาษี</span><input id="md-c-tax" inputmode="numeric" placeholder="0000000000000"></label>
+        <label><span>ชื่อสาขา</span><input id="md-c-branch-name" placeholder="สำนักงานใหญ่ / สาขา..."></label>
+        <label><span>รหัสสาขา</span><input id="md-c-branch-code" placeholder="00000"></label>
+        <label class="master-span-2"><span>ที่อยู่สำหรับออกเอกสาร</span><textarea id="md-c-address" rows="2" placeholder="บ้านเลขที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด"></textarea></label>
+        <label><span>รหัสไปรษณีย์</span><input id="md-c-postal" placeholder="00000"></label>
+        <label><span>ผู้ติดต่อ</span><input id="md-c-contact" placeholder="ชื่อผู้ประสานงาน"></label>
+        <label><span>เบอร์โทร</span><input id="md-c-phone" placeholder="000-000-0000"></label>
+        <label><span>อีเมล</span><input id="md-c-email" type="email" placeholder="name@example.com"></label>
+        <label><span>เครดิต (วัน)</span><input id="md-c-credit" type="number" min="0" step="1" placeholder="30"></label>
+        <label class="master-span-2"><span>หมายเหตุ</span><input id="md-c-note" placeholder="ข้อมูลประกอบเพิ่มเติม"></label>
+      </div>
+      <div class="form-actions"><button class="btn btn-ghost" onclick="resetCustomerMasterForm()">ล้าง</button><button class="btn btn-primary" onclick="saveCustomerMaster()">💾 จำลูกค้าไว้ในเครื่อง</button></div>
+    </div>
+    <div class="card"><div class="card-title"><span>รายชื่อลูกค้าที่จดจำไว้</span><span id="master-customer-count" class="analytics-mini-label"></span></div><div id="master-customer-table"></div></div>
+  </section>
+
+  <section id="master-tab-supplier" class="master-tab-panel">
+    <div class="card master-editor-card">
+      <div class="card-title">🏭 เพิ่ม / แก้ไขผู้จำหน่ายหรือผู้ผลิต</div>
+      <div class="master-form-grid">
+        <label><span>ชื่อผู้จำหน่าย / ผู้ผลิต *</span><input id="md-s-name" placeholder="ชื่อบริษัท / ผู้ผลิต"></label>
+        <label><span>ประเภทกิจการ</span><select id="md-s-entity"><option value="company">นิติบุคคล</option><option value="person">บุคคลธรรมดา</option></select></label>
+        <label><span>สถานะผู้ติดต่อ</span><select id="md-s-role"><option value="supplier">ผู้จำหน่าย</option><option value="both">ลูกค้าและผู้จำหน่าย</option></select></label>
+        <label><span>เลขประจำตัวผู้เสียภาษี</span><input id="md-s-tax" inputmode="numeric" placeholder="0000000000000"></label>
+        <label class="master-span-2"><span>ที่อยู่ผู้จำหน่าย / ผู้ผลิต</span><textarea id="md-s-address" rows="2" placeholder="ที่อยู่สำหรับติดต่อและเอกสารซื้อ"></textarea></label>
+        <label><span>ผู้ติดต่อ</span><input id="md-s-contact" placeholder="ชื่อผู้ประสานงาน"></label>
+        <label><span>เบอร์โทร</span><input id="md-s-phone" placeholder="000-000-0000"></label>
+        <label><span>อีเมล</span><input id="md-s-email" type="email" placeholder="supplier@example.com"></label>
+        <label><span>เครดิตผู้ผลิต</span><select id="md-s-credit"><option value="cash">เงินสด</option><option value="credit30">30 วัน</option><option value="credit60">60 วัน</option><option value="credit90">90 วัน</option><option value="credit120">120 วัน</option></select></label>
+        <label><span>ระยะเวลาส่งมาตรฐาน</span><input id="md-s-lead" placeholder="เช่น 7,14,30"></label>
+        <label class="master-span-2"><span>หมายเหตุ</span><input id="md-s-note" placeholder="เงื่อนไขการซื้อ / ชำระเงิน"></label>
+      </div>
+      <div class="form-actions"><button class="btn btn-ghost" onclick="resetSupplierMasterForm()">ล้าง</button><button class="btn btn-green" onclick="saveSupplierMaster()">💾 จำผู้จำหน่ายไว้ในเครื่อง</button></div>
+    </div>
+    <div class="card"><div class="card-title"><span>ผู้จำหน่าย / ผู้ผลิตที่จดจำไว้</span><span id="master-supplier-count" class="analytics-mini-label"></span></div><div id="master-supplier-table"></div></div>
+  </section>
+
+  <section id="master-tab-product" class="master-tab-panel">
+    <div class="card master-editor-card">
+      <div class="card-title">📦 Product Master & Stock Type</div>
+      <div class="master-flow-note"><b>แนวคิดจาก FlowAccount:</b> Service / Non-Inventory / Inventory และระบบนี้เพิ่ม “รูปแบบการจัดหา” เพื่อแยก <b>สินค้าในสต็อก</b> ออกจาก <b>สินค้าสั่งผลิต</b></div>
+      <div class="master-form-grid">
+        <label><span>รหัสสินค้า *</span><input id="md-p-code" placeholder="SKU-001"></label>
+        <label><span>ชื่อสินค้า *</span><input id="md-p-name" placeholder="ชื่อสินค้า / บริการ"></label>
+        <label><span>หมวดสินค้า</span><input id="md-p-category" placeholder="เช่น คอมพิวเตอร์และอุปกรณ์"></label>
+        <label><span>หน่วยหลัก</span><select id="md-p-unit"></select></label>
+        <label><span>ประเภทสินค้าแบบ FlowAccount</span><select id="md-p-flow-type" onchange="syncProductFulfillmentFromFlowType()"><option value="inventory">Inventory · นับสต็อก</option><option value="non_inventory">Non-Inventory · ไม่นับสต็อก</option><option value="service">Service · บริการ</option></select></label>
+        <label><span>รูปแบบการจัดหาในระบบนี้</span><select id="md-p-fulfillment"><option value="stock">📦 สินค้าในสต็อก</option><option value="made_to_order">🏭 สินค้าสั่งผลิต / สั่งซื้อเฉพาะงาน</option><option value="service">🧰 บริการ</option></select></label>
+        <label><span>ยอดตั้งต้น · สำนักงานใหญ่</span><input id="md-p-opening-ub" type="number" min="0" step="0.01" placeholder="0"></label>
+        <label><span>ยอดตั้งต้น · สาขาที่ 00001</span><input id="md-p-opening-kk" type="number" min="0" step="0.01" placeholder="0"></label>
+        <label><span>จุดสั่งซื้อซ้ำ</span><input id="md-p-reorder" type="number" min="0" step="0.01" placeholder="0"></label>
+        <label><span>ต้นทุนมาตรฐาน / หน่วย</span><input id="md-p-standard-cost" type="number" min="0" step="0.01" placeholder="0.00"></label>
+        <label class="master-span-2"><span>ผู้จำหน่ายหลัก</span><input id="md-p-supplier" list="supplier-master-list" placeholder="เลือกหรือพิมพ์ชื่อผู้จำหน่าย"></label>
+      </div>
+      <div class="form-actions"><button class="btn btn-ghost" onclick="resetProductMasterForm()">ล้าง</button><button class="btn btn-purple" onclick="saveProductMasterLocal()">💾 บันทึก Product Master</button></div>
+    </div>
+    <div class="card"><div class="card-title"><span>รายการสินค้า แยก Stock / Made-to-order / Service</span><span id="master-product-count" class="analytics-mini-label"></span></div><div id="master-product-table"></div><div class="master-flow-note"><b>หมายเหตุสต็อก:</b> คงเหลือคำนวณแบบแยกสาขาจากยอดตั้งต้น + รับสินค้า + ปรับสต็อก − จำนวนที่ออกใบส่งสินค้า/ใบกำกับภาษี โดยดูรายละเอียดทั้งหมดได้ที่เมนู “คลังสินค้า / Stock”</div></div>
+  </section>
+</div>
+
+<!-- BUSINESS RULES / FORMULA LAB -->
+<div id="panel-business-rules" class="panel">
+  <section class="brules-head">
+    <div><div class="brules-eyebrow">TENANT-SCOPED FORMULA SANDBOX</div><h2>🧮 Business Rules / Formula Lab</h2><p>แต่ละบริษัทมีสินค้า ลูกค้า ผู้ผลิต และวิธีคิดราคาไม่เหมือนกัน หน้านี้ใช้ทดลองกำหนดสูตรของบริษัทโดยไม่ต้องแก้ Source Code แยกรายลูกค้า และบันทึก Formula Version สำหรับ Audit</p></div>
+    <span id="br-version-badge" class="brules-version">Formula BR-001</span>
+  </section>
+
+  <div class="card">
+    <div class="card-title"><span>1) เลือก Scenario ตัวอย่าง</span><span class="analytics-mini-label">ข้อมูลสมมติสำหรับ Trial</span></div>
+    <div id="br-preset-grid" class="brules-preset-grid"></div>
+    <div class="brules-actions"><button type="button" id="br-seed-selected" class="btn btn-primary">🧪 โหลด Scenario + Master Data ลง Trial นี้</button></div>
+    <div class="brules-note"><strong>ความปลอดภัย:</strong> ปุ่มนี้เพิ่มข้อมูลสมมติเฉพาะ Tenant ที่กำลัง Login เท่านั้น ไม่เปิดให้บริษัทหนึ่งเห็น Master Data หรือ Business Rules ของอีกบริษัท</div>
+  </div>
+
+  <div class="brules-grid">
+    <section class="brules-card">
+      <h3>2) สูตรหลักของบริษัท</h3>
+      <div class="brules-form-grid">
+        <label><span>วิธีตั้งราคาหลัก</span><select id="br-pricing-method"><option value="markup_on_cost">Markup on Cost</option><option value="target_margin">Target Gross Margin</option><option value="fixed_price">Fixed Price / Rate</option></select></label>
+        <label><span>อัตรา (%) / ราคาคงที่</span><input id="br-rate" type="number" min="0" step="0.01" value="25"></label>
+        <label><span>ส่วนลดลูกค้า Default (%)</span><input id="br-default-discount" type="number" min="0" max="100" step="0.01" value="0"></label>
+        <label><span>วิธีคิดค่าคอมมิชชัน</span><select id="br-commission-method"><option value="none">ไม่มี</option><option value="net_sales">% จากยอดขายสุทธิ</option><option value="gross_profit">% จากกำไรขั้นต้น</option></select></label>
+        <label><span>Commission Rate (%)</span><input id="br-commission-rate" type="number" min="0" max="100" step="0.01" value="0"></label>
+      </div>
+      <div class="brules-checks">
+        <label><input id="br-cost-shipping" type="checkbox" checked> รวมค่าขนส่งในต้นทุน</label>
+        <label><input id="br-cost-labor" type="checkbox" checked> รวมค่าแรงในต้นทุน</label>
+        <label><input id="br-cost-design" type="checkbox" checked> รวมค่าออกแบบในต้นทุน</label>
+        <label><input id="br-cost-other" type="checkbox" checked> รวมต้นทุนทางตรงอื่น</label>
+      </div>
+      <div class="brules-actions"><button type="button" id="br-save" class="btn btn-green">💾 บันทึกเป็น Formula Version ใหม่</button></div>
+      <div class="brules-note"><strong>Markup ≠ Margin:</strong> Markup 25% = Cost × 1.25 ส่วน Target Margin 25% = Cost ÷ (1−0.25) จึงได้ราคาขายต่างกัน ระบบแยกสูตรให้ถูกต้อง</div>
+    </section>
+
+    <section class="brules-card">
+      <h3>3) Formula Lab — ทดลองคำนวณ</h3>
+      <div class="brules-form-grid">
+        <label><span>ต้นทุนสินค้า/บริการต่อหน่วย</span><input id="br-lab-base" type="number" min="0" step="0.01" value="10000"></label>
+        <label><span>ค่าขนส่งต่อหน่วย</span><input id="br-lab-shipping" type="number" min="0" step="0.01" value="0"></label>
+        <label><span>ค่าแรงต่อหน่วย</span><input id="br-lab-labor" type="number" min="0" step="0.01" value="0"></label>
+        <label><span>ค่าออกแบบต่อหน่วย</span><input id="br-lab-design" type="number" min="0" step="0.01" value="0"></label>
+        <label><span>ต้นทุนอื่นต่อหน่วย</span><input id="br-lab-other" type="number" min="0" step="0.01" value="0"></label>
+        <label><span>จำนวน</span><input id="br-lab-qty" type="number" min="0.01" step="0.01" value="1"></label>
+        <label><span>สินค้า / SKU (ใช้ Product Override)</span><input id="br-lab-product" list="br-product-list" placeholder="เช่น IT-TRIAL-01"><datalist id="br-product-list"></datalist></label>
+        <label><span>ลูกค้า (ใช้ Customer Override)</span><input id="br-lab-customer" list="br-customer-list" placeholder="ชื่อลูกค้า"><datalist id="br-customer-list"></datalist></label>
+        <label><span>ส่วนลดในเอกสาร (%)</span><input id="br-lab-discount" type="number" min="0" max="100" step="0.01" value="0"></label>
+        <label><span>VAT</span><select id="br-lab-vat"><option value="1">VAT 7%</option><option value="0">ไม่คิด VAT</option></select></label>
+      </div>
+      <div class="brules-result-grid" style="margin-top:12px">
+        <div class="brules-result"><small>ต้นทุนตรง/หน่วย</small><b id="br-res-cost">฿0.00</b></div>
+        <div class="brules-result purple"><small>ราคาก่อนส่วนลด/หน่วย</small><b id="br-res-list">฿0.00</b></div>
+        <div class="brules-result"><small>ราคาขายสุทธิ/หน่วย</small><b id="br-res-net">฿0.00</b></div>
+        <div class="brules-result good"><small>รวม VAT</small><b id="br-res-total">฿0.00</b></div>
+        <div class="brules-result good"><small>กำไรขั้นต้น</small><b id="br-res-profit">฿0.00</b></div>
+        <div class="brules-result"><small>Gross Margin</small><b id="br-res-margin">0%</b></div>
+        <div class="brules-result warn"><small>ค่าคอมมิชชัน</small><b id="br-res-commission">฿0.00</b></div>
+        <div class="brules-result good"><small>กำไรหลัง Commission</small><b id="br-res-netprofit">฿0.00</b></div>
+      </div>
+      <div class="brules-note">Rule ที่ใช้: <strong id="br-res-rule">-</strong><br>ส่วนลด: <strong id="br-res-discount">-</strong><br><strong>VAT 7%</strong> ใน Trial นี้เป็นสูตรระบบ ไม่เปิดให้เขียน JavaScript/สูตรภาษาธรรมชาติเอง</div>
+      <div class="brules-actions"><button type="button" id="br-apply-quote" class="btn btn-primary">→ ใส่ราคานี้ในใบเสนอราคาแถวแรก</button></div>
+    </section>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>4) Rule Priority</span><span class="analytics-mini-label">Formula Resolution</span></div>
+    <div class="brules-flow"><span>Company Default</span><i>→</i><span>Product Override</span><i>→</i><span>Customer Discount</span><i>→</i><span>Document Override</span></div>
+    <div class="brules-note">ระบบเลือกกฎที่เฉพาะเจาะจงกว่าก่อน และใบเสนอราคาจะเก็บ Snapshot ของ Formula Version + Suggested Price ณ วันที่สร้าง เพื่อให้การเปลี่ยนสูตรในอนาคตไม่ย้อนกลับไปเปลี่ยนบริบทของเอกสารเก่า</div>
+  </div>
+
+  <div class="brules-grid">
+    <section class="brules-card">
+      <div class="brules-section-title"><b>Product Pricing Override</b><small>สูตรเฉพาะสินค้า</small></div>
+      <div class="brules-inline-form">
+        <label><span>สินค้า/SKU</span><input id="br-rule-product" list="br-product-list" placeholder="SKU หรือชื่อสินค้า"></label>
+        <label><span>วิธีคำนวณ</span><select id="br-rule-product-method"><option value="markup_on_cost">Markup on Cost</option><option value="target_margin">Target Margin</option></select></label>
+        <label><span>อัตรา %</span><input id="br-rule-product-rate" type="number" min="0" max="95" step="0.01" value="25"></label>
+        <button type="button" id="br-add-product-rule" class="brules-mini-btn">+ เพิ่ม Rule</button>
+      </div>
+      <div id="br-product-rules-table"></div>
+    </section>
+    <section class="brules-card">
+      <div class="brules-section-title"><b>Customer Discount Override</b><small>ส่วนลดเฉพาะลูกค้า</small></div>
+      <div class="brules-inline-form" style="grid-template-columns:1.5fr .7fr auto">
+        <label><span>ลูกค้า</span><input id="br-rule-customer" list="br-customer-list" placeholder="ชื่อลูกค้า"></label>
+        <label><span>ส่วนลด %</span><input id="br-rule-customer-discount" type="number" min="0" max="100" step="0.01" value="0"></label>
+        <button type="button" id="br-add-customer-rule" class="brules-mini-btn">+ เพิ่ม Rule</button>
+      </div>
+      <div id="br-customer-rules-table"></div>
+    </section>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>5) Formula Version / Audit Context</span><span class="analytics-mini-label">ไม่แก้เอกสารย้อนหลัง</span></div>
+    <div id="br-audit" class="brules-audit"></div>
+    <div id="br-version-history" style="margin-top:12px"></div>
+    <div id="br-status" class="brules-status" aria-live="polite"></div>
+  </div>
+</div>
+
+
+<!-- PURCHASE ORDER -->
+<div id="panel-purchase-order" class="panel"><div class="card prodcore-shell">
+  <div class="card-title"><span>🛒 ใบสั่งซื้อสินค้า (Purchase Order)</span><span class="prodcore-badge">Purchase Control</span></div>
+  <div class="prodcore-guide"><b>Workflow:</b> สร้าง PO → ส่งให้ผู้จำหน่าย → รับสินค้า → Stock เพิ่ม → ปิด PO อัตโนมัติเมื่อรับครบ</div>
+  <div class="prodcore-form-grid">
+    <label><span>เลขที่ PO</span><div class="prodcore-inline"><input id="po-no" readonly><button type="button" class="btn btn-ghost btn-sm" onclick="pcRefreshPoNo()">↻ เลขใหม่</button></div></label>
+    <label><span>วันที่ *</span><input id="po-date" type="date" onchange="pcRefreshPoNo()"></label>
+    <label><span>สาขา *</span><select id="po-branch"><option value="ubon">สำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select></label>
+    <label><span>กำหนดรับสินค้า</span><input id="po-expected" type="date"></label>
+    <label class="prodcore-span-2"><span>ผู้จำหน่าย / ผู้ผลิต *</span><input id="po-supplier" list="supplier-master-list" placeholder="เลือกจาก Supplier Master" onchange="pcApplySupplierToPo()"></label>
+    <label class="prodcore-span-2"><span>ที่อยู่ผู้จำหน่าย</span><textarea id="po-supplier-address" rows="2" readonly></textarea></label>
+    <label><span>เลขผู้เสียภาษี</span><input id="po-supplier-tax" readonly></label>
+    <label><span>สถานะ</span><select id="po-status"><option value="draft">ร่าง</option><option value="ordered">ส่งคำสั่งซื้อแล้ว</option></select></label>
+  </div>
+  <div class="fsec prodcore-section-title">รายการที่สั่งซื้อ</div>
+  <div class="tbl-wrap"><table class="items-table prodcore-items"><thead><tr><th>สินค้า</th><th>คงเหลือ</th><th>จำนวนสั่ง</th><th>หน่วย</th><th>ต้นทุน/หน่วย</th><th>รวม</th><th></th></tr></thead><tbody id="po-items-body"></tbody></table></div>
+  <button class="btn btn-ghost btn-sm" type="button" onclick="pcAddPoItem()">+ เพิ่มสินค้า</button>
+  <div class="prodcore-total-row"><span>ยอดรวมก่อน VAT</span><b id="po-total">฿0.00</b></div>
+  <div class="prodcore-form-grid"><label class="prodcore-span-2"><span>หมายเหตุ</span><textarea id="po-note" rows="2" placeholder="เงื่อนไขการสั่งซื้อ / การจัดส่ง"></textarea></label></div>
+  <div class="form-actions"><button class="btn btn-ghost" onclick="pcResetPo()">ล้างฟอร์ม</button><button class="btn btn-primary" onclick="pcSavePo()">💾 บันทึกใบสั่งซื้อ</button></div>
+</div>
+<div class="card"><div class="card-title"><span>รายการใบสั่งซื้อ</span><span id="po-list-count" class="analytics-mini-label"></span></div><div id="po-list-table"></div></div>
+</div>
+
+<!-- GOODS RECEIPT -->
+<div id="panel-goods-receipt" class="panel"><div class="card prodcore-shell">
+  <div class="card-title"><span>📥 รับสินค้าเข้าคลัง (Goods Receipt)</span><span class="prodcore-badge green">Stock In</span></div>
+  <div class="prodcore-guide"><b>ควบคุมสต็อก:</b> เลือก PO ที่ยังรับไม่ครบ ระบบจะแสดงจำนวนค้างรับ และเพิ่ม Stock Movement เมื่อกด Post</div>
+  <div class="prodcore-form-grid">
+    <label><span>เลขที่รับสินค้า</span><input id="gr-no" readonly></label>
+    <label><span>วันที่รับ *</span><input id="gr-date" type="date" onchange="pcRefreshGrNo()"></label>
+    <label><span>สาขา *</span><select id="gr-branch" onchange="pcPopulateOpenPo()"><option value="ubon">สำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select></label>
+    <label class="prodcore-span-2"><span>อ้างอิงใบสั่งซื้อ *</span><select id="gr-po" onchange="pcLoadPoForReceipt()"><option value="">— เลือก PO —</option></select></label>
+    <label class="prodcore-span-2"><span>ผู้จำหน่าย</span><input id="gr-supplier" readonly></label>
+  </div>
+  <div class="tbl-wrap"><table class="items-table prodcore-items"><thead><tr><th>สินค้า</th><th>สั่งซื้อ</th><th>รับแล้ว</th><th>ค้างรับ</th><th>รับครั้งนี้ *</th><th>หน่วย</th><th>ต้นทุน</th></tr></thead><tbody id="gr-items-body"></tbody></table></div>
+  <div class="prodcore-form-grid"><label class="prodcore-span-2"><span>หมายเหตุการรับ</span><textarea id="gr-note" rows="2"></textarea></label></div>
+  <div class="form-actions"><button class="btn btn-green" onclick="pcPostGoodsReceipt()">✅ Post รับสินค้าเข้าคลัง</button></div>
+</div>
+<div class="card"><div class="card-title"><span>ประวัติการรับสินค้า</span><span id="gr-list-count" class="analytics-mini-label"></span></div><div id="gr-list-table"></div></div>
+</div>
+
+<!-- INVENTORY -->
+<div id="panel-inventory" class="panel">
+  <div class="prodcore-page-head"><div><span>INVENTORY CONTROL</span><h2>📦 คลังสินค้าและ Stock Movement</h2><p>คงเหลือ = Opening Stock + รับเข้า + Adjustment − ออกจากใบส่งสินค้า/ใบกำกับภาษี</p></div><button class="btn btn-primary" onclick="pcRenderInventory()">↻ Refresh</button></div>
+  <div id="inventory-kpis" class="prodcore-kpis"></div>
+  <div class="card"><div class="card-title">สินค้าคงเหลือแยกสาขา</div><div class="filter-bar"><div><label>สาขา</label><select id="inv-branch-filter" onchange="pcRenderInventory()"><option value="all">รวมทุกสาขา</option><option value="ubon">สำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select></div><div><label>ค้นหา</label><input id="inv-search" type="text" placeholder="SKU / ชื่อสินค้า" oninput="pcRenderInventory()"></div></div><div id="inventory-stock-table"></div></div>
+  <div class="card"><div class="card-title">⚙️ ปรับปรุงยอดสต็อก (Stock Adjustment)</div><div class="prodcore-form-grid"><label><span>วันที่</span><input id="adj-date" type="date"></label><label><span>สาขา</span><select id="adj-branch"><option value="ubon">สำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select></label><label class="prodcore-span-2"><span>สินค้า *</span><input id="adj-product" list="product-master-list" placeholder="เลือก Inventory Product"></label><label><span>ประเภท</span><select id="adj-type"><option value="increase">เพิ่มสต็อก</option><option value="decrease">ลดสต็อก</option></select></label><label><span>จำนวน *</span><input id="adj-qty" type="number" min="0" step="0.01"></label><label class="prodcore-span-2"><span>เหตุผล *</span><input id="adj-reason" placeholder="เช่น ตรวจนับจริง / ของชำรุด / รับคืน"></label></div><div class="form-actions"><button class="btn btn-amber" onclick="pcPostAdjustment()">บันทึก Adjustment</button></div></div>
+  <div class="card"><div class="card-title">🔄 โอนสินค้าระหว่างสาขา (Stock Transfer)</div><div class="prodcore-form-grid"><label><span>วันที่โอน</span><input id="transfer-date" type="date"></label><label><span>สินค้า *</span><input id="transfer-product" list="product-master-list" placeholder="เลือก Inventory Product"></label><label><span>ต้นทาง *</span><select id="transfer-from"><option value="ubon">สำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select></label><label><span>ปลายทาง *</span><select id="transfer-to"><option value="khonkaen">สาขาที่ 00001</option><option value="ubon">สำนักงานใหญ่</option></select></label><label><span>จำนวน *</span><input id="transfer-qty" type="number" min="0" step="0.01"></label><label><span>หมายเหตุ</span><input id="transfer-note" placeholder="เช่น เติมสต็อกสาขา"></label></div><div class="prodcore-guide"><b>Control:</b> ระบบจะตรวจ Stock ต้นทางก่อน และสร้าง Movement 2 รายการด้วยเลขอ้างอิงเดียวกัน: Transfer Out + Transfer In</div><div class="form-actions"><button class="btn btn-purple" onclick="pcPostTransfer()">🔄 บันทึกการโอนสต็อก</button></div></div>
+  <div class="card"><div class="card-title"><span>Stock Movement Ledger</span><span id="inventory-movement-count" class="analytics-mini-label"></span></div><div id="inventory-movement-table"></div></div>
+</div>
+
+<!-- AUDIT / CONTROL -->
+<div id="panel-audit-log" class="panel">
+  <div class="prodcore-page-head audit"><div><span>INTERNAL CONTROL</span><h2>🛡️ Audit & Control Center</h2><p>ติดตามการสร้าง แก้ไข รับสินค้า ปรับ Stock การชำระ และเหตุการณ์สำคัญของระบบบนเครื่องนี้</p></div><button class="btn btn-ghost" onclick="pcExportAudit()">⬇ Export Audit CSV</button></div>
+  <div id="audit-kpis" class="prodcore-kpis"></div>
+  <div class="card"><div class="filter-bar"><div><label>เหตุการณ์</label><select id="audit-action" onchange="pcRenderAudit()"><option value="">ทั้งหมด</option><option value="create">Create</option><option value="update">Update</option><option value="post">Post</option><option value="payment">Payment</option><option value="adjust">Adjust</option><option value="delete">Delete</option><option value="system">System</option></select></div><div><label>ค้นหา</label><input id="audit-search" type="text" placeholder="เลขเอกสาร / รายละเอียด" oninput="pcRenderAudit()"></div></div><div id="audit-table"></div><div class="prodcore-control-note"><b>หมายเหตุ:</b> Audit Log รุ่นนี้เก็บแบบ Local Audit Trail เพื่อช่วยตรวจสอบการทำงาน หากนำไปใช้ Production หลายผู้ใช้ควรเก็บ Audit Log บน Firebase/Backend แบบ append-only และกำหนดสิทธิ์ไม่ให้ผู้ใช้ทั่วไปแก้ไขย้อนหลัง</div></div>
+</div>
+
+<!-- QUOTE FORM -->
+<div id="panel-quote-form" class="panel"><div class="card">
+  <div id="q-edit-banner" class="edit-document-banner" style="display:none"><span data-edit-label></span><button type="button" onclick="cancelDocumentEdit('quote')">ยกเลิกการแก้ไข</button></div>
+  <div class="card-title">📄 ใบเสนอราคาใหม่</div>
+  <div class="form-quick-guide"><span class="guide-step active">1 ข้อมูลเอกสาร</span><span class="guide-step">2 ลูกค้าและสินค้า</span><span class="guide-step">3 ตรวจสอบและบันทึก</span></div>
+  <div class="fg">
+    <div class="ff doc-number-field"><label>เลขที่ใบเสนอราคา *</label><div class="doc-number-input-group"><input type="text" id="q-no" class="quote-auto-no" placeholder="QT690801"><button type="button" class="doc-number-auto-btn" onclick="useAutoDocumentNumber('quote')" title="สร้างเลขถัดไปอัตโนมัติ">↻ ใช้เลขอัตโนมัติ</button></div><div class="doc-number-help"><span class="doc-number-help-chip auto">ระบบสร้างเลขให้อัตโนมัติ</span><span class="doc-number-help-chip manual">พิมพ์แก้เลขเองได้</span></div><div class="doc-number-help-note">หากต้องการกลับไปใช้เลขจากระบบ ให้กดปุ่ม “ใช้เลขอัตโนมัติ”</div></div>
+    <div class="ff"><label>วันที่เสนอราคา *</label><input type="date" id="q-date" onchange="refreshAutoQuoteNumber()"><small class="section-hint">เปลี่ยนวันที่แล้วเลขใบเสนอราคาจะเปลี่ยนตามปี/เดือนโดยอัตโนมัติ</small></div>
+    <div class="ff-full">
+      <label style="font-size:12px;color:var(--g2);font-weight:500;display:block;margin-bottom:6px">สาขา * <span style="color:var(--red)">— กรุณาเลือกสาขา</span></label>
+      <div class="br-row">
+        <label class="br-opt" id="q-br-ub" onclick="selBr('q','ubon')"><input type="radio" name="q-br"> 🟣 สาขาสำนักงานใหญ่</label>
+        <label class="br-opt" id="q-br-kk" onclick="selBr('q','khonkaen')"><input type="radio" name="q-br"> 🔵 สาขาที่ 00001</label>
+      </div>
+      <div class="br-warn" id="q-br-warn">⚠️ กรุณาเลือกสาขาก่อนบันทึก</div>
+    </div>
+    <div class="ff"><label>ชื่อลูกค้า *</label><input type="text" id="q-cust" list="customer-master-list" placeholder="เลือกหรือพิมพ์ชื่อลูกค้า" oninput="handleCustomerMasterInput('q');autoDetectCustomerAgency('q')" onchange="applyCustomerMasterToForm('q')"><small class="section-hint">ลูกค้าใหม่จะถูกจดจำในเครื่องหลังบันทึกเอกสาร</small></div>
+    <div class="ff customer-agency-field"><label>ประเภทหน่วยงาน</label><select id="q-agency-group" onchange="populateCustomerAgencyTypeOptions('q');renderCustomerAgencyHint('q')"></select></div>
+    <div class="ff customer-agency-field"><label>ประเภทย่อย</label><select id="q-agency-type" onchange="renderCustomerAgencyHint('q')"></select><small id="q-agency-hint" class="section-hint">ระบบจะเดาจากชื่อย่อ เช่น กฟภ., กฟผ., ธ.ก.ส., สอ., รพ., รร., หจก., บจก.</small></div>
+    <div class="ff"><label>ชื่อพนักงานขาย</label><input type="text" id="q-sales" placeholder="ชื่อพนักงาน"></div>
+    <div class="fdiv"></div><div class="fsec">ข้อมูลลูกค้า / ที่อยู่สำหรับออกเอกสาร</div>
+    <div class="ff ff-full"><label>ที่อยู่ลูกค้า</label><textarea id="q-address" rows="2" placeholder="ที่อยู่สำหรับออกใบเสนอราคา"></textarea></div>
+    <div class="ff"><label>เลขประจำตัวผู้เสียภาษี</label><input id="q-tax-id" placeholder="0000000000000"></div>
+    <div class="ff"><label>ผู้ติดต่อ</label><input id="q-contact" placeholder="ชื่อผู้ประสานงาน"></div>
+    <div class="ff"><label>เบอร์โทร</label><input id="q-phone" placeholder="000-000-0000"></div>
+    <div class="ff"><label>อีเมล</label><input id="q-email" type="email" placeholder="name@example.com"></div>
+    <div class="ff"><button type="button" class="btn btn-ghost master-inline-save" onclick="rememberCustomerFromForm('q',true)">💾 จำข้อมูลลูกค้านี้</button></div>
+    <div class="fdiv"></div><div class="fsec">รายการสินค้า</div>
+    <div class="ff-full">
+      <table class="items-table"><thead><tr>
+        <th style="min-width:170px">ชื่อสินค้า/รายการ</th><th style="min-width:60px">จำนวน</th>
+        <th style="min-width:85px">หน่วย</th><th style="min-width:105px">ราคา/หน่วย (บาท)</th>
+        <th style="min-width:105px">ราคารวม (บาท)</th><th style="width:28px"></th>
+      </tr></thead><tbody id="q-items-body"></tbody></table>
+      <button class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="addQItem()">+ เพิ่มรายการ</button>
+    </div>
+    <div class="fdiv"></div>
+    <div class="ff"><label>ภาษีมูลค่าเพิ่ม 7%</label>
+      <select id="q-vat" onchange="calcQ()"><option value="0">ไม่รวม VAT</option><option value="1">รวม VAT 7%</option></select>
+    </div>
+    <div class="ff"><label>ยอดก่อน VAT (บาท)</label><input id="q-sub" class="ro" readonly></div>
+    <div class="ff"><label>VAT 7% (บาท)</label><input id="q-vat-amt" class="ro" readonly></div>
+    <div class="ff"><label>ยอดรวมทั้งหมด (บาท)</label><input id="q-total" class="ro" readonly style="font-size:15px;color:var(--blue)"></div>
+    <div class="fdiv"></div><div class="fsec">หลักฐานการส่งใบเสนอราคา / เอกสารเพิ่มเติม</div>
+    <div class="ff-full proof-upload-field">
+      <div class="upload-zone large-proof-upload" data-attachment-key="q-att" onclick="document.getElementById('q-files').click()" role="button" tabindex="0" aria-label="แนบรูปภาพหรือ PDF สำหรับใบเสนอราคา">
+        <span class="proof-upload-icon">📎</span>
+        <span class="proof-upload-text">แนบรูปภาพหรือ PDF</span>
+        <span class="proof-upload-sub">คลิกเพื่อเลือกไฟล์หลักฐานเพิ่มเติม</span>
+        <span class="proof-paste-sub">คลิกเลือกไฟล์ ลาก PDF/รูปภาพมาวาง หรือกด Ctrl+V เพื่อวางรูปจาก Clipboard</span>
+        <input type="file" id="q-files" accept="image/*,application/pdf,.pdf" multiple onchange="handleFiles('q-att',this)">
+      </div>
+      <div class="file-preview" id="q-att"></div>
+    </div>
+    <div class="ff"><label>หมายเหตุ</label><input type="text" id="q-note" placeholder="(ไม่บังคับ)"></div>
+  </div>
+  <div class="document-action-hint"><b>เอกสารพร้อมพิมพ์:</b> เปิดดูต้นฉบับ/สำเนา ตรวจรูปแบบ A4 และดาวน์โหลด PDF ได้ก่อนหรือหลังบันทึก</div>
+  <div class="form-actions">
+    <button class="btn btn-ghost" onclick="resetF('quote')">ล้างฟอร์ม</button>
+    <button class="btn btn-ghost document-preview-btn" type="button" onclick="previewQuoteDocumentFromForm()">👁 ตัวอย่าง / ต้นฉบับ / สำเนา / PDF</button>
+    <button id="q-save-btn" class="btn btn-primary" onclick="saveQuote()">💾 บันทึกใบเสนอราคา</button>
+  </div>
+</div></div>
+
+<!-- INVOICE FORM -->
+<div id="panel-invoice-form" class="panel"><div class="card">
+  <div id="i-edit-banner" class="edit-document-banner" style="display:none"><span data-edit-label></span><button type="button" onclick="cancelDocumentEdit('invoice')">ยกเลิกการแก้ไข</button></div>
+  <div class="card-title">🚚 ใบส่งสินค้า / ใบกำกับภาษี</div>
+  <div class="form-quick-guide blue"><span class="guide-step active">1 เลือกเอกสารต้นทาง</span><span class="guide-step">2 ตรวจข้อมูลและสินค้า</span><span class="guide-step">3 บันทึก / PDF</span></div>
+  <div class="fg">
+    <div class="ff doc-number-field"><label>เลขที่ใบส่งสินค้า / ใบกำกับภาษี *</label><div class="doc-number-input-group"><input type="text" id="i-no" placeholder="INV690801"><button type="button" class="doc-number-auto-btn" onclick="useAutoDocumentNumber('invoice')" title="สร้างเลขถัดไปอัตโนมัติ">↻ ใช้เลขอัตโนมัติ</button></div><div class="doc-number-help"><span class="doc-number-help-chip auto">ระบบสร้างเลขให้อัตโนมัติ</span><span class="doc-number-help-chip manual">พิมพ์แก้เลขเองได้</span></div><div class="doc-number-help-note">หากต้องการกลับไปใช้เลขจากระบบ ให้กดปุ่ม “ใช้เลขอัตโนมัติ”</div></div>
+    <div class="ff"><label>วันที่ *</label><input type="date" id="i-date" onchange="updateInvoiceDueDate()"></div>
+    <div class="ff-full">
+      <label style="font-size:12px;color:var(--g2);font-weight:500;display:block;margin-bottom:6px">สาขา * <span style="color:var(--red)">— กรุณาเลือกสาขา</span></label>
+      <div class="br-row">
+        <label class="br-opt" id="i-br-ub" onclick="selBr('i','ubon')"><input type="radio" name="i-br"> 🟣 สาขาสำนักงานใหญ่</label>
+        <label class="br-opt" id="i-br-kk" onclick="selBr('i','khonkaen')"><input type="radio" name="i-br"> 🔵 สาขาที่ 00001</label>
+      </div>
+      <div class="br-warn" id="i-br-warn">⚠️ กรุณาเลือกสาขาก่อนบันทึก</div>
+    </div>
+    <div class="ff ff-full production-invoice-link-card linked-source-card">
+      <div class="linked-source-head">
+        <div>
+          <label>เชื่อมข้อมูลจากใบสั่งผลิต</label>
+          <small>กรองตามสาขาที่เลือก พร้อมเลือกปีและเดือนเพื่อลดความสับสน</small>
+        </div>
+        <span id="i-prod-source-branch" class="linked-source-branch-badge">กรุณาเลือกสาขา</span>
+      </div>
+      <div class="linked-source-filter-row">
+        <label><span>ปี</span><input id="i-prod-filter-year" type="number" min="2020" max="2100" value="2026" oninput="populateProductionRefs()"></label>
+        <label><span>เดือน</span><select id="i-prod-filter-month" onchange="populateProductionRefs()"><option value="">ทุกเดือน</option></select></label>
+        <label class="linked-source-search"><span>ค้นหา</span><input id="i-prod-filter-search" type="search" placeholder="เลขที่ / ลูกค้า / งาน / สินค้า" oninput="populateProductionRefs()"></label>
+        <button type="button" class="btn btn-green" onclick="populateProductionRefs()">รีเฟรช</button>
+      </div>
+      <div class="production-invoice-link-row">
+        <select id="i-prod-ref" onchange="fillFromProduction()">
+          <option value="">-- เลือกใบสั่งผลิตเพื่อสร้างบิล --</option>
+        </select>
+        <button type="button" class="btn btn-green" onclick="fillFromProduction()">ดึงข้อมูลมาสร้างบิล</button>
+      </div>
+      <small id="i-prod-link-hint">เลือกรายการสั่งผลิตเพื่อเติมลูกค้า รายการสินค้า ราคาต้นทุนจากรายการ ราคาขาย VAT และค่าคอมมิชชั่นอัตโนมัติ โดยไม่ใช้ยอดต้นทุนรวมทั้งสิ้น</small>
+    </div>
+    <div class="fg-row-break" aria-hidden="true"></div>
+    <div class="ff"><label>ชื่อพนักงานขาย *</label><input type="text" id="i-sales" placeholder="ชื่อพนักงาน"></div>
+    <div class="ff"><label>ชื่อลูกค้า *</label><input type="text" id="i-cust" list="customer-master-list" placeholder="เลือกหรือพิมพ์ชื่อลูกค้า" oninput="handleCustomerMasterInput('i');autoDetectCustomerAgency('i')" onchange="applyCustomerMasterToForm('i')"></div>
+    <div class="ff customer-agency-field"><label>ประเภทหน่วยงาน</label><select id="i-agency-group" onchange="populateCustomerAgencyTypeOptions('i');renderCustomerAgencyHint('i')"></select></div>
+    <div class="ff customer-agency-field"><label>ประเภทย่อย</label><select id="i-agency-type" onchange="renderCustomerAgencyHint('i')"></select><small id="i-agency-hint" class="section-hint">ระบบจะเดาจากชื่อย่อ เช่น กฟภ., กฟผ., ธ.ก.ส., สอ., รพ., รร., หจก., บจก.</small></div>
+    <div class="ff ff-full"><label>ที่อยู่ลูกค้า</label><textarea id="i-address" rows="2" placeholder="ที่อยู่สำหรับออกใบส่งสินค้า / ใบกำกับภาษี"></textarea></div>
+    <div class="ff"><label>เลขประจำตัวผู้เสียภาษี</label><input id="i-tax-id" placeholder="0000000000000"></div>
+    <div class="ff"><label>ผู้ติดต่อ</label><input id="i-contact" placeholder="ชื่อผู้ประสานงาน"></div>
+    <div class="ff"><label>เบอร์โทร</label><input id="i-phone" placeholder="000-000-0000"></div>
+    <div class="ff"><label>อีเมล</label><input id="i-email" type="email" placeholder="name@example.com"></div>
+    <div class="ff"><button type="button" class="btn btn-ghost master-inline-save" onclick="rememberCustomerFromForm('i',true)">💾 จำข้อมูลลูกค้านี้</button></div>
+    <div class="ff"><label>เครดิตการชำระของลูกค้า</label>
+      <select id="i-credit-term" onchange="updateInvoiceDueDate()">
+        <option value="">เลือกเครดิตการชำระ</option>
+        <option value="cash">เงินสดเมื่อถึงกำหนดส่งสินค้า</option>
+        <option value="deposit50">จ่ายมัดจำ 50%</option>
+        <option value="credit30">เครดิต 30 วัน</option>
+        <option value="credit60">เครดิต 60 วัน</option>
+        <option value="credit90">เครดิต 90 วัน</option>
+        <option value="credit120">เครดิต 120 วัน</option>
+        <option value="credit150">เครดิต 150 วัน</option>
+        <option value="credit180">เครดิต 180 วัน</option>
+      </select>
+    </div>
+    <div class="ff"><label>วันครบกำหนดชำระ</label><input type="date" id="i-due-date" class="ro" readonly><small class="section-hint">คำนวณอัตโนมัติจากวันที่บิลและเครดิตที่เลือก</small></div>
+    <div class="fdiv"></div><div class="fsec">รายการสินค้า</div>
+    <div class="ff-full">
+      <table class="items-table"><thead><tr>
+        <th style="min-width:160px">ชื่อสินค้า</th><th style="min-width:60px">จำนวน</th>
+        <th style="min-width:80px">หน่วย</th><th style="min-width:165px">รูปแบบราคาต้นทุน</th>
+        <th style="min-width:120px">ราคาต้นทุน (บาท)</th><th style="min-width:100px">ราคาขาย/หน่วย</th>
+        <th style="min-width:100px">ยอดขายรวม</th><th style="min-width:100px">ต้นทุนรวม</th><th style="width:28px"></th>
+      </tr></thead><tbody id="i-items-body"></tbody></table>
+      <button class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="addIItem()">+ เพิ่มรายการ</button>
+    </div>
+    <div class="fdiv"></div>
+    <div class="ff"><label>ภาษีมูลค่าเพิ่ม 7%</label><select id="i-vat" onchange="calcI()"><option value="0">ไม่รวม VAT 7% (ถอด VAT จากยอดขายรวม)</option><option value="1">รวม VAT 7% (บวก VAT เพิ่ม)</option></select></div>
+    <div class="ff"><label>ยอดก่อน VAT (บาท)</label><input id="i-st" class="ro" readonly></div>
+    <div class="ff"><label>VAT 7% (บาท)</label><input id="i-vat-amt" class="ro" readonly></div>
+    <div class="ff"><label>ยอดรวมทั้งสิ้น (บาท)</label><input id="i-grand-total" class="ro" readonly></div>
+    <div class="ff"><label>ต้นทุนรวม (บาท)</label><input id="i-ct" class="ro" readonly></div>
+    <div class="fg-row-break" aria-hidden="true"></div>
+    <div class="ff"><label>วิธีคิดค่าคอมมิสชัน</label><select id="i-comm-mode" onchange="toggleCommMode('i');calcI()"><option value="percent">คิดตามเปอร์เซ็นต์</option><option value="manual">ใส่จำนวนเงินเอง</option></select></div>
+    <div class="ff"><label>อัตราค่าคอมมิสชัน (%)</label><input type="number" id="i-cr" placeholder="0" min="0" max="100" step="0.1" oninput="calcI()"></div>
+    <div class="ff"><label>ค่าคอมมิสชัน (บาท)</label><input id="i-ca" class="ro" readonly inputmode="decimal" placeholder="0.00" oninput="calcI()"></div>
+    <div class="ff"><label>กำไรสุทธิ (บาท)</label><input id="i-pf" class="ro" readonly></div>
+    <div class="fdiv"></div><div class="fsec">หลักฐานใบส่งสินค้า / เอกสารเพิ่มเติม</div>
+    <div class="ff-full">
+      <div class="upload-zone pasteable-upload-zone" data-attachment-key="i-att" onclick="document.getElementById('i-files').click()" role="button" tabindex="0" aria-label="แนบรูปภาพหรือ PDF สำหรับใบส่งสินค้า / ใบกำกับภาษี">
+        <span class="proof-upload-icon">📎</span>
+        <span class="proof-upload-text">แนบรูปภาพหรือ PDF</span>
+        <span class="proof-paste-sub">คลิกเลือกไฟล์ ลาก PDF/รูปภาพมาวาง หรือกด Ctrl+V เพื่อวางรูปจาก Clipboard</span>
+        <input type="file" id="i-files" accept="image/*,application/pdf,.pdf" multiple onchange="handleFiles('i-att',this)">
+      </div>
+      <div class="file-preview" id="i-att"></div>
+    </div>
+    <div class="ff"><label>หมายเหตุ</label><input type="text" id="i-note" placeholder="(ไม่บังคับ)"></div>
+  </div>
+  <div class="document-action-hint blue"><b>เอกสารพร้อมพิมพ์:</b> ตัวอย่างด้านเอกสารรองรับโลโก้ ต้นฉบับ/ORIGINAL สำเนา/COPY สำเนาส่งภายใน พิมพ์ และ PDF</div>
+  <div class="form-actions">
+    <button class="btn btn-ghost" onclick="resetF('invoice')">ล้างฟอร์ม</button>
+    <button class="btn btn-primary document-preview-btn" type="button" onclick="previewDeliveryDocumentFromForm()">👁 ตัวอย่างต้นฉบับ / สำเนา / PDF</button>
+    <button id="i-save-btn" class="btn btn-green" onclick="saveInvoice()">💾 บันทึกใบส่งสินค้า / ใบกำกับภาษี</button>
+  </div>
+</div></div>
+
+<!-- RECEIPT FORM -->
+<div id="panel-receipt-form" class="panel"><div class="card">
+  <div id="r-edit-banner" class="edit-document-banner" style="display:none"><span data-edit-label></span><button type="button" onclick="cancelDocumentEdit('receipt')">ยกเลิกการแก้ไข</button></div>
+  <div class="card-title">🧾 ใบเสร็จรับเงิน</div>
+  <div class="form-quick-guide pink"><span class="guide-step active">1 เลือกใบส่งสินค้า</span><span class="guide-step">2 ตรวจยอดรับชำระ</span><span class="guide-step">3 บันทึก / PDF</span></div>
+  <div class="fg">
+    <div class="ff doc-number-field"><label>เลขที่ใบเสร็จ *</label><div class="doc-number-input-group"><input type="text" id="r-no" placeholder="REC690801"><button type="button" class="doc-number-auto-btn" onclick="useAutoDocumentNumber('receipt')" title="สร้างเลขถัดไปอัตโนมัติ">↻ ใช้เลขอัตโนมัติ</button></div><div class="doc-number-help"><span class="doc-number-help-chip auto">ระบบสร้างเลขให้อัตโนมัติ</span><span class="doc-number-help-chip manual">พิมพ์แก้เลขเองได้</span></div><div class="doc-number-help-note">หากต้องการกลับไปใช้เลขจากระบบ ให้กดปุ่ม “ใช้เลขอัตโนมัติ”</div></div>
+    <div class="ff"><label>วันที่ *</label><input type="date" id="r-date"></div>
+    <div class="ff-full">
+      <label style="font-size:12px;color:var(--g2);font-weight:500;display:block;margin-bottom:6px">สาขา * <span style="color:var(--red)">— กรุณาเลือกสาขา</span></label>
+      <div class="br-row">
+        <label class="br-opt" id="r-br-ub" onclick="selBr('r','ubon')"><input type="radio" name="r-br"> 🟣 สาขาสำนักงานใหญ่</label>
+        <label class="br-opt" id="r-br-kk" onclick="selBr('r','khonkaen')"><input type="radio" name="r-br"> 🔵 สาขาที่ 00001</label>
+      </div>
+      <div class="br-warn" id="r-br-warn">⚠️ กรุณาเลือกสาขาก่อนบันทึก</div>
+    </div>
+    <div class="ff ff-full production-invoice-link-card linked-source-card receipt-invoice-link-card">
+      <div class="linked-source-head">
+        <div>
+          <label>ดึงข้อมูลจากใบส่งสินค้า / ใบกำกับภาษี</label>
+          <small>กรองตามสาขาที่เลือก พร้อมเลือกปีและเดือนเพื่อลดความสับสน</small>
+        </div>
+        <span id="r-inv-source-branch" class="linked-source-branch-badge">กรุณาเลือกสาขา</span>
+      </div>
+      <div class="linked-source-filter-row">
+        <label><span>ปี</span><input id="r-inv-filter-year" type="number" min="2020" max="2100" value="2026" oninput="populateInvRefs()"></label>
+        <label><span>เดือน</span><select id="r-inv-filter-month" onchange="populateInvRefs()"><option value="">ทุกเดือน</option></select></label>
+        <label class="linked-source-search"><span>ค้นหา</span><input id="r-inv-filter-search" type="search" placeholder="เลขที่บิล / ลูกค้า / พนักงานขาย / สินค้า" oninput="populateInvRefs()"></label>
+        <button type="button" class="btn btn-purple" onclick="populateInvRefs()">รีเฟรช</button>
+      </div>
+      <div class="production-invoice-link-row">
+        <select id="r-inv-ref" onchange="fillFromInv()"><option value="">-- เลือกจากบิลที่มี --</option></select>
+        <button type="button" class="btn btn-purple" onclick="fillFromInv()">ดึงข้อมูลจากบิล</button>
+      </div>
+      <small id="r-inv-link-hint">เลือกใบส่งสินค้า / ใบกำกับภาษีเพื่อเติมเลขบิล ลูกค้า พนักงานขาย รายการสินค้า VAT และค่าคอมมิชชั่นอัตโนมัติ</small>
+    </div>
+    <div class="ff"><label>หรือกรอกเลขใบส่งสินค้า / ใบกำกับภาษีเอง</label><input type="text" id="r-inv-no" placeholder="เลขใบส่งสินค้า / ใบกำกับภาษีอ้างอิง"></div>
+    <div class="fg-row-break" aria-hidden="true"></div>
+    <div class="ff"><label>ชื่อพนักงานขาย</label><input type="text" id="r-sales" placeholder="ชื่อพนักงาน"></div>
+    <div class="ff"><label>ชื่อลูกค้า *</label><input type="text" id="r-cust" list="customer-master-list" placeholder="เลือกหรือพิมพ์ชื่อลูกค้า" oninput="handleCustomerMasterInput('r');autoDetectCustomerAgency('r')" onchange="applyCustomerMasterToForm('r')"></div>
+    <div class="ff customer-agency-field"><label>ประเภทหน่วยงาน</label><select id="r-agency-group" onchange="populateCustomerAgencyTypeOptions('r');renderCustomerAgencyHint('r')"></select></div>
+    <div class="ff customer-agency-field"><label>ประเภทย่อย</label><select id="r-agency-type" onchange="renderCustomerAgencyHint('r')"></select><small id="r-agency-hint" class="section-hint">ระบบจะเดาจากชื่อย่อ เช่น กฟภ., กฟผ., ธ.ก.ส., สอ., รพ., รร., หจก., บจก.</small></div>
+    <div class="ff ff-full"><label>ที่อยู่ลูกค้า</label><textarea id="r-address" rows="2" placeholder="ที่อยู่สำหรับออกใบเสร็จรับเงิน"></textarea></div>
+    <div class="ff"><label>เลขประจำตัวผู้เสียภาษี</label><input id="r-tax-id" placeholder="0000000000000"></div>
+    <div class="ff"><label>ผู้ติดต่อ</label><input id="r-contact" placeholder="ชื่อผู้ประสานงาน"></div>
+    <div class="ff"><label>เบอร์โทร</label><input id="r-phone" placeholder="000-000-0000"></div>
+    <div class="ff"><label>อีเมล</label><input id="r-email" type="email" placeholder="name@example.com"></div>
+    <div class="ff"><button type="button" class="btn btn-ghost master-inline-save" onclick="rememberCustomerFromForm('r',true)">💾 จำข้อมูลลูกค้านี้</button></div>
+    <div class="fdiv"></div><div class="fsec">รายการสินค้า</div>
+    <div class="ff-full">
+      <table class="items-table"><thead><tr>
+        <th style="min-width:160px">ชื่อสินค้า</th><th style="min-width:60px">จำนวน</th>
+        <th style="min-width:80px">หน่วย</th><th style="min-width:100px">ราคาขาย/หน่วย</th>
+        <th style="min-width:100px">ราคาขายรวม</th><th style="min-width:100px">ต้นทุน/หน่วย</th>
+        <th style="width:28px"></th>
+      </tr></thead><tbody id="r-items-body"></tbody></table>
+      <button class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="addRItem()">+ เพิ่มรายการ</button>
+    </div>
+    <div class="fdiv"></div>
+    <div class="ff"><label>ภาษีมูลค่าเพิ่ม 7%</label><select id="r-vat" onchange="calcR()"><option value="0">ไม่รวม VAT 7% (ถอด VAT จากยอดขายรวม)</option><option value="1">รวม VAT 7% (บวก VAT เพิ่ม)</option></select></div>
+    <div class="ff"><label>ยอดขายรวมจากรายการ (บาท)</label><input id="r-st" class="ro" readonly></div>
+    <div class="ff"><label>ยอดก่อน VAT (บาท)</label><input id="r-subtotal" class="ro" readonly></div>
+    <div class="ff"><label>VAT 7% (บาท)</label><input id="r-vat-amt" class="ro" readonly></div>
+    <div class="ff"><label>ยอดรวมทั้งสิ้น (บาท)</label><input id="r-grand-total" class="ro" readonly></div>
+    <div class="ff"><label>ต้นทุนรวม (บาท)</label><input id="r-ct" class="ro" readonly></div>
+    <div class="fg-row-break" aria-hidden="true"></div>
+    <div class="ff"><label>วิธีคิดค่าคอมมิสชัน</label><select id="r-comm-mode" onchange="toggleCommMode('r');calcR()"><option value="percent">คิดตามเปอร์เซ็นต์</option><option value="manual">ใส่จำนวนเงินเอง</option></select></div>
+    <div class="ff"><label>ค่าคอมมิสชัน (%)</label><input type="number" id="r-cr" placeholder="0" min="0" max="100" step="0.1" oninput="calcR()"></div>
+    <div class="ff"><label>ค่าคอมมิสชัน (บาท)</label><input id="r-ca" class="ro" readonly inputmode="decimal" placeholder="0.00" oninput="calcR()"></div>
+    <div class="ff"><label>กำไรสุทธิ (บาท)</label><input id="r-pf" class="ro" readonly></div>
+    <div class="fdiv"></div><div class="fsec">หลักฐานใบเสร็จรับเงิน / เอกสารเพิ่มเติม</div>
+    <div class="ff-full proof-upload-field">
+      <div class="upload-zone large-proof-upload" data-attachment-key="r-att" onclick="document.getElementById('r-files').click()" role="button" tabindex="0" aria-label="แนบรูปภาพหรือ PDF สำหรับใบเสร็จรับเงิน">
+        <span class="proof-upload-icon">📎</span>
+        <span class="proof-upload-text">แนบรูปภาพหรือ PDF</span>
+        <span class="proof-upload-sub">คลิกเพื่อเลือกไฟล์หลักฐานเพิ่มเติม</span>
+        <span class="proof-paste-sub">คลิกเลือกไฟล์ ลาก PDF/รูปภาพมาวาง หรือกด Ctrl+V เพื่อวางรูปจาก Clipboard</span>
+        <input type="file" id="r-files" accept="image/*,application/pdf,.pdf" multiple onchange="handleFiles('r-att',this)">
+      </div>
+      <div class="file-preview" id="r-att"></div>
+    </div>
+    <div class="ff"><label>หมายเหตุ</label><input type="text" id="r-note" placeholder="(ไม่บังคับ)"></div>
+  </div>
+  <div class="document-action-hint pink"><b>เอกสารพร้อมพิมพ์:</b> ตัวอย่างสีชมพูพร้อมโลโก้ ต้นฉบับ/ORIGINAL สำเนาบัญชี สำเนาเก็บหลักฐาน พิมพ์ และ PDF</div>
+  <div class="form-actions">
+    <button class="btn btn-ghost" onclick="resetF('receipt')">ล้างฟอร์ม</button>
+    <button class="btn btn-purple document-preview-btn" type="button" onclick="previewReceiptDocumentFromForm()">👁 ตัวอย่างต้นฉบับ / สำเนา / PDF</button>
+    <button id="r-save-btn" class="btn btn-purple" onclick="saveReceipt()">💾 บันทึกใบเสร็จรับเงิน</button>
+  </div>
+</div></div>
+
+
+<!-- PRODUCTION FORM -->
+<div id="panel-production-form" class="panel"><div class="card">
+  <div id="p-edit-banner" class="edit-mode-banner" style="display:none"><span data-edit-label>กำลังแก้ไขรายการสั่งผลิต</span><button type="button" class="btn btn-ghost btn-sm" onclick="cancelDocumentEdit('production')">ยกเลิกการแก้ไข</button></div>
+  <div class="card-title"><span>🏭 สั่งผลิตสินค้า</span><span class="section-hint">จัดรูปแบบเหมือนใบเสนอราคา / ใบเสร็จ เพื่อกรอกง่าย</span></div>
+  <div class="form-quick-guide"><span class="guide-step active">1 เลือกใบเสนอราคา</span><span class="guide-step">2 ผู้ผลิตและสินค้า</span><span class="guide-step">3 กำหนดส่ง / บันทึก</span></div>
+  <div class="fg">
+    <div class="ff"><label>เลขที่สั่งผลิต *</label><input type="text" id="p-no" placeholder="PRD-2568-001"></div>
+    <div class="ff"><label>วันที่ *</label><input type="date" id="p-date" onchange="updateProductionSupplierDueDate();updateProductionDeliveryDueDate()"></div>
+    <div class="ff-full">
+      <label style="font-size:14px;color:var(--g2);font-weight:700;display:block;margin-bottom:8px">สาขา * <span style="color:var(--red)">— กรุณาเลือกสาขา</span></label>
+      <div class="br-row">
+        <label class="br-opt" id="p-br-ub" onclick="selBr('p','ubon')"><input type="radio" name="p-br"> 🟣 สาขาสำนักงานใหญ่</label>
+        <label class="br-opt" id="p-br-kk" onclick="selBr('p','khonkaen')"><input type="radio" name="p-br"> 🔵 สาขาที่ 00001</label>
+      </div>
+      <div class="br-warn" id="p-br-warn">⚠️ กรุณาเลือกสาขาก่อนบันทึก</div>
+    </div>
+    <input type="hidden" id="p-source-quote-ref" value="">
+    <div class="ff ff-full production-invoice-link-card linked-source-card quote-link-card">
+      <div class="linked-source-head">
+        <div>
+          <label>สร้างสั่งผลิตจากใบเสนอราคา</label>
+          <small>ดึงลูกค้า รายการสินค้า จำนวน ราคาขาย และ VAT จากใบเสนอราคา โดยกรอกราคาต้นทุน/ผู้ผลิตเพิ่มเติมในขั้นตอนสั่งผลิต</small>
+        </div>
+        <span id="p-quote-source-branch" class="linked-source-branch-badge">กรุณาเลือกสาขา</span>
+      </div>
+      <div class="linked-source-filter-row">
+        <label><span>ปี</span><input id="p-quote-filter-year" type="number" min="2020" max="2100" value="2026" oninput="populateQuoteRefs('p')"></label>
+        <label><span>เดือน</span><select id="p-quote-filter-month" onchange="populateQuoteRefs('p')"><option value="">ทุกเดือน</option></select></label>
+        <label class="linked-source-search"><span>ค้นหา</span><input id="p-quote-filter-search" type="search" placeholder="เลขที่ใบเสนอราคา / ลูกค้า / สินค้า" oninput="populateQuoteRefs('p')"></label>
+        <button type="button" class="btn btn-primary" onclick="populateQuoteRefs('p')">รีเฟรช</button>
+      </div>
+      <div class="production-invoice-link-row">
+        <select id="p-quote-ref" onchange="fillProductionFromQuote()"><option value="">-- เลือกใบเสนอราคา --</option></select>
+        <button type="button" class="btn btn-primary" onclick="fillProductionFromQuote()">ดึงข้อมูลใบเสนอราคา</button>
+      </div>
+      <small id="p-quote-link-hint">แนะนำให้เลือกใบเสนอราคาที่อนุมัติแล้ว เพื่อให้สายเอกสารติดตามได้ครบตั้งแต่เสนอราคา → ผลิต → ส่งสินค้า → รับชำระ</small>
+    </div>
+    <div class="ff"><label>ผู้รับผลิต / ผู้สั่งผลิต *</label><input type="text" id="p-maker" list="production-maker-options" placeholder="เลือกจากรายชื่อ หรือพิมพ์ชื่อผู้ผลิตเอง" oninput="handleProductionMakerChange()" onchange="handleProductionMakerChange()"><datalist id="production-maker-options"><option value="คอมฟอร์มกรุงเทพ"></option><option value="จันชนา"></option><option value="68 computer"></option><option value="สุเทพการพิมพ์"></option><option value="PK"></option><option value="วิทยา"></option><option value="เมดิแคร์พลัส"></option><option value="เจ้าพระยา 41"></option><option value="โพรดิวส์ลาเบล"></option><option value="PW IT"></option><option value="ยูนิ - สมาร์ท"></option></datalist><small id="p-maker-preset-hint" class="section-hint">เลือกรายชื่อผู้ผลิตเพื่อให้ระบบจำกัดระยะเวลาส่งสินค้าและตั้งเครดิตผู้ผลิตให้อัตโนมัติ หรือพิมพ์ชื่ออื่นเองได้</small></div>
+    <div class="ff ff-full supplier-address-card"><label>ที่อยู่ผู้ผลิต / ผู้จำหน่าย</label><textarea id="p-maker-address" rows="2" placeholder="เลือกผู้ผลิตที่เคยบันทึก ระบบจะเติมที่อยู่อัตโนมัติ"></textarea></div>
+    <div class="ff"><label>เลขประจำตัวผู้เสียภาษีผู้ผลิต</label><input id="p-maker-tax-id" placeholder="0000000000000"></div>
+    <div class="ff"><label>ผู้ติดต่อผู้ผลิต</label><input id="p-maker-contact" placeholder="ชื่อผู้ประสานงาน"></div>
+    <div class="ff"><label>เบอร์โทรผู้ผลิต</label><input id="p-maker-phone" placeholder="000-000-0000"></div>
+    <div class="ff"><label>อีเมลผู้ผลิต</label><input id="p-maker-email" type="email" placeholder="supplier@example.com"></div>
+    <div class="ff"><button type="button" class="btn btn-ghost master-inline-save" onclick="rememberSupplierFromProduction(true)">💾 จำผู้ผลิตนี้</button></div>
+    <div class="ff"><label>ชื่อลูกค้า *</label><input type="text" id="p-cust" list="customer-master-list" onchange="applyCustomerMasterToForm('p')" placeholder="ชื่อลูกค้า" oninput="autoDetectCustomerAgency('p')"></div>
+    <div class="ff customer-agency-field"><label>ประเภทหน่วยงาน</label><select id="p-agency-group" onchange="populateCustomerAgencyTypeOptions('p');renderCustomerAgencyHint('p')"></select></div>
+    <div class="ff customer-agency-field"><label>ประเภทย่อย</label><select id="p-agency-type" onchange="renderCustomerAgencyHint('p')"></select><small id="p-agency-hint" class="section-hint">ระบบจะเดาจากชื่อย่อ เช่น กฟภ., กฟผ., ธ.ก.ส., สอ., รพ., รร., หจก., บจก.</small></div>
+    <div class="ff ff-full"><label>ชื่องาน *</label><input type="text" id="p-job" placeholder="เช่น งานป้าย / งานพิมพ์ / งานผลิตสินค้า"></div>
+
+    <div class="fdiv"></div><div class="fsec">กำหนดส่งสินค้า</div>
+    <div class="ff"><label>ระยะเวลาในการส่งสินค้า</label>
+      <select id="p-delivery-lead-days" onchange="updateProductionDeliveryDueDate()">
+        <option value="">เลือกระยะเวลาส่งสินค้า</option>
+        <option value="1">1 วัน</option>
+        <option value="3">3 วัน</option>
+        <option value="7">7 วัน</option>
+        <option value="14">14 วัน</option>
+        <option value="15">15 วัน</option>
+        <option value="21">21 วัน</option>
+        <option value="28">28 วัน</option>
+        <option value="30">30 วัน</option>
+        <option value="45">45 วัน</option>
+        <option value="60">60 วัน</option>
+      </select>
+      <small class="section-hint">เลือกระยะเวลานับจากวันที่สั่งผลิต ระบบจะคำนวณวันส่งสินค้าให้อัตโนมัติ</small>
+    </div>
+    <div class="ff"><label>กำหนดส่งสินค้า</label>
+      <input type="date" id="p-delivery-due-date" class="ro readonly-big" readonly title="คำนวณอัตโนมัติตามวันที่สั่งผลิตและระยะเวลาส่งสินค้า">
+      <small class="section-hint">ใช้ติดตามกำหนดส่งสินค้าและช่วยลดการเลือกงานผิดช่วงเวลา</small>
+    </div>
+
+    <div class="fdiv"></div><div class="fsec">รายการสินค้าที่สั่งผลิต</div>
+    <div class="ff-full">
+      <div class="tbl-wrap">
+        <table class="items-table production-items-table">
+          <thead><tr>
+            <th style="width:42px">ลำดับ</th>
+            <th style="min-width:340px">รายการสินค้า / รายละเอียด *<br><small style="font-weight:500">รองรับหลายบรรทัด — Shift + Enter เพื่อขึ้นบรรทัดใหม่</small></th>
+            <th style="min-width:110px">จำนวน *</th>
+            <th style="min-width:120px">หน่วย *</th>
+            <th style="min-width:190px">รูปแบบราคาต้นทุน *</th>
+            <th style="min-width:170px">ราคาต้นทุน (บาท) *</th>
+            <th style="min-width:170px">รวมยอดต้นทุน (บาท)</th>
+            <th style="min-width:180px">ราคาขายต่อหน่วย (บาท) *</th>
+            <th style="min-width:170px">ยอดขายรวม (บาท)</th>
+            <th style="width:62px">จัดการ</th>
+          </tr></thead>
+          <tbody id="p-items-body"></tbody>
+        </table>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="addPItem()">+ เพิ่มรายการสินค้า</button>
+    </div>
+
+    <div class="fdiv"></div><div class="fsec">สรุปรวมยอดต้นทุนและยอดขาย</div>
+    <div class="ff ff-full">
+      <div class="summary-split-grid production-summary-split">
+        <section class="summary-panel summary-panel-cost">
+          <div class="summary-panel-head">
+            <div>
+              <div class="summary-panel-title">1. รวมยอดต้นทุนรวม</div>
+              <div class="summary-panel-subtitle">แยกยอดต้นทุนออกจากยอดขายให้ดูง่าย และเลือกวิธีคำนวณ VAT ได้</div>
+            </div>
+          </div>
+          <div class="vat-choice summary-choice">
+            <label><input type="radio" name="p-cost-vat" value="1" onchange="calcP()"> รวม VAT 7% (บวก VAT เพิ่มจากยอดต้นทุนรวม)</label>
+            <label><input type="radio" name="p-cost-vat" value="0" checked onchange="calcP()"> ไม่รวม VAT 7% (ใช้ยอดต้นทุนรวมเดิม ไม่บวก VAT)</label>
+          </div>
+          <div class="summary-field-grid">
+            <div class="ff"><label>ยอดต้นทุนรวมจากรายการ (บาท)</label><input id="p-cost-raw" class="ro readonly-big" readonly></div>
+            <div class="ff"><label>ยอดต้นทุนก่อน VAT (บาท)</label><input id="p-cost-subtotal" class="ro readonly-big" readonly></div>
+            <div class="ff"><label>VAT 7% ต้นทุน (บาท)</label><input id="p-cost-vat-total" class="ro readonly-big" readonly></div>
+            <div class="ff"><label>ยอดต้นทุนรวมทั้งสิ้น (บาท)</label><input id="p-cost-grandtotal" class="ro readonly-big" readonly style="font-size:18px;color:var(--purple)"></div>
+          </div>
+        </section>
+
+        <section class="summary-panel summary-panel-sales">
+          <div class="summary-panel-head">
+            <div>
+              <div class="summary-panel-title">2. รวมยอดขาย</div>
+              <div class="summary-panel-subtitle">สรุปยอดขาย, VAT, สวัสดิการ/คอมมิชชั่น และกำไรในโซนเดียวกัน</div>
+            </div>
+          </div>
+          <div class="vat-choice summary-choice">
+            <label><input type="radio" name="p-vat" value="1" checked onchange="calcP()"> รวม VAT 7% (บวก VAT เพิ่มจากยอดขายรวม)</label>
+            <label><input type="radio" name="p-vat" value="0" onchange="calcP()"> ไม่รวม VAT 7% (ถอด VAT จากยอดขายรวม × 100 ÷ 107)</label>
+          </div>
+          <div class="summary-field-grid">
+            <div class="ff"><label>ยอดขายรวมจากรายการ (บาท)</label><input id="p-sale-raw" class="ro readonly-big" readonly></div>
+            <div class="ff"><label>ยอดขายก่อน VAT (บาท)</label><input id="p-sub-total" class="ro readonly-big" readonly></div>
+            <div class="ff"><label>VAT 7% ยอดขาย (บาท)</label><input id="p-vat-total" class="ro readonly-big" readonly></div>
+            <div class="ff"><label>ยอดรวมทั้งสิ้น (บาท)</label><input id="p-total" class="ro readonly-big" readonly style="font-size:18px;color:var(--blue)"></div>
+          </div>
+          <div class="summary-field-grid commission-grid">
+            <div class="ff">
+              <label>วิธีคิดสวัสดิการหรือค่าคอมมิชชั่น</label>
+              <select id="p-comm-mode" onchange="toggleCommMode('p');calcP()">
+                <option value="percent">คิดตามเปอร์เซ็นต์</option>
+                <option value="manual">ใส่จำนวนเอง</option>
+              </select>
+            </div>
+            <div class="ff"><label>อัตราค่าคอมมิชชั่น (%)</label><input type="number" id="p-cr" min="0" step="0.01" placeholder="0" oninput="calcP()"></div>
+            <div class="ff"><label>สวัสดิการหรือค่าคอมมิชชั่น (บาท)</label><input id="p-ca" class="ro readonly-big" readonly placeholder="0.00" oninput="calcP()"></div>
+            <div class="ff"><label>กำไร (ยอดขายก่อน VAT − ยอดต้นทุนรวม) (บาท)</label><input id="p-profit" class="ro readonly-big" readonly style="font-size:18px;color:var(--green)"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="fdiv"></div><div class="fsec">การชำระกับผู้ผลิต</div>
+    <div class="ff"><label>เครดิตการชำระผู้ผลิต</label>
+      <select id="p-supplier-credit" onchange="updateProductionSupplierDueDate()">
+        <option value="deliveryLead" selected>เครดิตหลังส่งสินค้าเท่ากับระยะเวลาส่งสินค้า</option>
+        <option value="lead1">เครดิตหลังส่งสินค้า 1 วัน</option>
+        <option value="lead3">เครดิตหลังส่งสินค้า 3 วัน</option>
+        <option value="lead7">เครดิตหลังส่งสินค้า 7 วัน</option>
+        <option value="lead14">เครดิตหลังส่งสินค้า 14 วัน</option>
+        <option value="lead15">เครดิตหลังส่งสินค้า 15 วัน</option>
+        <option value="lead21">เครดิตหลังส่งสินค้า 21 วัน</option>
+        <option value="lead28">เครดิตหลังส่งสินค้า 28 วัน</option>
+        <option value="lead30">เครดิตหลังส่งสินค้า 30 วัน</option>
+        <option value="lead45">เครดิตหลังส่งสินค้า 45 วัน</option>
+        <option value="lead60">เครดิตหลังส่งสินค้า 60 วัน</option>
+        <option value="cash">เงินสดเมื่อถึงกำหนดส่งสินค้า</option>
+        <option value="deposit50">จ่ายมัดจำ 50%</option>
+        <option value="credit30">เครดิต 30 วัน (กำหนดเอง)</option>
+        <option value="credit60">เครดิต 60 วัน (กำหนดเอง)</option>
+        <option value="credit90">เครดิต 90 วัน (กำหนดเอง)</option>
+        <option value="credit120">เครดิต 120 วัน (กำหนดเอง)</option>
+        <option value="credit150">เครดิต 150 วัน (กำหนดเอง)</option>
+        <option value="credit180">เครดิต 180 วัน (กำหนดเอง)</option>
+      </select>
+      <small id="p-supplier-credit-hint" class="section-hint">ระบบจะเริ่มนับเครดิตหลังวันกำหนดส่งสินค้า เช่น ส่ง 45 วัน + เครดิต 30 วัน = ครบกำหนดชำระหลัง 75 วันจากวันที่สั่งผลิต</small>
+    </div>
+    <div class="ff"><label>วันครบกำหนดชำระผู้ผลิต</label>
+      <input type="date" id="p-supplier-due-date" class="ro readonly-big" readonly title="คำนวณอัตโนมัติตามวันที่สั่งผลิตและระยะเวลาส่งสินค้า / เครดิตผู้ผลิต">
+      <small class="section-hint">ระบบคำนวณจากวันที่สั่งผลิต + ระยะเวลาส่งสินค้า + เครดิตผู้ผลิตหลังส่งสินค้า</small>
+    </div>
+    <div class="ff"><label>สถานะชำระกับผู้ผลิต</label>
+      <select id="p-supplier-payment-status">
+        <option value="pending" selected>รอการชำระสินค้า</option>
+        <option value="partial">ชำระบางส่วน</option>
+        <option value="paid">ชำระแล้ว</option>
+      </select>
+    </div>
+    <div class="ff ff-full"><label>หมายเหตุการชำระผู้ผลิต</label><input id="p-supplier-payment-note" placeholder="เช่น ครบกำหนดชำระ 30 วัน / วางบิลแล้ว / มัดจำแล้ว (ไม่บังคับ)"></div>
+
+    <div class="fdiv"></div><div class="fsec">หลักฐาน / หมายเหตุ</div>
+    <div class="ff ff-full">
+      <div class="upload-zone pasteable-upload-zone" data-attachment-key="p-att" onclick="document.getElementById('p-files').click()" role="button" tabindex="0" aria-label="แนบรูปภาพหรือ PDF สำหรับหลักฐานการสั่งผลิต">
+        <span class="proof-upload-icon">📎</span>
+        <span class="proof-upload-text">แนบรูปภาพหรือ PDF หลักฐานการสั่งผลิต</span>
+        <span class="proof-paste-sub">คลิกเลือกไฟล์ ลาก PDF/รูปภาพมาวาง หรือกด Ctrl+V เพื่อวางรูปจาก Clipboard</span>
+        <input type="file" id="p-files" accept="image/*,application/pdf,.pdf" multiple onchange="handleFiles('p-att',this)">
+      </div>
+      <div class="file-preview" id="p-att"></div>
+    </div>
+    <div class="ff ff-full"><label>หมายเหตุ</label><input id="p-note" placeholder="รายละเอียดเพิ่มเติม เช่น กำหนดส่ง / เงื่อนไขการผลิต (ไม่บังคับ)"></div>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-ghost" onclick="resetProduction()">ล้างฟอร์ม</button>
+    <button id="p-save-btn" class="btn btn-primary" onclick="saveProduction()">💾 บันทึกสั่งผลิตสินค้า</button>
+  </div>
+</div></div>
+
+<!-- PRODUCTION LIST -->
+<div id="panel-production-list" class="panel"><div class="card">
+  <div class="card-title"><span>รายการสั่งผลิตสินค้า</span><button class="btn btn-ghost btn-sm" onclick="exportXLSX('productions')">⬇ Excel</button></div>
+  <div class="filter-bar" style="margin-bottom:.75rem">
+    <div><label>สาขา</label><select id="pl-br" onchange="renderPList()"><option value="">ทุกสาขา</option><option value="ubon">สาขาสำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select></div>
+    <div><label>เดือน</label><select id="pl-month" onchange="renderPList()"><option value="">ทุกเดือน</option></select></div>
+    <div><label>ปี</label><select id="pl-year" onchange="renderPList()"></select></div>
+    <div><label>สถานะชำระผู้ผลิต</label>
+      <select id="pl-paystatus" onchange="renderPList()">
+        <option value="">ทุกสถานะ</option>
+        <option value="outstanding">ค้างชำระ</option>
+        <option value="pending">รอการชำระสินค้า</option>
+        <option value="partial">ชำระบางส่วน</option>
+        <option value="paid">ชำระแล้ว</option>
+        <option value="dueSoon">ใกล้ครบกำหนดภายใน 7 วัน</option>
+        <option value="overdue">เกินกำหนดชำระ</option>
+      </select>
+    </div>
+    <div><label>ค้นหาเลขที่ / งาน</label><input type="text" id="pl-search" placeholder="พิมพ์ค้นหา..." oninput="renderPList()" style="min-width:160px"></div>
+  </div>
+  <div class="tbl-wrap"><table><thead><tr><th>เลขที่</th><th>สาขา</th><th>วันที่</th><th>ผู้รับผลิต/ผู้สั่งผลิต</th><th>ลูกค้า</th><th>ชื่องาน</th><th>ระยะเวลาส่งสินค้า</th><th>กำหนดส่งสินค้า</th><th class="tn">ต้นทุนรวมทั้งสิ้น</th><th class="tn">ต้นทุนรวม + VAT 7%</th><th>เครดิตผู้ผลิต</th><th>วันครบกำหนดชำระ</th><th>สถานะชำระผู้ผลิต</th><th class="tn">ยอดขายก่อน VAT</th><th class="tn">VAT ยอดขาย</th><th class="tn">ยอดขายรวมทั้งสิ้น</th><th class="tn">สวัสดิการ/คอมมิชชั่น</th><th class="tn">กำไร</th><th>รูปแบบ VAT ยอดขาย</th><th>สถานะบิล</th><th>จัดการ</th></tr></thead><tbody id="ptbl"></tbody></table></div>
+  <div id="pempty" class="empty" style="display:none">ไม่พบรายการ</div>
+</div></div>
+
+<!-- EXPENSE FORM -->
+<div id="panel-expense-form" class="panel"><div class="card expense-entry-card">
+  <div class="card-title">💸 บันทึกค่าใช้จ่ายองค์กร</div>
+  <div class="form-quick-guide blue expense-guide" aria-label="ขั้นตอนบันทึกค่าใช้จ่าย">
+    <div class="guide-step active">1 · ระบุค่าใช้จ่าย</div>
+    <div class="guide-step">2 · ระบุเอกสารภาษี</div>
+    <div class="guide-step">3 · ถ่ายรูป / แนบหลักฐาน</div>
+  </div>
+  <div class="expense-help-banner">
+    <div class="expense-help-icon">📷</div>
+    <div><b>เก็บหลักฐานให้รู้ทันทีว่าเป็นค่าใช้จ่ายอะไร</b><span>ตัวอย่าง: ค่าน้ำมัน · ยื่นขอใบกำกับภาษีแล้ว · แนบรูปใบเสร็จจากสถานีบริการ หรือใบเสร็จซื้อสินค้าของบริษัท</span></div>
+  </div>
+  <div class="fg">
+    <div class="ff"><label>วันที่ *</label><input type="date" id="e-date" onchange="refreshExpenseEvidenceUi()"></div>
+    <div class="ff-full">
+      <label style="font-size:12px;color:var(--g2);font-weight:500;display:block;margin-bottom:6px">สาขา * <span style="color:var(--red)">— กรุณาเลือกสาขา</span></label>
+      <div class="br-row">
+        <label class="br-opt" id="e-br-ub" onclick="selBr('e','ubon');refreshExpenseEvidenceUi()"><input type="radio" name="e-br"> 🟣 สาขาสำนักงานใหญ่</label>
+        <label class="br-opt" id="e-br-kk" onclick="selBr('e','khonkaen');refreshExpenseEvidenceUi()"><input type="radio" name="e-br"> 🔵 สาขาที่ 00001</label>
+      </div>
+      <div class="br-warn" id="e-br-warn">⚠️ กรุณาเลือกสาขาก่อนบันทึก</div>
+    </div>
+
+    <div class="fdiv"></div><div class="fsec">1 · รายละเอียดค่าใช้จ่าย</div>
+    <div class="ff"><label>หมวดหมู่ *</label>
+      <select id="e-cat" onchange="refreshExpenseEvidenceUi()">
+        <option value="ค่าน้ำมันเชื้อเพลิง">⛽ ค่าน้ำมันเชื้อเพลิง</option>
+        <option value="ค่าซื้อสินค้า/วัสดุของบริษัท">🛒 ค่าซื้อสินค้า/วัสดุของบริษัท</option>
+        <option value="ค่าวัตถุดิบ">📦 ค่าวัตถุดิบ</option>
+        <option value="ค่าอุปกรณ์สำนักงาน">🖨️ ค่าอุปกรณ์สำนักงาน</option>
+        <option value="ค่าขนส่ง/จัดส่ง">🚚 ค่าขนส่ง/จัดส่ง</option>
+        <option value="ค่าเดินทาง/ที่พัก">🚗 ค่าเดินทาง/ที่พัก</option>
+        <option value="ค่าอาหาร/รับรอง">🍽️ ค่าอาหาร/รับรอง</option>
+        <option value="ค่าสาธารณูปโภค">💡 ค่าสาธารณูปโภค</option>
+        <option value="ค่าซ่อมบำรุง">🛠️ ค่าซ่อมบำรุง</option>
+        <option value="ค่าเช่าสถานที่">🏢 ค่าเช่าสถานที่</option>
+        <option value="ค่าแรงงาน">👷 ค่าแรงงาน</option>
+        <option value="ค่าการตลาด">📣 ค่าการตลาด</option>
+        <option value="ภาษี/ค่าธรรมเนียม">🧾 ภาษี/ค่าธรรมเนียม</option>
+        <option value="อื่น ๆ">อื่น ๆ</option>
+      </select>
+    </div>
+    <div class="ff"><label>ร้านค้า / ผู้ขาย / ผู้ให้บริการ</label><input type="text" id="e-vendor" placeholder="เช่น สถานีบริการน้ำมัน / ร้านค้า" oninput="refreshExpenseEvidenceUi()"></div>
+    <div class="ff ff-full"><label>รายละเอียด *</label><input type="text" id="e-desc" placeholder="เช่น เติมน้ำมันรถบริษัททะเบียน... / ซื้อหมึกพิมพ์ใช้สำนักงาน" oninput="refreshExpenseEvidenceUi()"></div>
+    <div class="ff"><label>จำนวนเงิน (บาท) *</label><input type="number" id="e-amount" placeholder="0.00" step="0.01" oninput="refreshExpenseEvidenceUi()"></div>
+    <div class="ff"><label>ผู้บันทึก</label><input type="text" id="e-by" placeholder="ชื่อพนักงาน"></div>
+
+    <div class="fdiv"></div><div class="fsec">2 · เอกสารและภาษี</div>
+    <div class="ff"><label>ประเภทเอกสาร *</label>
+      <select id="e-doc-type" onchange="refreshExpenseEvidenceUi()">
+        <option value="receipt">ใบเสร็จรับเงิน</option>
+        <option value="tax_invoice">ใบกำกับภาษีเต็มรูป</option>
+        <option value="receipt_tax_invoice">ใบเสร็จรับเงิน / ใบกำกับภาษี</option>
+        <option value="abbreviated_tax_invoice">ใบกำกับภาษีอย่างย่อ</option>
+        <option value="invoice">ใบแจ้งหนี้ / Invoice</option>
+        <option value="other">เอกสารอื่น ๆ</option>
+        <option value="none">ไม่มีเอกสาร</option>
+      </select>
+    </div>
+    <div class="ff"><label>สถานะใบกำกับภาษี</label>
+      <select id="e-tax-status" onchange="refreshExpenseEvidenceUi()">
+        <option value="requested">ยื่นขอใบกำกับภาษีแล้ว</option>
+        <option value="received">ได้รับใบกำกับภาษีแล้ว</option>
+        <option value="not_requested">ยังไม่ได้ยื่นขอ</option>
+        <option value="not_required">ไม่ต้องใช้ใบกำกับภาษี</option>
+      </select>
+    </div>
+    <div class="ff"><label>เลขที่ใบเสร็จ / ใบกำกับภาษี</label><input type="text" id="e-doc-no" placeholder="ถ้ามี" oninput="refreshExpenseEvidenceUi()"></div>
+    <div class="ff"><label>การใช้งานค่าใช้จ่าย</label>
+      <select id="e-purpose" onchange="refreshExpenseEvidenceUi()">
+        <option value="company">ค่าใช้จ่ายของบริษัท</option>
+        <option value="customer_job">ค่าใช้จ่ายสำหรับงานลูกค้า</option>
+        <option value="delivery">ค่าใช้จ่ายสำหรับส่งสินค้า</option>
+        <option value="production">ค่าใช้จ่ายสำหรับการผลิต</option>
+        <option value="other">อื่น ๆ</option>
+      </select>
+    </div>
+
+    <div class="fdiv"></div><div class="fsec">3 · รูปถ่ายและหลักฐานค่าใช้จ่าย</div>
+    <div class="ff-full proof-upload-field expense-proof-field">
+      <div class="expense-capture-actions">
+        <button type="button" class="btn expense-camera-btn" onclick="document.getElementById('e-camera').click()">📷 ถ่ายรูปหลักฐาน</button>
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('e-files').click()">📎 เลือกรูป / PDF</button>
+        <input type="file" id="e-camera" accept="image/*" capture="environment" onchange="handleFiles('e-att',this);refreshExpenseEvidenceUi()" hidden>
+      </div>
+      <div class="upload-zone large-proof-upload expense-upload-zone" data-attachment-key="e-att" onclick="document.getElementById('e-files').click()" role="button" tabindex="0" aria-label="แนบรูปภาพหรือ PDF สำหรับค่าใช้จ่าย">
+        <span class="proof-upload-icon">📎</span>
+        <span class="proof-upload-text">ถ่ายรูปหรือแนบหลักฐานค่าใช้จ่าย</span>
+        <span class="proof-upload-sub">รองรับรูปใบเสร็จ ใบกำกับภาษี และ PDF · คลิก ลากไฟล์ หรือวางจาก Clipboard</span>
+        <span class="proof-paste-sub">รูปที่แนบจะแสดงพร้อมหมวดค่าใช้จ่ายและสถานะเอกสารด้านล่าง</span>
+        <input type="file" id="e-files" accept="image/*,application/pdf,.pdf" multiple onchange="handleFiles('e-att',this);refreshExpenseEvidenceUi()">
+      </div>
+      <div id="e-evidence-summary" class="expense-evidence-summary"></div>
+      <div class="file-preview expense-file-preview" id="e-att"></div>
+    </div>
+    <div class="ff ff-full"><label>หมายเหตุ</label><input type="text" id="e-note" placeholder="เช่น รอเอกสารตัวจริง / ส่งฝ่ายบัญชีแล้ว"></div>
+  </div>
+  <div class="form-actions">
+    <button class="btn btn-ghost" onclick="resetF('expense')">ล้างฟอร์ม</button>
+    <button class="btn btn-red" onclick="saveExpense()">💾 บันทึกค่าใช้จ่าย</button>
+  </div>
+</div></div>
+
+<!-- QUOTE LIST -->
+<div id="panel-quote-list" class="panel"><div class="card">
+  <div class="card-title"><span>รายการใบเสนอราคา</span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-ghost btn-sm" onclick="exportXLSX('quotes')">⬇ Excel</button></div>
+  </div>
+  <div class="filter-bar" style="margin-bottom:.75rem">
+    <div><label>สาขา</label>
+      <select id="ql-br" onchange="renderQLList()"><option value="">ทุกสาขา</option><option value="ubon">สาขาสำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select>
+    </div>
+    <div><label>เดือน</label>
+      <select id="ql-month" onchange="renderQLList()"><option value="">ทุกเดือน</option></select>
+    </div>
+    <div><label>ปี</label>
+      <select id="ql-year" onchange="renderQLList()"></select>
+    </div>
+    <div><label>ค้นหาเลขที่</label>
+      <input type="text" id="ql-search" placeholder="พิมพ์เลขที่..." oninput="renderQLList()" style="min-width:130px">
+    </div>
+  </div>
+  <div class="tbl-wrap"><table><thead><tr><th>เลขที่</th><th>สาขา</th><th>วันที่</th><th>ลูกค้า</th><th>พนักงาน</th><th class="tn">ยอดรวม</th><th>VAT</th><th>สถานะ</th><th>อนุมัติ</th><th></th></tr></thead><tbody id="qtbl"></tbody></table></div>
+  <div id="qempty" class="empty" style="display:none">ไม่พบรายการ</div>
+</div></div>
+
+<!-- INVOICE LIST -->
+<div id="panel-invoice-list" class="panel"><div class="card">
+  <div class="card-title"><span>รายการใบส่งสินค้า / ใบกำกับภาษี</span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-ghost btn-sm" onclick="exportXLSX('invoices')">⬇ Excel</button></div>
+  </div>
+  <div class="filter-bar" style="margin-bottom:.75rem">
+    <div><label>สาขา</label>
+      <select id="il-br" onchange="renderIList()"><option value="">ทุกสาขา</option><option value="ubon">สาขาสำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select>
+    </div>
+    <div><label>เดือน</label>
+      <select id="il-month" onchange="renderIList()"><option value="">ทุกเดือน</option></select>
+    </div>
+    <div><label>ปี</label>
+      <select id="il-year" onchange="renderIList()"></select>
+    </div>
+    <div><label>สถานะการชำระ</label>
+      <select id="il-paystatus" onchange="renderIList()">
+        <option value="">ทุกสถานะ</option>
+        <option value="outstanding">ค้างชำระ</option>
+        <option value="paid">ชำระแล้ว</option>
+        <option value="dueSoon">ใกล้ครบกำหนดภายใน 7 วัน</option>
+        <option value="overdue">เกินกำหนดชำระ</option>
+      </select>
+    </div>
+    <div><label>ค้นหาเลขที่</label>
+      <input type="text" id="il-search" placeholder="เลขที่ / ลูกค้า / เซลล์ / สินค้า" oninput="renderIList()" style="min-width:180px">
+    </div>
+  </div>
+  <div class="tbl-wrap"><table class="invoice-report-table"><thead><tr>
+    <th>วันที่ขาย</th>
+    <th>เลขที่ใบส่ง/ภาษี</th>
+    <th>พนักงานขาย</th>
+    <th>ชื่อลูกค้า</th>
+    <th>รายการสินค้า</th>
+    <th class="tn">จำนวน</th>
+    <th>รูปแบบราคาต้นทุน</th>
+    <th class="tn">ราคาต้นทุน</th>
+    <th class="tn">รวมต้นทุน</th>
+    <th class="tn">ราคาขายต่อหน่วย</th>
+    <th class="tn">รวมราคาขายพร้อม VAT</th>
+    <th class="tn">ถอด VAT 7%</th>
+    <th class="tn">สวัสดิการหรือค่าคอมมิชชั่น</th>
+    <th class="tn">กำไร</th>
+    <th class="tn">%กำไรต้นทุน</th>
+    <th class="tn">%กำไรยอดขาย</th>
+    <th>เครดิตการชำระ</th>
+    <th>วันครบกำหนด</th>
+    <th>สถานะชำระเงิน</th>
+    <th>จัดการ</th>
+  </tr></thead><tbody id="itbl"></tbody></table></div>
+  <div id="iempty" class="empty" style="display:none">ไม่พบรายการ</div>
+</div></div>
+
+<!-- RECEIPT LIST -->
+<div id="panel-receipt-list" class="panel"><div class="card">
+  <div class="card-title"><span>รายการใบเสร็จรับเงิน</span>
+    <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn btn-ghost btn-sm" onclick="exportXLSX('receipts')">⬇ Excel</button></div>
+  </div>
+  <div class="filter-bar" style="margin-bottom:.75rem">
+    <div><label>สาขา</label>
+      <select id="rl-br" onchange="renderRList()"><option value="">ทุกสาขา</option><option value="ubon">สาขาสำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select>
+    </div>
+    <div><label>เดือน</label>
+      <select id="rl-month" onchange="renderRList()"><option value="">ทุกเดือน</option></select>
+    </div>
+    <div><label>ปี</label>
+      <select id="rl-year" onchange="renderRList()"></select>
+    </div>
+    <div><label>ค้นหาเลขที่</label>
+      <input type="text" id="rl-search" placeholder="พิมพ์เลขที่..." oninput="renderRList()" style="min-width:130px">
+    </div>
+  </div>
+  <div class="tbl-wrap"><table><thead><tr><th>เลขที่</th><th>สาขา</th><th>วันที่</th><th>เลขใบส่ง/ภาษี</th><th>ลูกค้า</th><th>พนักงาน</th><th class="tn">ยอดขาย</th><th class="tn">กำไร</th><th></th></tr></thead><tbody id="rtbl"></tbody></table></div>
+  <div id="rempty" class="empty" style="display:none">ไม่พบรายการ</div>
+</div></div>
+
+<!-- ISSUED DELIVERY/TAX DOCUMENT LIST -->
+<div id="panel-issued-invoice-list" class="panel"><div class="card">
+  <div class="card-title"><span>ข้อมูลออกบิลใบส่งของ / ใบกำกับภาษี</span><span class="section-hint">ข้อมูลเอกสารที่ออกจริง แยกจากหลักฐานที่ใช้คำนวณแดชบอร์ด</span></div>
+  <div class="filter-bar" style="margin-bottom:.75rem">
+    <div><label>สาขา</label><select id="oil-br" onchange="renderIssuedInvoiceList()"><option value="">ทุกสาขา</option><option value="ubon">สาขาสำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select></div>
+    <div><label>เดือน</label><select id="oil-month" onchange="renderIssuedInvoiceList()"><option value="">ทุกเดือน</option></select></div>
+    <div><label>ปี</label><select id="oil-year" onchange="renderIssuedInvoiceList()"></select></div>
+    <div><label>ค้นหา</label><input type="text" id="oil-search" placeholder="เลขที่ / ลูกค้า / พนักงาน" oninput="renderIssuedInvoiceList()"></div>
+  </div>
+  <div class="tbl-wrap"><table><thead><tr><th>เลขที่</th><th>สาขา</th><th>วันที่</th><th>ลูกค้า</th><th>พนักงาน</th><th class="tn">ยอดก่อน VAT</th><th class="tn">ยอดรวม</th><th>อ้างอิงสั่งผลิต</th><th></th></tr></thead><tbody id="oitbl"></tbody></table></div>
+  <div id="oiempty" class="empty" style="display:none">ไม่พบรายการ</div>
+</div></div>
+
+<!-- ISSUED RECEIPT DOCUMENT LIST -->
+<div id="panel-issued-receipt-list" class="panel"><div class="card">
+  <div class="card-title"><span>ข้อมูลออกใบเสร็จรับเงิน</span><span class="section-hint">ข้อมูลเอกสารที่ออกจริง แยกจากหลักฐานที่ใช้คำนวณแดชบอร์ด</span></div>
+  <div class="filter-bar" style="margin-bottom:.75rem">
+    <div><label>สาขา</label><select id="orl-br" onchange="renderIssuedReceiptList()"><option value="">ทุกสาขา</option><option value="ubon">สาขาสำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select></div>
+    <div><label>เดือน</label><select id="orl-month" onchange="renderIssuedReceiptList()"><option value="">ทุกเดือน</option></select></div>
+    <div><label>ปี</label><select id="orl-year" onchange="renderIssuedReceiptList()"></select></div>
+    <div><label>ค้นหา</label><input type="text" id="orl-search" placeholder="เลขที่ / เลขบิล / ลูกค้า" oninput="renderIssuedReceiptList()"></div>
+  </div>
+  <div class="tbl-wrap"><table><thead><tr><th>เลขที่</th><th>สาขา</th><th>วันที่</th><th>เลขบิลอ้างอิง</th><th>ลูกค้า</th><th>พนักงาน</th><th class="tn">ยอดรวม</th><th></th></tr></thead><tbody id="ortbl"></tbody></table></div>
+  <div id="orempty" class="empty" style="display:none">ไม่พบรายการ</div>
+</div></div>
+
+<!-- EXPENSE LIST -->
+<div id="panel-expense-list" class="panel"><div class="card">
+  <div class="card-title"><span>รายการค่าใช้จ่ายองค์กร</span>
+    <button class="btn btn-ghost btn-sm" onclick="exportXLSX('expenses')">⬇ Excel</button>
+  </div>
+  <div class="filter-bar" style="margin-bottom:.75rem">
+    <div><label>สาขา</label>
+      <select id="el-br" onchange="renderEList()"><option value="">ทุกสาขา</option><option value="ubon">สาขาสำนักงานใหญ่</option><option value="khonkaen">สาขาที่ 00001</option></select>
+    </div>
+    <div><label>เดือน</label>
+      <select id="el-month" onchange="renderEList()"><option value="">ทุกเดือน</option></select>
+    </div>
+    <div><label>ปี</label>
+      <select id="el-year" onchange="renderEList()"></select>
+    </div>
+  </div>
+  <div class="tbl-wrap expense-list-wrap"><table class="expense-list-table"><thead><tr><th>วันที่</th><th>สาขา</th><th>หมวดหมู่</th><th>ร้านค้า / ผู้ขาย</th><th>รายละเอียด</th><th>เอกสาร</th><th>สถานะใบกำกับภาษี</th><th>หลักฐาน</th><th>ผู้บันทึก</th><th class="tn">จำนวนเงิน</th><th></th></tr></thead><tbody id="etbl"></tbody></table></div>
+  <div id="eempty" class="empty" style="display:none">ไม่พบรายการ</div>
+</div></div>
+
+
+<!-- LINKED DOCUMENT FLOW -->
+<div id="panel-linked-flow" class="panel">
+  <div class="linked-page-head">
+    <div>
+      <div class="linked-eyebrow">DOCUMENT WORKFLOW</div>
+      <h2>ศูนย์เชื่อมโยงเอกสาร</h2>
+      <p>ติดตามสายงานตั้งแต่ใบเสนอราคา → สั่งผลิตสินค้า → ระยะเวลาในการส่งสินค้า → ใบส่งสินค้า / ใบกำกับภาษี → เครดิตการชำระของลูกค้า → ใบเสร็จรับเงิน โดยกรองตามสาขา เดือน และปี</p>
+    </div>
+    <button type="button" class="btn btn-ghost" onclick="refreshLinkedFlow(true)">↻ ดึงข้อมูลล่าสุด</button>
+  </div>
+  <div class="linked-filter-card">
+    <div class="linked-branch-switch" role="group" aria-label="เลือกสาขา">
+      <button type="button" data-linked-branch="" class="active" onclick="setLinkedBranch('',this)">รวมทุกสาขา</button>
+      <button type="button" data-linked-branch="ubon" onclick="setLinkedBranch('ubon',this)"><span class="branch-dot ub"></span>สาขาสำนักงานใหญ่</button>
+      <button type="button" data-linked-branch="khonkaen" onclick="setLinkedBranch('khonkaen',this)"><span class="branch-dot kk"></span>สาขาที่ 00001</button>
+    </div>
+    <div class="linked-filter-grid">
+      <label><span>ปี</span><select id="linked-year" onchange="renderLinkedFlow()"></select></label>
+      <label><span>เดือน</span><select id="linked-month" onchange="renderLinkedFlow()"><option value="">ทุกเดือน</option></select></label>
+      <label class="linked-search"><span>ค้นหา</span><input id="linked-search" type="search" placeholder="เลขที่เอกสาร / ลูกค้า / งาน / สินค้า" oninput="renderLinkedFlow()"></label>
+      <label><span>สถานะ</span><select id="linked-status" onchange="renderLinkedFlow()"><option value="">ทุกสถานะ</option><option value="complete">ครบทุกขั้นตอน</option><option value="pending-lead-time">รอระยะเวลาส่งสินค้า</option><option value="pending-invoice">รอใบส่งสินค้า / ใบกำกับภาษี</option><option value="pending-credit">รอเครดิตลูกค้า</option><option value="pending-receipt">รอใบเสร็จรับเงิน</option></select></label>
+    </div>
+  </div>
+  <div id="linked-summary" class="linked-summary"></div>
+  <div class="linked-legend"><span><i class="ok"></i>มีเอกสารแล้ว</span><span><i class="wait"></i>รอดำเนินการ</span><span><i class="muted"></i>ไม่เกี่ยวข้อง/ไม่มีข้อมูล</span></div>
+  <div id="linked-flow-list" class="linked-flow-list"></div>
+  <div id="linked-empty" class="linked-empty" hidden>ไม่พบข้อมูลตามตัวกรองที่เลือก</div>
+</div>
+
+<!-- FILES -->
+
+<!-- SAAS TENANT / SUBSCRIPTION -->
+<div id="panel-saas-admin" class="panel">
+  <div class="card">
+    <div class="card-title">🏢 บริษัท / แพ็กเกจ SaaS</div>
+    <div class="saas-note">ข้อมูลหน้านี้อ่านจาก Tenant ของบัญชีที่ Login อยู่เท่านั้น การเพิ่มสาขาทำผ่าน Vercel API ฝั่ง Server และตรวจ <b>Branch Limit</b> ก่อนสร้างจริง</div>
+    <div id="saas-summary-cards" class="metrics"></div>
+    <div class="saas-admin-grid">
+      <div class="saas-box">
+        <h3>สาขาที่เปิดใช้งาน</h3>
+        <div id="saas-branch-list" class="saas-branch-list"><div class="empty">กำลังโหลด...</div></div>
+      </div>
+      <div class="saas-box">
+        <h3>เพิ่มสาขา (Add-on)</h3>
+        <p class="section-hint">ในเวอร์ชันนี้ ERP รองรับรหัสสาขาหลักเดิม 2 รหัส: <b>ubon</b> = สำนักงานใหญ่ และ <b>khonkaen</b> = สาขาที่ 00001 หากต้องการมากกว่า 2 สาขา ควรทำ Dynamic Branch Refactor เพิ่มเติม</p>
+        <div class="fg">
+          <div class="ff"><label>รหัสสาขา</label><select id="saas-new-branch-code"><option value="ubon">ubon — สำนักงานใหญ่</option><option value="khonkaen">khonkaen — สาขาที่ 00001</option></select></div>
+          <div class="ff"><label>ชื่อสาขา</label><input id="saas-new-branch-name" type="text" placeholder="เช่น สาขาที่ 00001"></div>
+        </div>
+        <div class="form-actions"><button type="button" class="btn btn-primary" onclick="window.SaaSService?.createBranchFromPanel?.()">+ เพิ่มสาขาตามสิทธิ์แพ็กเกจ</button></div>
+        <div id="saas-action-status" class="section-hint"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="panel-files" class="panel"><div class="card">
+  <div class="card-title">Export / Import ข้อมูล</div>
+  <p style="font-size:15px;color:var(--g2);margin-bottom:1rem">
+    เลือกปีและเดือนที่ต้องการ แล้วดาวน์โหลดได้ทั้งแบบ Excel หรือ Backup JSON — รองรับไฟล์รายเดือน รายปี และไฟล์รวมทั้งหมด
+  </p>
+
+  <div class="export-grid">
+    <div class="export-box">
+      <div class="export-box-title">📅 เลือกช่วงข้อมูล</div>
+      <div class="fg">
+        <div class="ff">
+          <label>สาขา</label>
+          <select id="ex-branch">
+            <option value="">รวมทั้งสองสาขา</option>
+            <option value="ubon">สาขาสำนักงานใหญ่</option>
+            <option value="khonkaen">สาขาที่ 00001</option>
+          </select>
+        </div>
+        <div class="ff">
+          <label>ปีที่ต้องการ</label>
+          <select id="ex-year"></select>
+        </div>
+        <div class="ff">
+          <label>เดือนที่ต้องการ</label>
+          <select id="ex-month"></select>
+        </div>
+        <div class="ff">
+          <label>ประเภทข้อมูล</label>
+          <select id="ex-type">
+            <option value="all">ทุกรายการ</option>
+            <option value="productions">สั่งผลิตสินค้า</option>
+            <option value="invoices">บิลขาย</option>
+            <option value="quotes">ใบเสนอราคา</option>
+            <option value="receipts">ใบเสร็จรับเงิน</option>
+            <option value="expenses">ค่าใช้จ่าย</option>
+          </select>
+        </div>
+      </div>
+      <div class="export-actions">
+        <button class="btn btn-primary" onclick="exportSelectedMonthExcel()">⬇ Excel เดือนที่เลือก</button>
+        <button class="btn btn-green" onclick="exportSelectedYearExcel()">⬇ Excel ทั้งปีที่เลือก</button>
+        <button class="btn btn-ghost" onclick="exportSelectedMonthJSON()">⬇ Backup JSON เดือนที่เลือก</button>
+        <button class="btn btn-ghost" onclick="exportSelectedYearJSON()">⬇ Backup JSON ทั้งปีที่เลือก</button>
+      </div>
+    </div>
+
+    <div class="export-box">
+      <div class="export-box-title">🗂️ ไฟล์รวมและนำเข้าข้อมูล</div>
+      <p class="export-help">รองรับทั้งไฟล์ Backup JSON ของระบบ และไฟล์ฐานข้อมูลยอดขาย <code>firebase-sales-*.json</code> ที่จัดทำจาก Excel</p>
+      <div class="import-json-options">
+        <label><input id="import-sync-cloud" type="checkbox" checked> อัปโหลดข้อมูลขึ้น Firebase พร้อมกัน</label>
+        <label>Backup JSON:
+          <select id="import-mode">
+            <option value="merge">รวมกับข้อมูลเดิมและตัดรายการซ้ำ</option>
+            <option value="replace">แทนที่ข้อมูลเดิมในเดือนที่นำเข้า</option>
+          </select>
+        </label>
+      </div>
+      <div class="import-json-note">
+        ไฟล์ฐานข้อมูลยอดขายจะนำเฉพาะรายการสถานะปกติที่มียอดขายไปใช้คำนวณใน <b>ยอดขาย</b> และช่วงเดือน 1–6 ปี พ.ศ. 2569 ระบบจะสะท้อนยอดเดียวกันไปเป็น <b>ยอดส่งสินค้า</b> บน Dashboard/Analytics โดยไม่สร้างเอกสารใบส่งสินค้าซ้ำ ส่วนข้อมูลดิบทั้งหมดจะเก็บใน Firebase collection <code>salesArchive</code>
+      </div>
+      <div class="export-actions">
+        <button class="btn btn-purple" onclick="exportAllExcel()">⬇ Excel รวมทุกปี</button>
+        <button class="btn btn-ghost" onclick="exportAllJSON()">⬇ Backup JSON ทั้งหมด</button>
+        <label class="btn btn-green" style="cursor:pointer">⬆ Import JSON / ฐานข้อมูลยอดขาย
+          <input type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)">
+        </label>
+        <button class="btn btn-ghost" type="button" onclick="repairHistoricalImportData()">🛠 ซ่อมข้อมูลเดิม / เพิ่มวันที่ พ.ศ.</button>
+      </div>
+      <div id="import-json-status" class="import-json-status">ยังไม่มีการนำเข้าไฟล์</div>
+    </div>
+  </div>
+
+  <div class="csv-import-card">
+    <div class="csv-import-head">
+      <div>
+        <div class="export-box-title">📄 CSV Import Wizard</div>
+        <p class="export-help">นำเข้าข้อมูลหลักจาก Excel/CSV แบบ Preview → จับคู่คอลัมน์ → ตรวจข้อมูล → Import รองรับ Customer Master, Supplier/Manufacturer Master และ Product Master</p>
+      </div>
+      <div class="csv-template-actions">
+        <button class="btn btn-ghost btn-sm" type="button" onclick="downloadCsvTemplate('customer')">⬇ ตัวอย่างลูกค้า CSV</button>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="downloadCsvTemplate('supplier')">⬇ ตัวอย่างผู้จำหน่าย CSV</button>
+        <button class="btn btn-ghost btn-sm" type="button" onclick="downloadCsvTemplate('product')">⬇ ตัวอย่างสินค้า CSV</button>
+      </div>
+    </div>
+
+    <div class="csv-import-controls">
+      <label class="csv-file-picker btn btn-primary">📂 เลือกไฟล์ CSV
+        <input id="csv-import-file" type="file" accept=".csv,text/csv,text/plain" onchange="handleCsvImportFile(event)">
+      </label>
+      <label>ประเภทข้อมูล
+        <select id="csv-import-type" onchange="changeCsvImportType(this.value)">
+          <option value="auto">ตรวจประเภทอัตโนมัติ</option>
+          <option value="customer">Customer Master · ลูกค้า</option>
+          <option value="supplier">Supplier / Manufacturer · ผู้จำหน่าย/ผู้ผลิต</option>
+          <option value="product">Product Master · สินค้า</option>
+        </select>
+      </label>
+      <label>วิธีนำเข้า
+        <select id="csv-import-mode">
+          <option value="merge">รวม/อัปเดตข้อมูลเดิม</option>
+          <option value="replace">แทนที่ Master ประเภทนี้</option>
+        </select>
+      </label>
+      <button id="csv-import-confirm" class="btn btn-green" type="button" onclick="commitCsvImport()" disabled>✓ Import ข้อมูลที่ผ่าน</button>
+      <button class="btn btn-ghost" type="button" onclick="resetCsvImportWizard()">ล้าง</button>
+    </div>
+
+    <div id="csv-import-file-summary" class="csv-import-summary">ยังไม่ได้เลือกไฟล์ CSV</div><div class="csv-map-note"><b>การจัดเก็บ:</b> CSV Master Data จะถูกเก็บเป็น Tenant-scoped cache ใน Browser และเมื่อเชื่อม Firebase ระบบจะ Sync Customer/Supplier/Product Master ของบริษัทนั้นขึ้น Firestore ด้วย · Backup JSON ยังใช้สำรอง/ย้ายข้อมูลได้ · แนะนำให้บันทึก CSV เป็น UTF-8</div>
+
+    <div id="csv-mapping-section" class="csv-mapping-section" style="display:none">
+      <div class="csv-section-title"><span>1</span> จับคู่คอลัมน์</div>
+      <div id="csv-mapping-grid" class="csv-mapping-grid"></div>
+      <div class="csv-map-note">ระบบจะจับคู่ชื่อคอลัมน์ภาษาไทย/อังกฤษให้อัตโนมัติ คุณสามารถเปลี่ยน Mapping ก่อน Import ได้ · ช่องที่มี * เป็นข้อมูลจำเป็น</div>
+    </div>
+
+    <div id="csv-validation-section" class="csv-validation-section" style="display:none">
+      <div class="csv-section-title"><span>2</span> ตรวจข้อมูลก่อนนำเข้า</div>
+      <div id="csv-validation-summary" class="csv-validation-summary"></div>
+      <div id="csv-preview-table"></div>
+    </div>
+
+    <div id="csv-import-status" class="import-json-status">CSV: ยังไม่มีการนำเข้าไฟล์</div>
+  </div>
+</div></div>
+
+</div></div><!-- end main/layout -->
+
+</div><!-- /app-content -->
+
+<script src="boot-status.js"></script>
+<script type="module" src="tenant-context.js"></script>
+<script type="module" src="firebase-auth.js"></script>
+<script type="module" src="saas-client.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script type="module" src="google-drive.js"></script>
+<script type="module" src="local-file-store.js"></script>
+<script type="module" src="firebase-bridge.js"></script>
+<script type="module" src="click-fallback.js"></script>
+<!-- Load printable document modules before app.js so inline previews are ready when forms boot. -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<script type="module" src="delivery-tax-document.js"></script>
+<script type="module" src="quotation-document.js"></script>
+<script type="module" src="receipt-document.js"></script>
+<script type="module" src="app.js"></script>
+<script type="module" src="business-rules.js"></script>
+<script type="module" src="trial-mode.js"></script>
+<script type="module" src="firebase-dashboard.js"></script>
+<script type="module" src="erp-production-core.js"></script>
+<datalist id="customer-master-list"></datalist>
+<datalist id="supplier-master-list"></datalist>
+</body>
+</html>

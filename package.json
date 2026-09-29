@@ -1,0 +1,28 @@
+{
+  "name": "example-company-erp",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "bootstrap:tenant": "node scripts/bootstrap-tenant.mjs",
+    "migrate:tenant": "node scripts/migrate-legacy-to-tenant.mjs",
+    "set:superadmin": "node scripts/set-superadmin.mjs",
+    "create:trial": "node scripts/create-trial-tenant.mjs"
+  },
+  "dependencies": {
+    "firebase": "12.16.0",
+    "html2canvas": "1.4.1",
+    "jspdf": "4.2.1",
+    "xlsx": "0.18.5",
+    "firebase-admin": "13.6.0"
+  },
+  "devDependencies": {
+    "vite": "8.1.5"
+  }
+}
